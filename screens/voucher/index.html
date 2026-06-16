@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>سند صرف</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../company-settings/style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="../../shared-styles/debt-limit-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/auto-journal-modal.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+    <script src="../../shared-styles/auto-journal-modal.js"></script>
+    <style>
+      /* Keep only the last action column transparent */
+      #hv_linesTable tbody td:last-child,
+      #hv_linesTable thead th:last-child{
+        background: transparent !important;
+      }
+      
+      /* Remove row styling effects (like purchase invoice) */
+      #hv_linesTable tbody tr,
+      #hv_linesTable tbody tr:nth-child(even) {
+        background: transparent !important;
+      }
+      
+      #hv_linesTable tbody tr:hover {
+        background: transparent !important;
+        transform: none !important;
+        box-shadow: none !important;
+        cursor: default !important;
+      }
+      
+      /* Show spinner arrows in number inputs (karat field) */
+      #hv_linesTable input[type="number"] {
+        -moz-appearance: number-input !important;
+        appearance: auto !important;
+      }
+      
+      #hv_linesTable input[type="number"]::-webkit-inner-spin-button,
+      #hv_linesTable input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: inner-spin-button !important;
+        opacity: 1 !important;
+        cursor: pointer !important;
+        background: none !important;
+        border: 0 !important;
+        filter: brightness(0.8) !important;
+        mix-blend-mode: multiply !important;
+      }
+      
+      /* Print button (professional look) */
+      .btn.print{position:relative; border:1px solid color-mix(in oklab, var(--primary, #00a99d) 60%, #000); color:#fff;
+        background:linear-gradient(135deg, color-mix(in oklab, var(--primary, #00a99d) 90%, #000), color-mix(in oklab, var(--primary, #00a99d) 65%, #000));
+        overflow:hidden; transition:transform .12s ease, box-shadow .15s ease, filter .15s ease}
+      .btn.print:hover{transform:translateY(-1px); filter:brightness(1.05); box-shadow:0 8px 20px color-mix(in oklab, var(--primary, #00a99d) 25%, transparent), 0 0 0 6px color-mix(in oklab, var(--ring) 45%, transparent)}
+      .btn.print:active{transform:translateY(0)}
+      .btn.print:focus-visible{box-shadow:0 0 0 6px color-mix(in oklab, var(--ring) 55%, transparent)}
+      .btn.print i{transition:transform .25s ease}
+      .btn.print:hover i{transform:rotate(-8deg) scale(1.05)}
+      .btn.print::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent); transform:translateX(-120%); transition:transform .6s ease}
+      .btn.print:hover::after{transform:translateX(120%)}
+
+      /* ===== Chevron button styles are in style.css ===== */
+
+      /* Self-reference professional hint */
+      .self-hint{display:none; margin-top:10px; border:1px solid var(--border); border-radius:14px; padding:10px 12px; background:linear-gradient(135deg, color-mix(in oklab, var(--card) 92%, transparent), color-mix(in oklab, var(--bg-muted) 85%, transparent)); color:var(--text); box-shadow:0 10px 26px rgba(0,0,0,.12)}
+      .self-hint .lead{display:flex; align-items:center; gap:8px; font-weight:700}
+      .self-hint .lead i{color:var(--primary)}
+      .self-hint .sub{color:var(--subtle); font-size:12px; margin-top:4px}
+
+      /* Red capsule chip under name cell */
+      .self-chip{position:fixed; z-index:9999; display:none; align-items:center; gap:8px; background:#fff; color:#b00020; border:1px solid #b00020; padding:8px 12px; border-radius:999px; box-shadow:0 10px 24px rgba(0,0,0,.18)}
+      .self-chip .x{display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:999px; color:#b00020; cursor:pointer}
+      @media (prefers-color-scheme: dark){ .self-chip{background:#101214; color:#ff6b6b; border-color:#ff6b6b} .self-chip .x{color:#ff6b6b} }
+
+      /* Customer lookup modal close button - Teal color */
+      #lookupCustomerClose {
+        background: linear-gradient(135deg, #00897B, #00695C) !important;
+        color: white !important;
+        border: 2px solid #00695C !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 50% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3) !important;
+      }
+      
+      #lookupCustomerClose:hover {
+        background: linear-gradient(135deg, #00695C, #004D40) !important;
+        transform: scale(1.05) rotate(-5deg) !important;
+        box-shadow: 0 8px 20px rgba(0, 137, 123, 0.4), 
+                    0 0 0 6px rgba(0, 137, 123, 0.2) !important;
+      }
+      
+      #lookupCustomerClose:active {
+        transform: scale(0.95) !important;
+        box-shadow: 0 2px 8px rgba(0, 137, 123, 0.3) !important;
+      }
+      
+      #lookupCustomerClose i {
+        font-size: 20px !important;
+        transition: transform 0.3s ease !important;
+      }
+      
+      #lookupCustomerClose:hover i {
+        transform: rotate(90deg) scale(1.1) !important;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        #lookupCustomerClose {
+          background: linear-gradient(135deg, #00BFA5, #00897B) !important;
+          border-color: #00BFA5 !important;
+          box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3) !important;
+        }
+        
+        #lookupCustomerClose:hover {
+          background: linear-gradient(135deg, #00897B, #00695C) !important;
+          box-shadow: 0 8px 20px rgba(0, 191, 165, 0.4), 
+                      0 0 0 6px rgba(0, 191, 165, 0.2) !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section id="panel-voucher" class="panel active" role="tabpanel" aria-labelledby="tab-voucher">
+        <div class="toolbar">
+          <div class="actions">
+            <button class="btn primary" id="btnNewVoucher" title="سند صرف جديد"><span><i class="fa-solid fa-file-circle-plus"></i> جديد</span></button>
+            <button class="btn secondary" id="hv_btnEditTop" title="تعديل"><span><i class="fa-solid fa-pen-to-square"></i> تعديل</span></button>
+            <button class="btn primary" id="hv_btnSaveTop" title="حفظ"><span><i class="fa-solid fa-circle-check"></i> حفظ</span></button>
+            <button class="btn danger" id="hv_btnDeleteTop" title="حذف"><span><i class="fa-solid fa-circle-xmark"></i> حذف</span></button>
+            <button class="btn print" id="hv_btnPrintTop" title="طباعة PDF"><span><i class="fa-solid fa-file-pdf"></i> طباعة PDF</span></button>
+            <button class="btn btn-journal-view" id="hv_btnJournalView" title="صورة الحركة" disabled><span><i class="fa-solid fa-file-invoice"></i> صورة الحركة</span></button>
+            <button class="btn whatsapp" id="hv_btnWhatsApp" title="واتساب"><span><i class="fa-brands fa-whatsapp"></i> واتساب</span></button>
+            <button class="btn close-screen" id="hv_btnCloseTop" title="إغلاق"><span><i class="fa-solid fa-arrow-right-from-bracket"></i> إغلاق</span></button>
+          </div>
+
+    <!-- Supplier Lookup Modal (F9) -->
+    <div class="modal" id="lookupSupplierModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3>اختر مورد</h3>
+          <button class="icon-btn" id="lookupSupplierClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span>بحث عن مورد</span>
+            <input type="search" id="ls_search" placeholder="اكتب رقم المورد أو اسم المورد للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="ls_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th style="width:140px">رقم المورد</th>
+                  <th>اسم المورد</th>
+                </tr>
+              </thead>
+              <tbody id="ls_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupSupplierCancel"><i class="fa-regular fa-circle-xmark"></i> إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Lookup Modal (F9) -->
+    <div class="modal" id="lookupAccountModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3>اختر حساب</h3>
+          <button class="icon-btn" id="lookupAccountClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span>بحث عن حساب</span>
+            <input type="search" id="la_search" placeholder="اكتب رقم الحساب أو اسم الحساب للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="la_table" style="min-width:520px">
+              <thead>
+                <tr>
+                  <th style="width:160px">رقم الحساب</th>
+                  <th>اسم الحساب</th>
+                </tr>
+              </thead>
+              <tbody id="la_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupAccountCancel"><i class="fa-regular fa-circle-xmark"></i> إلغاء</button>
+        </div>
+      </div>
+    </div>
+        </div>
+
+        <div class="grid cards-3">
+          <div class="card form-card grid-span-3 fullwide">
+            <h3 style="margin:0 0 12px 0; display:flex; align-items:center; justify-content:space-between">
+              <span>رأس سند الصرف</span>
+              <div class="row nav-controls" style="gap:6px; align-items:center">
+                <button class="icon-btn" type="button" id="hv_nav_last" title="الأخير"><i class="fa-solid fa-angles-right"></i></button>
+                <button class="icon-btn" type="button" id="hv_nav_next" title="التالي"><i class="fa-solid fa-angle-right"></i></button>
+                <input type="text" id="hv_nav_id" inputmode="numeric" pattern="\\d*" placeholder="رقم" title="رقم السند" style="width:88px; text-align:center; padding:6px 10px; border:1px solid var(--border); border-radius:10px; background:var(--bg-muted); color:var(--text); outline:none">
+                <span id="hv_nav_counter" style="min-width:76px;text-align:center;color:var(--subtle);font-size:13px">0 / 0</span>
+                <button class="icon-btn" type="button" id="hv_nav_prev" title="السابق"><i class="fa-solid fa-angle-left"></i></button>
+                <button class="icon-btn" type="button" id="hv_nav_first" title="الأول"><i class="fa-solid fa-angles-left"></i></button>
+                <input type="time" id="hv_time" readonly style="width:auto;min-width:110px">
+              </div>
+            </h3>
+            <div class="row" style="gap:8px; flex-wrap:nowrap; align-items:flex-end; overflow:hidden">
+              <label class="form-field" style="margin:0; padding:0; flex:0 0 auto">
+                <span><i class="fa-solid fa-hashtag" style="color:#f59e0b; margin-left:4px"></i>رقم السند</span>
+                <input type="text" id="hv_id" readonly disabled style="width:80px; text-align:center">
+              </label>
+              <label class="form-field" style="margin:0; padding:0; flex:0 0 auto">
+                <span><i class="fa-solid fa-calendar-days" style="color:#ef4444; margin-left:4px"></i>التاريخ</span>
+                <input type="date" id="hv_date" style="width:135px">
+              </label>
+              <label class="form-field" style="margin:0; padding:0; flex:1 1 0; min-width:0">
+                <span><i class="fa-solid fa-coins" style="color:#3b82f6; margin-left:4px"></i>صندوق الريال <small style="color:#888">(للبحث F9)</small></span>
+                <div style="display:flex; gap:4px; align-items:center">
+                  <input type="text" id="hv_cash_acc_no_inp" placeholder="رقم" style="width:79px; text-align:center">
+                  <select id="hv_cash_acc" style="flex:1; min-width:0"></select>
+                  <input type="hidden" id="hv_cash_acc_id">
+                  <datalist id="hv_cash_list"></datalist>
+                </div>
+              </label>
+              <label class="form-field" style="margin:0; padding:0; flex:1 1 0; min-width:0">
+                <span><i class="fa-solid fa-cube" style="color:#f59e0b; margin-left:4px"></i>صندوق الذهب <small style="color:#888">(للبحث F9)</small></span>
+                <div style="display:flex; gap:4px; align-items:center">
+                  <input type="text" id="hv_gold_acc_no_inp" placeholder="رقم" style="width:79px; text-align:center">
+                  <select id="hv_gold_acc" style="flex:1; min-width:0"></select>
+                  <input type="hidden" id="hv_gold_acc_id">
+                  <datalist id="hv_gold_list"></datalist>
+                </div>
+              </label>
+              <label class="form-field" style="margin:0; padding:0; flex:1 1 0; min-width:0">
+                <span><i class="fa-solid fa-cube" style="color:#9ca3af; margin-left:4px"></i>صندوق الفضة <small style="color:#888">(للبحث F9)</small></span>
+                <div style="display:flex; gap:4px; align-items:center">
+                  <input type="text" id="hv_silver_acc_no_inp" placeholder="رقم" style="width:79px; text-align:center">
+                  <select id="hv_silver_acc" style="flex:1; min-width:0"></select>
+                  <input type="hidden" id="hv_silver_acc_id">
+                </div>
+              </label>
+            </div>
+            <div id="hv_self_hint" class="self-hint" role="status" aria-live="polite">
+              <div class="lead"><i class="fa-regular fa-circle-info"></i> عملية ذاتية للحساب</div>
+              <div class="sub">لا تؤثر على الرصيد (مدين = دائن) لهذا الحساب.</div>
+            </div>
+            <!-- User tracking info -->
+            <div id="hv_user_tracking_info" style="display:none; margin-top:6px; padding:5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-muted); font-size:11px; color:var(--subtle);">
+              <div id="hv_created_info" style="margin:0;"></div>
+              <div id="hv_updated_info"></div>
+            </div>
+          </div>
+          <div class="card table-card grid-span-3 fullwide" id="voucher-lines-grid">
+            <div class="table-head" style="flex-wrap:nowrap; gap:10px">
+              <h3 style="flex-shrink:0">تفاصيل السند</h3>
+              <input type="text" id="hv_memo" placeholder="بيان السند..." style="flex:1; margin:0; padding:8px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg-muted); color:var(--text); font-size:13px">
+              <div style="display:flex; align-items:center; gap:8px; flex-shrink:0">
+                <button type="button" id="hv_btnCopyMemo" class="btn primary" title="نسخ البيان إلى جميع السطور" style="width:38px; padding:0; font-size:14px; display:inline-flex; align-items:center; justify-content:center">
+                  <i class="fa-solid fa-chevron-down" style="margin:0"></i>
+                </button>
+                <button class="btn primary" id="hv_btnAddLine" type="button" style="width:auto"><i class="fa-solid fa-circle-plus"></i> إضافة سطر</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="hv_linesTable">
+                <thead>
+                  <tr>
+                    <th>رقم العميل</th>
+                    <th>رقم المورد</th>
+                    <th>رقم الحساب</th>
+                    <th>الاسم</th>
+                    <th>المبلغ</th>
+                    <th>الذهب/الفضة</th>
+                    <th>العيار</th>
+                    <th>الوصف</th>
+                    <th>إزالة</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <!-- Global datalist for karat combo (Gold + Silver) -->
+            <datalist id="hv_karat_list">
+              <option value="24">ذهب 24</option>
+              <option value="22">ذهب 22</option>
+              <option value="21">ذهب 21</option>
+              <option value="18">ذهب 18</option>
+              <option value="999">فضة 999</option>
+              <option value="925">فضة 925</option>
+              <option value="900">فضة 900</option>
+              <option value="800">فضة 800</option>
+            </datalist>
+          </div>
+        </div>
+
+        <!-- بطاقة الإجماليات -->
+        <div class="card form-card grid-span-3 fullwide totals-card" id="voucher_totals">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 4px 0;">
+            <!-- إجمالي المبلغ -->
+            <div style="display: flex; gap: 24px; align-items: center;">
+              <span style="font-weight: 600; color: var(--text); font-size: 13px;">إجمالي المبلغ: <span id="voucher_total_amount" style="font-weight: 700;">0.00</span></span>
+            </div>
+            
+            <!-- إجماليات الذهب بالعيارات -->
+            <div style="display: flex; gap: 16px; align-items: center;">
+              <span style="font-weight: 600; color: var(--text); font-size: 12px;">ذهب (24): <span id="voucher_gold_24" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: var(--text); font-size: 12px;">ذهب (22): <span id="voucher_gold_22" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: var(--text); font-size: 12px;">ذهب (21): <span id="voucher_gold_21" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: var(--text); font-size: 12px;">ذهب (18): <span id="voucher_gold_18" style="font-weight: 700;">0.00</span></span>
+            </div>
+            <!-- إجماليات الفضة بالعيارات -->
+            <div style="display: flex; gap: 16px; align-items: center;">
+              <span style="font-weight: 600; color: #9ca3af; font-size: 12px;">فضة (999): <span id="voucher_silver_999" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: #9ca3af; font-size: 12px;">فضة (925): <span id="voucher_silver_925" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: #9ca3af; font-size: 12px;">فضة (900): <span id="voucher_silver_900" style="font-weight: 700;">0.00</span></span>
+              <span style="font-weight: 600; color: #9ca3af; font-size: 12px;">فضة (800): <span id="voucher_silver_800" style="font-weight: 700;">0.00</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Confirm Delete Modal (Voucher header grid) -->
+    <div class="modal" id="confirmVDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span>تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmVDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+          </div>
+          <p id="confirmVDelMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6">هل أنت متأكد من أنك تريد حذف هذا السطر؟</p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmVDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-check"></i> نعم، احذف
+          </button>
+          <button class="btn secondary" id="confirmVDelNo" style="font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-xmark"></i> إلغاء الأمر
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voucher Modal -->
+    <div class="modal" id="voucherModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="voucherModalTitle">إضافة سند صرف</h3>
+          <button class="icon-btn" id="voucherModalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="voucherForm">
+            <label class="form-field">
+              <span>رقم السند</span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-hashtag icon" aria-hidden="true"></i>
+                <input type="text" id="v_id" readonly disabled>
+              </div>
+            </label>
+            <label class="form-field">
+              <span>التاريخ</span>
+              <input type="date" id="v_date">
+            </label>
+            <label class="form-field">
+              <span>حساب صندوق الريال</span>
+              <div class="input-wrap" style="position:relative">
+                <i class="fa-regular fa-wallet icon" aria-hidden="true"></i>
+                <input type="text" id="v_cash_acc" placeholder="ابحث بالاسم أو الرقم" autocomplete="off">
+                <input type="hidden" id="v_cash_acc_id">
+                <div id="v_cash_list" class="dropdown-list" style="position:absolute; inset-inline:0; top:100%; z-index:10; display:none; background:var(--card-bg,#fff); border:1px solid #ccc; max-height:180px; overflow:auto"></div>
+              </div>
+            </label>
+            <label class="form-field">
+              <span>حساب صندوق الذهب</span>
+              <div class="input-wrap" style="position:relative">
+                <i class="fa-regular fa-wallet icon" aria-hidden="true"></i>
+                <input type="text" id="v_gold_acc" placeholder="ابحث بالاسم أو الرقم" autocomplete="off">
+                <input type="hidden" id="v_gold_acc_id">
+                <div id="v_gold_list" class="dropdown-list" style="position:absolute; inset-inline:0; top:100%; z-index:10; display:none; background:var(--card-bg,#fff); border:1px solid #ccc; max-height:180px; overflow:auto"></div>
+              </div>
+            </label>
+            <label class="form-field">
+              <span>الحساب</span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-wallet icon" aria-hidden="true"></i>
+                <input type="text" id="v_account" placeholder="اسم أو رقم الحساب">
+              </div>
+            </label>
+            <label class="form-field">
+              <span>المبلغ</span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-money-bill-1 icon" aria-hidden="true"></i>
+                <input type="number" id="v_amount" step="0.01" value="0">
+              </div>
+            </label>
+            <label class="form-field">
+              <span>ملاحظة</span>
+              <textarea id="v_note" rows="2" placeholder="ملاحظات..." style="resize:vertical"></textarea>
+            </label>
+          </form>
+          <div class="card form-card" style="margin-top:12px">
+            <h4 style="margin:0 0 8px 0; display:flex; align-items:center; justify-content:space-between">
+              <span>تفاصيل السند</span>
+              <button class="btn" id="btnAddLine" type="button"><i class="fa-solid fa-plus"></i> إضافة سطر</button>
+            </h4>
+            <div class="table-responsive">
+              <table class="table" id="linesTable">
+                <thead>
+                  <tr>
+                    <th>رقم العميل</th>
+                    <th>رقم المورد</th>
+                    <th>رقم الحساب</th>
+                    <th>المبلغ</th>
+                    <th>الوزن</th>
+                    <th>العيار</th>
+                    <th>رقم الحساب (نصي)</th>
+                    <th>الوصف</th>
+                    <th>إزالة</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="error" id="voucher_error"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="voucherCancel"><i class="fa-regular fa-circle-xmark"></i> إلغاء</button>
+          <button class="btn" id="voucherSave" style="display:none"><i class="fa-regular fa-floppy-disk"></i> حفظ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unsaved Changes Confirmation Modal (Elegant Style) -->
+    <div class="permission-denied-modal" id="unsavedChangesModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="permission-denied-backdrop" data-close></div>
+      <div class="permission-denied-content" style="max-width:420px">
+        <div class="permission-denied-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding:28px 24px 24px;">
+          <div class="permission-denied-icon" style="width:72px; height:72px; font-size:32px; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); border:3px solid rgba(255,255,255,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+            <i class="fa-solid fa-file-pen"></i>
+          </div>
+          <h3 class="permission-denied-title" id="unsavedChangesTitle" style="font-size:18px; margin-top:16px; text-shadow:0 2px 4px rgba(0,0,0,0.1);">تغييرات غير محفوظة</h3>
+          <button id="unsavedChangesClose" aria-label="إغلاق" style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.2); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; backdrop-filter:blur(4px);">
+            <i class="fa-solid fa-xmark" style="font-size:14px;"></i>
+          </button>
+        </div>
+        <div class="permission-denied-body" style="padding:28px 24px 20px;">
+          <p class="permission-denied-message" id="unsavedChangesMessage" style="font-size:15px; font-weight:600; color:var(--text); margin:0 0 10px 0; line-height:1.7;">لديك تعديلات لم يتم حفظها بعد</p>
+          <p class="permission-denied-detail" id="unsavedChangesDetail" style="font-size:13px; color:var(--subtle); margin:0; line-height:1.7; opacity:0.85;">هل تريد المتابعة والخروج بدون حفظ التغييرات؟</p>
+        </div>
+        <div class="permission-denied-footer" style="padding:16px 24px 24px; display:flex; gap:12px; flex-direction:row-reverse;">
+          <button id="unsavedStayBtn" type="button" style="flex:1; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; font-size:14px; font-weight:600; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(16,185,129,0.3); transition:all 0.2s;">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            <span id="unsavedStayBtnText">العودة للتعديل</span>
+          </button>
+          <button id="unsavedLeaveBtn" type="button" style="flex:1; background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color:white; border:none; font-size:14px; font-weight:500; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(107,114,128,0.25); transition:all 0.2s;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span id="unsavedLeaveBtnText">خروج بدون حفظ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal (Voucher list item) -->
+    <div class="modal" id="confirmVoucherDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span>تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmVoucherDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+          </div>
+          <p id="confirmVoucherDelMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6">هل أنت متأكد من حذف سند الصرف؟</p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmVoucherDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-check"></i> نعم، احذف
+          </button>
+          <button class="btn secondary" id="confirmVoucherDelNo" style="font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-xmark"></i> إلغاء الأمر
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Lookup Modal (F9) -->
+    <div class="modal" id="lookupCustomerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3>اختر عميل</h3>
+          <button class="icon-btn" id="lookupCustomerClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span>بحث عن عميل</span>
+            <input type="search" id="lc_search" placeholder="اكتب رقم العميل أو اسم العميل للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="lc_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th style="width:140px">رقم العميل</th>
+                  <th>اسم العميل</th>
+                </tr>
+              </thead>
+              <tbody id="lc_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupCustomerCancel"><i class="fa-regular fa-circle-xmark"></i> إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="../../shared-styles/debt-limit-modal.js"></script>
+    <script src="../../shared-styles/inactive-entity-modal.js"></script>
+    <script src="../main/edit-confirm.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

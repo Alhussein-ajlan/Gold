@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="quickStatement.title">كشف حساب سريع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+</head>
+<body>
+  <main class="dashboard">
+    <section class="panel active" id="panel-quick-statement">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="page-header-icon">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="page-header-content">
+          <h1 data-i18n="quickStatement.title">كشف حساب سريع</h1>
+          <p data-i18n="quickStatement.subtitle">عرض أرصدة الحسابات حسب العيارات</p>
+        </div>
+      </div>
+      
+      <!-- Filters Card -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <!-- نوع الكيان -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-sitemap"></i> <span data-i18n="quickStatement.filters.type">النوع</span></label>
+            <select id="q_type">
+              <option value="customer" data-i18n="quickStatement.types.customer">عميل</option>
+              <option value="supplier" data-i18n="quickStatement.types.supplier">مورد</option>
+              <option value="account" data-i18n="quickStatement.types.account">حساب</option>
+            </select>
+          </div>
+          
+          <!-- رقم الكيان -->
+          <div class="filter-group filter-id">
+            <label><i class="fa-solid fa-hashtag"></i> <span data-i18n="quickStatement.filters.number">الرقم</span></label>
+            <input type="text" id="q_ref_id" inputmode="numeric" placeholder="F9">
+          </div>
+          
+          <!-- اسم الكيان -->
+          <div class="filter-group filter-name">
+            <label><i class="fa-regular fa-id-card"></i> <span data-i18n="quickStatement.filters.name">الاسم</span></label>
+            <input type="text" id="q_entity_name" readonly data-i18n-placeholder="quickStatement.filters.namePlaceholder" placeholder="اسم العميل/المورد/الحساب">
+          </div>
+          
+          <!-- من تاريخ -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-calendar-days"></i> <span data-i18n="quickStatement.filters.dateFrom">من تاريخ</span></label>
+            <input type="date" id="q_from">
+          </div>
+          
+          <!-- إلى تاريخ -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-calendar-check"></i> <span data-i18n="quickStatement.filters.dateTo">إلى تاريخ</span></label>
+            <input type="date" id="q_to">
+          </div>
+          
+          <!-- رصيد افتتاحي -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-door-open"></i> <span data-i18n="quickStatement.filters.openingBalance">رصيد افتتاحي</span></label>
+            <select id="q_include_opening">
+              <option value="1" data-i18n="quickStatement.filters.yes">نعم</option>
+              <option value="0" data-i18n="quickStatement.filters.no">لا</option>
+            </select>
+          </div>
+          
+          <!-- عيار رصيد الذهب -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-medal gold-icon"></i> <span data-i18n="quickStatement.filters.goldBasis">عيار رصيد الذهب</span></label>
+            <select id="q_gold_basis">
+              <option value="18">18</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="24" selected>24</option>
+            </select>
+          </div>
+          
+          <!-- عيار رصيد الفضة -->
+          <div class="filter-group">
+            <label><i class="fa-solid fa-coins silver-icon"></i> <span data-i18n="quickStatement.filters.silverBasis">عيار رصيد الفضة</span></label>
+            <select id="q_silver_basis">
+              <option value="800">800</option>
+              <option value="900">900</option>
+              <option value="925">925</option>
+              <option value="999" selected>999</option>
+            </select>
+          </div>
+          
+          <!-- زر العرض -->
+          <div class="filter-group filter-btn">
+            <button class="view-btn premium-view-btn" id="q_view_btn" type="button">
+              <i class="fa-solid fa-chart-column"></i>
+              <span data-i18n="quickStatement.filters.view">عرض</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Results -->
+      <div class="results-section" id="results_container" style="display:none">
+        <!-- Summary Cards Row -->
+        <div class="summary-row">
+          <div class="summary-box gold-box">
+            <div class="summary-icon"><i class="fa-solid fa-medal"></i></div>
+            <div class="summary-info">
+              <span class="summary-title" data-i18n="quickStatement.summary.goldTotal">إجمالي الذهب</span>
+              <span class="summary-amount" id="goldTotalValue">0.00 جم (عيار 24)</span>
+            </div>
+          </div>
+          
+          <div class="summary-box silver-box">
+            <div class="summary-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="summary-info">
+              <span class="summary-title" data-i18n="quickStatement.summary.silverTotal">إجمالي الفضة</span>
+              <span class="summary-amount" id="silverTotalValue">0.00 جم (عيار 999)</span>
+            </div>
+          </div>
+          
+          <div class="summary-box cash-box">
+            <div class="summary-icon"><i class="fa-solid fa-wallet"></i></div>
+            <div class="summary-info">
+              <span class="summary-title" data-i18n="quickStatement.summary.cashBalance">رصيد الريال</span>
+              <span class="summary-amount" id="cashTotalValue">0.00 ريال</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tables Row -->
+        <div class="tables-row">
+          <!-- Gold Table -->
+          <div class="data-card gold-card">
+            <div class="data-card-header">
+              <i class="fa-solid fa-medal"></i>
+              <span data-i18n="quickStatement.tables.gold">الذهب</span>
+            </div>
+            <div class="data-card-body">
+              <table id="goldTable">
+                <thead>
+                  <tr>
+                    <th data-i18n="quickStatement.tables.karat">العيار</th>
+                    <th data-i18n="quickStatement.tables.debit">مدين</th>
+                    <th data-i18n="quickStatement.tables.credit">دائن</th>
+                    <th data-i18n="quickStatement.tables.net">صافي</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Silver Table -->
+          <div class="data-card silver-card">
+            <div class="data-card-header">
+              <i class="fa-solid fa-coins"></i>
+              <span data-i18n="quickStatement.tables.silver">الفضة</span>
+            </div>
+            <div class="data-card-body">
+              <table id="silverTable">
+                <thead>
+                  <tr>
+                    <th data-i18n="quickStatement.tables.karat">العيار</th>
+                    <th data-i18n="quickStatement.tables.debit">مدين</th>
+                    <th data-i18n="quickStatement.tables.credit">دائن</th>
+                    <th data-i18n="quickStatement.tables.net">صافي</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- نافذة البحث المنبثقة -->
+  <div class="modal" id="lookupModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h3 id="lookupTitle"><i class="fa-solid fa-search"></i> <span data-i18n="quickStatement.lookup.search">بحث</span></h3>
+        <button class="icon-btn" id="lookupClose" data-i18n-aria="quickStatement.lookup.close" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="lookup-tabs">
+          <button class="lookup-tab active" data-type="customer"><i class="fa-solid fa-user"></i> <span data-i18n="quickStatement.types.customer">عميل</span></button>
+          <button class="lookup-tab" data-type="supplier"><i class="fa-solid fa-truck"></i> <span data-i18n="quickStatement.types.supplier">مورد</span></button>
+          <button class="lookup-tab" data-type="account"><i class="fa-solid fa-building-columns"></i> <span data-i18n="quickStatement.types.account">حساب</span></button>
+        </div>
+        <label class="form-field" style="margin:12px 0">
+          <input type="search" id="lookupSearch" data-i18n-placeholder="quickStatement.lookup.searchPlaceholder" placeholder="اكتب رقم أو اسم للبحث...">
+        </label>
+        <div class="table-responsive" style="max-height:50vh; overflow:auto">
+          <table class="table" id="lookupTable">
+            <thead>
+              <tr>
+                <th style="width:100px" data-i18n="quickStatement.filters.number">الرقم</th>
+                <th data-i18n="quickStatement.filters.name">الاسم</th>
+              </tr>
+            </thead>
+            <tbody id="lookupBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="lookupCancel"><i class="fa-regular fa-circle-xmark"></i> <span data-i18n="quickStatement.lookup.cancel">إلغاء</span></button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="../../shared-styles/number-formatter.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

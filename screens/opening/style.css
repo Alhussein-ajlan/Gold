@@ -1,0 +1,646 @@
+@import url('../customers/style.css');
+
+:root{--ring: color-mix(in oklab, var(--primary) 25%, transparent)}
+
+/* تطبيق خط Cairo على عناصر الإدخال والجداول */
+#panel-opening input[type="text"],
+#panel-opening input[type="number"],
+#panel-opening input[type="date"],
+#panel-opening input[type="time"],
+#panel-opening select,
+#panel-opening textarea,
+#panel-opening option,
+#panel-opening button,
+#panel-opening label,
+#panel-opening .form-field,
+#panel-opening .totals-card,
+#openingTable input,
+#openingTable select,
+#openingTable option,
+#openingTable td,
+#openingTable th,
+#openingTable button,
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="email"],
+.modal input[type="tel"],
+.modal input[type="search"],
+.modal select,
+.modal option,
+.modal textarea,
+.modal td,
+.modal th,
+.modal button,
+.modal label,
+.modal .modal-body,
+.modal .modal-header,
+.modal .modal-footer,
+#o_lookupAccount .modal-body,
+.toast,
+.o-hint {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* إصلاح ارتفاع النص في القوائم المنسدلة */
+#panel-opening select,
+#openingTable select,
+.modal select {
+  line-height: 2.2 !important;
+  vertical-align: middle !important;
+  padding-top: 5px !important;
+}
+
+/* إصلاح ارتفاع النص في خيارات القوائم المنسدلة */
+#panel-opening option,
+#openingTable option,
+.modal option {
+  line-height: 1.8 !important;
+  padding: 8px 12px !important;
+}
+
+/* حجم أكبر قليلاً للعناوين في الجدول */
+#openingTable th {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+/* إزالة التمرير من الشاشة */
+body {
+  overflow-y: hidden !important;
+  height: 100vh !important;
+  font-family:Cairo,Arial,sans-serif;
+}
+
+#panel-opening {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  position: relative !important;
+  --opening-totals-height: 72px;
+  --opening-totals-left: 0px;
+  --opening-totals-width: 100vw;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+
+#panel-opening > .toolbar {
+  flex-shrink: 0;
+}
+
+#panel-opening > .grid.cards-3 {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: calc(var(--opening-totals-height, 72px) + 1px);
+  margin-bottom: 0;
+  box-sizing: border-box;
+}
+
+/* تطبيق نفس تصميم قائمة العملاء تماماً */
+#opening-grid {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+#panel-opening .card.form-card.grid-span-3.fullwide {
+  margin-bottom: 10px !important;
+}
+
+#panel-opening #opening-grid {
+  margin-bottom: 0 !important;
+}
+
+#opening-grid .table-head {
+  flex-shrink: 0;
+}
+
+#opening-grid .table-responsive {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+/* تأكد من أن الجدول يأخذ كامل المساحة */
+#opening-grid.table-card.fullwide {
+  overflow: hidden;
+}
+
+/* أنماط إضافية للجدول */
+#obTable{
+  min-width:1100px;
+}
+#obTable input[type="text"],
+#obTable input[type="number"],
+#obTable select{
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  min-height: 42px;
+  font-weight: 600;
+}
+
+/* Readonly fields */
+#obTable input[readonly] {
+  background: var(--card);
+  cursor: not-allowed;
+}
+
+/* Select dropdowns */
+#obTable select {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+#obTable input[type="text"]:focus,
+#obTable select:focus{ border-color:var(--primary); box-shadow:0 0 0 6px var(--ring); }
+
+/* Dark mode adjustments - Unified styling like invoices */
+html[data-theme='dark'] {
+  #obTable input[type="number"],
+  #obTable input[type="text"],
+  #obTable select{
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  #obTable input[readonly] {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  /* Amount field dark mode */
+  #obTable tbody input[name="amount"] {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, var(--primary) 8%, #1f2937), 
+      #1f2937
+    ) !important;
+    color: #f9fafb !important;
+    border-color: color-mix(in oklab, var(--primary) 45%, transparent) !important;
+  }
+  
+  #obTable tbody input[name="amount"]:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, var(--primary) 12%, #1f2937), 
+      #1f2937
+    ) !important;
+    color: #f9fafb !important;
+  }
+  
+  #obTable tbody input[name="amount"]::placeholder {
+    color: color-mix(in oklab, var(--primary) 50%, transparent);
+  }
+  
+  /* Gold field dark mode */
+  #obTable tbody input[name="weight"] {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 12%, #1f2937), 
+      color-mix(in oklab, #ff8c00 8%, #1f2937)
+    ) !important;
+    color: #f9fafb !important;
+    border-color: color-mix(in oklab, #ffa500 45%, transparent) !important;
+  }
+  
+  #obTable tbody input[name="weight"]:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+  }
+  
+  #obTable tbody input[name="weight"]::placeholder {
+    color: color-mix(in oklab, #ffa500 50%, transparent);
+  }
+  
+  /* Karat field dark mode */
+  #obTable tbody input[name="karat"] {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 12%, #1f2937), 
+      color-mix(in oklab, #ff8c00 8%, #1f2937)
+    ) !important;
+    color: #f9fafb !important;
+    border-color: color-mix(in oklab, #ffa500 45%, transparent) !important;
+  }
+  
+  #obTable tbody input[name="karat"]:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+  }
+  
+  #obTable tbody input[name="karat"]::placeholder {
+    color: color-mix(in oklab, #ffa500 50%, transparent);
+  }
+  
+  /* Gold and Karat headers dark mode */
+  #obTable thead th:nth-child(7),
+  #obTable thead th:nth-child(8) {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+    color: #ffd700 !important;
+  }
+}
+
+/* Center align number fields */
+#obTable input[name="customer_id"],
+#obTable input[name="supplier_id"],
+#obTable input[name="account_id"],
+#obTable input[name="amount"],
+#obTable input[name="weight"] { 
+  text-align:center;
+}
+/* Prevent overlap: keep fixed layout widths and no flex-shrink */
+#obTable td, #obTable th{ white-space:nowrap }
+#obTable td > *{ max-height:36px }
+#obTable select.shrink{ width:100% }
+/* Column widths */
+#obTable thead th:nth-child(1){ width:110px }
+#obTable thead th:nth-child(2){ width:110px }
+#obTable thead th:nth-child(3){ width:110px }
+#obTable thead th:nth-child(4){ width:220px }
+#obTable thead th:nth-child(5){ width:110px }
+#obTable thead th:nth-child(6){ 
+  width:120px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 12%, var(--card)), 
+    color-mix(in oklab, var(--primary) 8%, var(--card))
+  ) !important;
+  color: var(--primary) !important;
+  border-bottom: 2px solid color-mix(in oklab, var(--primary) 45%, transparent) !important;
+}
+#obTable thead th:nth-child(7){ 
+  width:120px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 12%, var(--card)), 
+    color-mix(in oklab, #ff8c00 8%, var(--card))
+  ) !important;
+  color: #ff8c00 !important;
+  border-bottom: 2px solid color-mix(in oklab, #ffa500 55%, transparent) !important;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.3) !important;
+}
+#obTable thead th:nth-child(8){ 
+  width:90px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 12%, var(--card)), 
+    color-mix(in oklab, #ff8c00 8%, var(--card))
+  ) !important;
+  color: #ff8c00 !important;
+  border-bottom: 2px solid color-mix(in oklab, #ffa500 55%, transparent) !important;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.3) !important;
+}
+#obTable thead th:nth-child(9){ width:320px }
+#obTable thead th:nth-child(10){ width:64px }
+
+/* Enhanced field styling - Amount field */
+#obTable tbody input[name="amount"] {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 3%, var(--card)), 
+    var(--card)
+  ) !important;
+  border: 2px solid color-mix(in oklab, var(--primary) 25%, transparent) !important;
+  color: var(--text) !important;
+}
+
+#obTable tbody input[name="amount"]:focus {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 5%, var(--card)), 
+    var(--card)
+  ) !important;
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary) 12%, transparent), 
+              0 4px 12px rgba(0, 169, 157, 0.15) !important;
+}
+
+#obTable tbody input[name="amount"]::placeholder {
+  color: color-mix(in oklab, var(--primary) 40%, transparent);
+  font-weight: 600;
+}
+
+/* Gold field styling - Golden border */
+#obTable tbody input[name="weight"] {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 5%, var(--card)), 
+    color-mix(in oklab, #ffa500 3%, var(--card))
+  ) !important;
+  border: 2px solid color-mix(in oklab, #ffa500 35%, transparent) !important;
+  color: var(--text) !important;
+  box-shadow: 0 2px 8px rgba(255, 165, 0, 0.15) !important;
+}
+
+#obTable tbody input[name="weight"]:focus {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 0 6px rgba(255, 140, 0, 0.15), 
+              0 4px 12px rgba(255, 140, 0, 0.25) !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 8%, var(--card)), 
+    color-mix(in oklab, #ffa500 5%, var(--card))
+  ) !important;
+}
+
+#obTable tbody input[name="weight"]::placeholder {
+  color: color-mix(in oklab, #ffa500 40%, transparent);
+  font-weight: 600;
+}
+
+/* Karat field styling */
+#obTable tbody input[name="karat"] {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 5%, var(--card)), 
+    color-mix(in oklab, #ffa500 3%, var(--card))
+  ) !important;
+  border: 2px solid color-mix(in oklab, #ffa500 35%, transparent) !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  box-shadow: 0 2px 8px rgba(255, 165, 0, 0.15) !important;
+  width: 80px !important;
+  text-align: center !important;
+  font-size: 16px !important;
+}
+
+#obTable tbody input[name="karat"]:focus {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 0 6px rgba(255, 140, 0, 0.15), 
+              0 4px 12px rgba(255, 140, 0, 0.25) !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 8%, var(--card)), 
+    color-mix(in oklab, #ffa500 5%, var(--card))
+  ) !important;
+}
+
+#obTable tbody input[name="karat"]::placeholder {
+  color: color-mix(in oklab, #ffa500 40%, transparent);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Karat datalist dropdown styling */
+#ob_karat_list option {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  color: #ff8c00;
+}
+
+/* Totals card - ثابتة أسفل الشاشة - مطابقة لشاشة القيود */
+#ob_totals{
+  flex-shrink: 0;
+  align-self: stretch;
+  position: fixed !important;
+  left: var(--opening-totals-left, 0px) !important;
+  right: auto !important;
+  bottom: 0 !important;
+  inset-block: auto 0 !important;
+  z-index: 20 !important;
+  width: var(--opening-totals-width, 100vw) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  border-top: 0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  backdrop-filter: saturate(1.05) blur(8px) !important;
+  background: var(--card) !important;
+}
+
+#panel-opening > #ob_totals{
+  margin-bottom: 0 !important;
+}
+
+#ob_totals > div{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px 20px !important;
+  flex-wrap: wrap !important;
+  padding: 2px 0 !important;
+}
+
+/* Delete icon style */
+#obTable .icon-btn.act-delete, #obTable .icon-btn.act-delete i{ color: var(--error) }
+#obTable .icon-btn.act-delete:hover{ background: color-mix(in oklab, var(--error) 35%, transparent); color:#fff }
+#obTable .icon-btn.act-delete:hover i{ color:#fff }
+/* Add Row button size to match all buttons */
+#ob_add_line{ border-radius:10px; min-width:140px; white-space:nowrap }
+
+/* Top-right pager (elegant container) */
+.toolbar{ position:relative }
+.toolbar .pager{ position:absolute; top:-12px; inset-inline-end:-4px; display:flex; align-items:center; gap:8px; z-index:2; padding:8px 14px; background:linear-gradient(135deg, rgba(10, 163, 154, 0.12) 0%, rgba(10, 163, 154, 0.06) 100%); border:1px solid rgba(10, 163, 154, 0.25); border-radius:16px; backdrop-filter:blur(12px); box-shadow:0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.05) inset, 0 1px 0 rgba(255, 255, 255, 0.1) inset }
+.toolbar .pager .btn.icon{ width:36px; height:36px; padding:0; box-sizing:border-box; border-radius:12px; border:1px solid color-mix(in oklab, var(--ring,#7cd2c6) 55%, #000); background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.35));
+  display:grid; place-items:center; text-align:center; color:var(--text); box-shadow:0 8px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .12s ease, box-shadow .2s ease, background .2s ease }
+.toolbar .pager .btn.icon i{ display:flex; align-items:center; justify-content:center; width:18px; height:18px; color:var(--primary,#0aa39a); font-size:18px; line-height:1; vertical-align:middle }
+.toolbar .pager .btn.icon:hover{ transform:translateY(-1px); box-shadow:0 10px 28px rgba(0,0,0,.09), 0 0 0 6px color-mix(in oklab, var(--primary,#0aa39a) 25%, transparent) }
+.toolbar .pager .btn.icon:active{ transform:translateY(0) }
+.toolbar .pager .btn.icon:disabled{ opacity:.45; filter:saturate(.2); cursor:not-allowed }
+.toolbar .pager .counter{ min-width:86px; height:36px; padding:0 12px; display:grid; place-items:center; border-radius:12px; border:1px solid color-mix(in oklab, var(--ring,#7cd2c6) 45%, #000); background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.25)); box-shadow:inset 0 1px 0 rgba(255,255,255,.5) }
+.toolbar .pager .nav-id, #ob_nav_id{ width:110px; height:36px; border-radius:12px; border:1px solid color-mix(in oklab, var(--ring,#7cd2c6) 45%, #000); background:rgba(255,255,255,.6); padding:0 10px; outline:none; transition:box-shadow .15s ease, border-color .15s ease }
+#ob_nav_id:focus{ border-color:#ffbf3b; box-shadow:0 0 0 2px #ffbf3b, 0 0 0 8px color-mix(in oklab, var(--primary) 30%, transparent) }
+
+/* Date & Time styles are now in shared-styles/date-time-inputs.css */
+
+/* Modal search input styling (golden focus ring) */
+.modal .modal-body input[type="text"],
+.modal .modal-body input[type="search"]{
+  border:1.5px solid color-mix(in oklab, var(--primary) 45%, var(--border)); border-radius:14px;
+  background:color-mix(in oklab, var(--bg-muted) 96%, transparent); color:var(--text);
+  outline:none; transition:border-color .15s ease, box-shadow .2s ease, background-color .15s ease
+}
+.modal .modal-body input[type="text"]:focus,
+.modal .modal-body input[type="search"]:focus{
+  border-color:#ffbf3b; /* gold */
+  box-shadow:0 0 0 2px #ffbf3b, 0 0 0 8px color-mix(in oklab, var(--primary) 35%, transparent);
+}
+
+/* ===== Dark mode visibility tweaks ===== */
+html[data-theme='dark'] {
+  .toolbar .pager .btn.icon{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff); background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35)); box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05) }
+  .toolbar .pager .btn.icon i{ color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%) }
+  .toolbar .pager .counter{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35)); color: color-mix(in oklab, #ffffff 85%, var(--text,#dfe7e6) 15%) }
+  .toolbar .pager .nav-id, #ob_nav_id{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); background: rgba(60,60,60,.65); color: #f5f7f6 }
+  #ob_totals{ box-shadow:0 8px 24px rgba(0,0,0,0.5) }
+  /* Date & Time dark mode is in shared-styles/date-time-inputs.css */
+}
+:root[data-theme="dark"] .toolbar .pager .btn.icon{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff); background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35)); box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05) }
+:root[data-theme="dark"] .toolbar .pager .btn.icon i{ color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%) }
+:root[data-theme="dark"] .toolbar .pager .counter{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35)); color: color-mix(in oklab, #ffffff 85%, var(--text,#dfe7e6) 15%) }
+:root[data-theme="dark"] .toolbar .pager .nav-id, :root[data-theme="dark"] #ob_nav_id{ border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); background: rgba(60,60,60,.65); color: #f5f7f6 }
+:root[data-theme="dark"] #ob_totals{ box-shadow:0 8px 24px rgba(0,0,0,0.5) }
+
+/* Button styles are now in shared-styles/button-styles.css */
+
+/* Themed scrollbars (different in light vs dark) */
+:root[data-theme='light'] .hv-lines-responsive::-webkit-scrollbar,
+:root[data-theme='light'] body::-webkit-scrollbar{ width:10px; height:10px; background: #e9eef4 }
+:root[data-theme='light'] .hv-lines-responsive::-webkit-scrollbar-thumb,
+:root[data-theme='light'] body::-webkit-scrollbar-thumb{ background: #9aa9b8; border:2px solid #e9eef4; border-radius:10px }
+:root[data-theme='light'] .hv-lines-responsive::-webkit-scrollbar-thumb:hover,
+:root[data-theme='light'] body::-webkit-scrollbar-thumb:hover{ background: #7f91a3 }
+
+:root[data-theme='dark'] .hv-lines-responsive::-webkit-scrollbar,
+:root[data-theme='dark'] body::-webkit-scrollbar{ width:10px; height:10px; background: #0f1320 }
+:root[data-theme='dark'] .hv-lines-responsive::-webkit-scrollbar-thumb,
+:root[data-theme='dark'] body::-webkit-scrollbar-thumb{ background: #2d3a55; border:2px solid #0f1320; border-radius:10px }
+:root[data-theme='dark'] .hv-lines-responsive::-webkit-scrollbar-thumb:hover,
+:root[data-theme='dark'] body::-webkit-scrollbar-thumb:hover{ background: #3a4b6e }
+
+/* Toast notifications are now in shared-styles/toast-notifications.css */
+
+/* ===== Chevron Connected Buttons Style ===== */
+.toolbar .actions {
+  display: flex;
+  gap: 0 !important;
+  align-items: center;
+}
+
+html[dir='ltr'] .toolbar .actions,
+:root[dir='ltr'] .toolbar .actions {
+  flex-direction: row-reverse;
+}
+
+.toolbar .actions .btn {
+  position: relative;
+  margin-left: -8px !important;
+  height: 60px !important;
+  min-width: 90px !important;
+  width: auto !important;
+  padding: 6px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+/* إظهار النصوص أسفل الأيقونات */
+.toolbar .actions .btn span {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.toolbar .actions .btn span i {
+  font-size: 20px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+/* أول زر - مسطح من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:first-child {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%) !important;
+  padding-right: 24px !important;
+  padding-left: 16px !important;
+  margin-left: 0 !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+/* آخر زر - مسطح من اليسار، محفور من اليمين */
+.toolbar .actions .btn:last-child {
+  clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%, 88% 50%) !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  border-radius: 10px 0 0 10px !important;
+}
+
+/* الأزرار الوسطى - محفور من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:not(:first-child):not(:last-child) {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%, 88% 50%) !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+
+.toolbar .actions .btn:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+  filter: brightness(1.15) !important;
+}
+
+.toolbar .actions .btn:active {
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Tooltip عند التمرير */
+.toolbar .actions .btn::before {
+  display: none !important;
+}
+
+/* إلغاء التأثيرات من shared-styles */
+.toolbar .actions .btn::after {
+  display: none !important;
+}
+
+/* ألوان مخصصة للأزرار */
+.toolbar .actions .btn.primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+}
+
+/* زر الحفظ بلون مختلف */
+.toolbar .actions .btn.primary#obtnSave {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important;
+  border-color: #0d9488 !important;
+}
+
+.toolbar .actions .btn.secondary {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}
+
+.toolbar .actions .btn.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #dc2626 !important;
+}
+
+.toolbar .actions .btn.print {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-color: #2563eb !important;
+}
+
+.toolbar .actions .btn.btn-journal-view {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border-color: #d97706 !important;
+}
+
+.toolbar .actions .btn.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  border-color: #128c7e !important;
+}
+
+.toolbar .actions .btn.close-screen {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}

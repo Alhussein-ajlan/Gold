@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>المراكز المفتوحة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <script src="../../shared-styles/number-formatter.js"></script>
+  </head>
+  <body>
+    <main class="dashboard open-positions-screen">
+      <section class="panel active">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-header-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="page-header-content">
+              <h1 data-i18n="openPositions.title">المراكز المفتوحة</h1>
+              <p data-i18n="openPositions.subtitle">متابعة مراكز العملاء والموردين المفتوحة</p>
+            </div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn-refresh" id="btnRefresh" title="تحديث البيانات">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span data-i18n="openPositions.actions.refresh">تحديث</span>
+            </button>
+            <button class="btn-export" id="btnExportExcel" data-i18n-title="openPositions.actions.exportExcel" title="تصدير Excel">
+              <i class="fa-regular fa-file-excel"></i>
+            </button>
+            <button class="btn-export" id="btnExportPdf" data-i18n-title="openPositions.actions.exportPDF" title="تصدير PDF">
+              <i class="fa-regular fa-file-pdf"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- البطاقات الرئيسية -->
+        <div class="cards-grid">
+          <!-- بطاقة سعر الأونصة MT5 - نفس بطاقة لوحة التحكم -->
+          <div class="card form-card db-card xau-card">
+            <div class="xau-header">
+              <div class="xau-title">
+                <div class="ico"><i class="fa-solid fa-gem"></i></div>
+                <div>
+                  <h3 id="xauTitleText" data-i18n="openPositions.cards.xauPrice">سعر أونصة الذهب</h3>
+                  <div class="sub" id="xauSubText">XAU/USD (Spot)</div>
+                </div>
+              </div>
+              <div class="xau-actions">
+                <span class="xau-badge" id="xauMarketBadge"><i class="fa-solid fa-circle"></i> —</span>
+                <button class="xau-refresh xau-reconnect" id="btnMt5ReconnectXau" hidden><i class="fa-solid fa-plug-circle-bolt"></i><span data-i18n="openPositions.cards.reconnect">إعادة اتصال MT5</span></button>
+                <button class="xau-refresh" id="btnRefreshXau"><i class="fa-solid fa-arrows-rotate"></i><span data-i18n="openPositions.actions.refresh">تحديث</span></button>
+              </div>
+            </div>
+
+            <div class="xau-price-row">
+              <div class="xau-price" id="xauPrice">—</div>
+              <div class="xau-change" id="xauChange">—</div>
+            </div>
+
+            <canvas class="xau-chart" id="xauChart"></canvas>
+
+            <div class="xau-grid">
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-clock"></i></div>
+                <div>
+                  <div class="lbl" data-i18n="openPositions.cards.lastUpdate">آخر تحديث</div>
+                  <div class="val" id="xauLastUpdate">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-solid fa-door-open"></i></div>
+                <div>
+                  <div class="lbl" id="xauNextLabel">—</div>
+                  <div class="val xau-countdown" id="xauCountdown">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-calendar"></i></div>
+                <div>
+                  <div class="lbl" data-i18n="openPositions.cards.eventTime">موعد الحدث</div>
+                  <div class="val" id="xauNextTime">—</div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-sub" id="xauMeta" style="margin-top:10px">—</div>
+          </div>
+
+          <!-- بطاقة ملخص المراكز -->
+          <div class="stat-card summary-card" id="summaryCard">
+            <div class="card-header">
+              <div class="card-icon info">
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+              <div class="card-title">
+                <h3 data-i18n="openPositions.cards.summary">ملخص المراكز</h3>
+              </div>
+            </div>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <div class="summary-icon cash-debit">
+                  <i class="fa-solid fa-arrow-trend-down"></i>
+                </div>
+                <div class="summary-data">
+                  <span class="summary-value" id="totalCashDebit">0</span>
+                  <span class="summary-label" data-i18n="openPositions.cards.cashDebit">مدين نقداً</span>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-icon gold-credit">
+                  <i class="fa-solid fa-arrow-trend-up"></i>
+                </div>
+                <div class="summary-data">
+                  <span class="summary-value" id="totalGoldCredit">0</span>
+                  <span class="summary-label" data-i18n="openPositions.cards.goldCredit">دائن ذهب</span>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-icon cash-credit">
+                  <i class="fa-solid fa-arrow-trend-up"></i>
+                </div>
+                <div class="summary-data">
+                  <span class="summary-value" id="totalCashCredit">0</span>
+                  <span class="summary-label" data-i18n="openPositions.cards.cashCredit">دائن نقداً</span>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-icon gold-debit">
+                  <i class="fa-solid fa-arrow-trend-down"></i>
+                </div>
+                <div class="summary-data">
+                  <span class="summary-value" id="totalGoldDebit">0</span>
+                  <span class="summary-label" data-i18n="openPositions.cards.goldDebit">مدين ذهب</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة الحسابات الآمنة -->
+          <div class="stat-card safe-card" id="safeCard">
+            <div class="card-glow success"></div>
+            <div class="card-header">
+              <div class="card-icon success">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <div class="card-title">
+                <h3 data-i18n="openPositions.cards.safeAccounts">حسابات آمنة</h3>
+                <span class="badge success" id="safeCount">0 عميل</span>
+              </div>
+            </div>
+            <div class="stat-value success" id="safeAccountsTotal">0.00</div>
+            <div class="stat-label" data-i18n="openPositions.export.safeAccounts">إجمالي المراكز الآمنة (ر.س)</div>
+            <div class="stat-details">
+              <div class="detail-item">
+                <i class="fa-solid fa-user-check"></i>
+                <span data-i18n="openPositions.cards.customersCount">عدد العملاء:</span>
+                <strong id="safeCustomersCount">0</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-coins"></i>
+                <span data-i18n="openPositions.cards.totalCash">إجمالي الريال:</span>
+                <strong id="safeTotalCash">0.00</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span data-i18n="openPositions.cards.avgCoverage">متوسط التغطية:</span>
+                <strong id="avgCoveragePrice">0.00</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-weight-hanging"></i>
+                <span data-i18n="openPositions.cards.totalGold">إجمالي الذهب:</span>
+                <strong id="safeTotalGold">0.00</strong>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <div class="stat-rate" id="safeRate">
+                <i class="fa-solid fa-percent"></i>
+                <span data-i18n="openPositions.cards.rate">المعدل:</span>
+                <strong id="safeRateValue">0.00%</strong>
+              </div>
+              <div class="stat-position" id="safePosition">
+                <i class="fa-solid fa-chart-line"></i>
+                <span data-i18n="openPositions.cards.avgPosition">مركز العميل:</span>
+                <strong id="safePositionValue">0.0000</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة مطلوب التغطية -->
+          <div class="stat-card coverage-card" id="coverageCard">
+            <div class="card-glow danger"></div>
+            <div class="card-header">
+              <div class="card-icon danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="card-title">
+                <h3 data-i18n="openPositions.cards.needsCoverage">مطلوب التغطية</h3>
+                <span class="badge danger" id="coverageCount">0 عميل</span>
+              </div>
+            </div>
+            <div class="stat-value danger" id="totalCoverageRequired">0.00</div>
+            <div class="stat-label" data-i18n="openPositions.export.needsCoverage">إجمالي التغطية المطلوبة (ر.س)</div>
+            <div class="stat-details">
+              <div class="detail-item">
+                <i class="fa-solid fa-users"></i>
+                <span data-i18n="openPositions.cards.customersCount">عدد العملاء:</span>
+                <strong id="coverageCustomersCount">0</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-coins"></i>
+                <span data-i18n="openPositions.cards.totalCash">إجمالي الريال:</span>
+                <strong id="coverageTotalCash">0.00</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span data-i18n="openPositions.cards.avgCoverage">متوسط التغطية:</span>
+                <strong id="coverageAvgPrice">0.00</strong>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-weight-hanging"></i>
+                <span data-i18n="openPositions.cards.totalGold">إجمالي الذهب:</span>
+                <strong id="coverageGoldTotal">0.00 جم</strong>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <div class="stat-rate" id="coverageRate">
+                <i class="fa-solid fa-percent"></i>
+                <span data-i18n="openPositions.cards.rate">المعدل:</span>
+                <strong id="coverageRateValue">0.00%</strong>
+              </div>
+              <div class="stat-position" id="coveragePosition">
+                <i class="fa-solid fa-chart-line"></i>
+                <span data-i18n="openPositions.cards.avgPosition">مركز العميل:</span>
+                <strong id="coveragePositionValue">0.0000</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- تبويبات نوع المراكز -->
+        <div class="positions-tabs">
+          <button class="tab-btn active" data-tab="cash-debit-gold-credit">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span data-i18n="openPositions.tabs.sellPositions">مراكز البيع المفتوحة</span>
+            <span class="tab-count" id="tab1Count">0</span>
+          </button>
+          <button class="tab-btn" data-tab="gold-debit-cash-credit">
+            <i class="fa-solid fa-coins"></i>
+            <span data-i18n="openPositions.tabs.buyPositions">مراكز الشراء المفتوحة</span>
+            <span class="tab-count" id="tab2Count">0</span>
+          </button>
+        </div>
+
+        <!-- جدول المراكز المفتوحة -->
+        <div class="positions-table-wrapper">
+          <div class="table-header">
+            <div class="table-title">
+              <i class="fa-solid fa-table-list"></i>
+              <h3 id="tableTitle" data-i18n="openPositions.table.title">أطراف لهم ذهب وعليهم نقد</h3>
+            </div>
+            <div class="table-controls">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="searchInput" data-i18n-placeholder="openPositions.filters.search" placeholder="بحث عن عميل...">
+              </div>
+              <div class="filter-group">
+                <label>
+                  <span data-i18n="openPositions.filters.comparePrice">سعر المقارنة:</span>
+                  <input type="number" id="comparePrice" value="120.56" step="0.01" class="compare-price-input" style="width:65px">
+                </label>
+              </div>
+              <div class="filter-group">
+                <label>
+                  <span data-i18n="openPositions.filters.agreedRate">المعدل المتفق عليه %:</span>
+                  <input type="number" id="agreedRate" value="0" step="0.01" class="compare-price-input" style="width:55px">
+                </label>
+              </div>
+              <div class="filter-group">
+                <label>
+                  <span data-i18n="openPositions.filters.priceAdjustment">الإضافة/النقص:</span>
+                  <input type="number" id="priceAdjustment" value="0" step="1" class="compare-price-input" style="width:55px" data-i18n-title="openPositions.filters.priceAdjustmentHint" title="قيمة موجبة = إضافة، قيمة سالبة = نقص من سعر الأونصة">
+                </label>
+              </div>
+              <div class="filter-group">
+                <label>
+                  <span data-i18n="openPositions.filters.status">الحالة:</span>
+                  <select id="statusFilter" style="width:80px">
+                    <option value="all" data-i18n="openPositions.filters.all">الكل</option>
+                    <option value="danger" data-i18n="openPositions.filters.danger">تحذير</option>
+                    <option value="warning" data-i18n="openPositions.filters.warning">تنبيه</option>
+                    <option value="safe" data-i18n="openPositions.filters.safe">آمن</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="positions-table" id="positionsTable">
+              <thead>
+                <tr>
+                  <th class="th-num" data-i18n="openPositions.table.number">#</th>
+                  <th class="th-type" data-i18n="openPositions.table.type">النوع</th>
+                  <th class="th-id" data-i18n="openPositions.table.id">الرقم</th>
+                  <th class="th-name" data-i18n="openPositions.table.name">الاسم</th>
+                  <th class="th-cash" id="thCashCol">مدين ريال</th>
+                  <th class="th-gold" id="thGoldCol">دائن ذهب</th>
+                  <th class="th-coverage" data-i18n="openPositions.table.coveragePrice">التغطية على سعر</th>
+                  <th class="th-position" data-i18n="openPositions.table.customerPosition">مركز العميل</th>
+                  <th class="th-status" data-i18n="openPositions.table.status">الحالة</th>
+                  <th class="th-required" data-i18n="openPositions.table.requiredCoverage">المطلوب للتغطية</th>
+                  <th class="th-actions" data-i18n="openPositions.table.actions">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="positionsTableBody">
+                <!-- سيتم ملء البيانات ديناميكياً -->
+              </tbody>
+              <tfoot>
+                <tr class="totals-row">
+                  <td colspan="4" class="totals-label" data-i18n="openPositions.table.total">الإجمالي</td>
+                  <td id="footerCashTotal">0.00</td>
+                  <td id="footerGoldTotal">0.00</td>
+                  <td colspan="2"></td>
+                  <td></td>
+                  <td id="footerCoverageTotal">0.00</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- لا توجد بيانات -->
+          <div class="no-data-message" id="noDataMessage" style="display:none">
+          <!-- لا توجد بيانات -->
+          <div class="no-data-message" id="noDataMessage" style="display:none">
+            <i class="fa-solid fa-inbox"></i>
+            <p data-i18n="openPositions.table.noData">لا توجد مراكز مفتوحة</p>
+          </div>
+
+          <!-- شريط التحميل -->
+          <div class="loading-overlay" id="loadingOverlay" style="display:none">
+            <div class="loading-spinner">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              <span data-i18n="openPositions.messages.loading">جاري التحميل...</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./notification-template.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

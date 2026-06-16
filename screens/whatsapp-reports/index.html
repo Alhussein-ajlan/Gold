@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>إرسال الكشوفات عبر واتساب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="wa-hero">
+      <div class="wa-hero-bg"></div>
+      <div class="page-header wa-hero-header">
+        <div class="page-header-icon">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="page-header-text">
+          <h1 data-i18n="wa.header.title">واتساب للأعمال</h1>
+          <p data-i18n="wa.header.subtitle">إرسال كشوفات الحسابات وتنبيهات العمليات تلقائياً عبر واتساب</p>
+        </div>
+        <div class="page-header-status" id="waStatusBadge">
+          <span class="status-dot disconnected"></span>
+          <span id="waStatusText" data-i18n="wa.status.disconnected">غير متصل</span>
+        </div>
+      </div>
+
+      <div class="wa-hero-stats">
+        <div class="wa-stat-card" data-stat="recipients">
+          <div class="wa-stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="wa-stat-body">
+            <div class="wa-stat-label">المستلمون النشطون</div>
+            <div class="wa-stat-value" id="waStatRecipients">0</div>
+          </div>
+        </div>
+        <div class="wa-stat-card" data-stat="next">
+          <div class="wa-stat-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="wa-stat-body">
+            <div class="wa-stat-label">الإرسال القادم</div>
+            <div class="wa-stat-value" id="waStatNext">—</div>
+          </div>
+        </div>
+        <div class="wa-stat-card" data-stat="last">
+          <div class="wa-stat-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="wa-stat-body">
+            <div class="wa-stat-label">آخر إرسال</div>
+            <div class="wa-stat-value" id="waStatLast">—</div>
+          </div>
+        </div>
+        <div class="wa-stat-card" data-stat="events">
+          <div class="wa-stat-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="wa-stat-body">
+            <div class="wa-stat-label">الأحداث المفعلة</div>
+            <div class="wa-stat-value" id="waStatEvents">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav Pills -->
+    <div class="settings-nav-pills" id="waNavPills">
+      <span class="nav-indicator" id="waNavIndicator"></span>
+      <button class="nav-pill active" data-target="card-connection">
+        <i class="fa-solid fa-link"></i>
+        <span data-i18n="wa.nav.connection">الاتصال</span>
+      </button>
+      <button class="nav-pill" data-target="card-transactions">
+        <i class="fa-solid fa-bolt"></i>
+        <span data-i18n="wa.nav.transactions">تنبيهات العمليات</span>
+        <span class="nav-pill-badge" data-i18n="wa.nav.live">لحظي</span>
+      </button>
+      <button class="nav-pill" data-target="card-balances">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span data-i18n="wa.nav.balances">أرصدة العملاء والموردين</span>
+      </button>
+      <button class="nav-pill" data-target="card-promo">
+        <i class="fa-solid fa-bullhorn"></i>
+        <span data-i18n="wa.nav.promo">الرسائل الترويجية</span>
+      </button>
+    </div>
+
+    <!-- ===== بطاقة الاتصال ===== -->
+    <div class="wa-card card-connection active-card">
+      <h2 class="card-title">
+        <i class="fa-brands fa-whatsapp"></i> <span data-i18n="wa.connection.title">ربط واتساب</span>
+      </h2>
+
+      <div class="connection-layout">
+        <div class="qr-section" id="qrSection">
+          <div class="qr-box" id="qrBox">
+            <div class="qr-placeholder" id="qrPlaceholder">
+              <i class="fa-solid fa-qrcode"></i>
+              <p data-i18n="wa.connection.qrPlaceholder">اضغط "بدء الربط" لإظهار رمز QR</p>
+            </div>
+            <img id="qrImage" src="" alt="QR Code" style="display:none;">
+            <div class="qr-loading" id="qrLoading" style="display:none;">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              <p data-i18n="wa.connection.preparing">جاري التحضير...</p>
+            </div>
+            <div class="qr-success" id="qrSuccess" style="display:none;">
+              <i class="fa-solid fa-circle-check"></i>
+              <p data-i18n="wa.connection.connectedSuccess">تم الاتصال بنجاح</p>
+              <div class="qr-success-meta" id="qrSuccessMeta" style="display:none;"></div>
+            </div>
+          </div>
+          <div class="qr-instructions">
+            <h3><i class="fa-solid fa-circle-info"></i> <span data-i18n="wa.connection.howTitle">كيفية الربط</span></h3>
+            <ol>
+              <li data-i18n="wa.connection.step1">اضغط زر "بدء الربط" أدناه</li>
+              <li data-i18n="wa.connection.step2">افتح واتساب على هاتفك</li>
+              <li data-i18n="wa.connection.step3">اضغط النقاط الثلاث ← الأجهزة المرتبطة</li>
+              <li data-i18n="wa.connection.step4">اضغط "ربط جهاز" وامسح رمز QR</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="connection-actions">
+          <button class="btn-connect" id="btnStartConnection">
+            <i class="fa-solid fa-play"></i> <span data-i18n="wa.connection.btnStart">بدء الربط</span>
+          </button>
+          <button class="btn-disconnect" id="btnDisconnect" style="display:none;">
+            <i class="fa-solid fa-plug-circle-xmark"></i> <span data-i18n="wa.connection.btnDisconnect">فصل مؤقت</span>
+          </button>
+          <button class="btn-logout" id="btnLogout" style="display:none;">
+            <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="wa.connection.btnLogout">تسجيل خروج</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== بطاقة تنبيهات العمليات ===== -->
+    <div class="wa-card card-transactions">
+      <h2 class="card-title">
+        <i class="fa-solid fa-bolt"></i>
+        <span data-i18n="wa.tx.title">تنبيهات العمليات</span>
+        <span class="card-live-badge" data-i18n="wa.nav.live">لحظي</span>
+      </h2>
+
+      <div class="tx-notify-layout">
+
+        <!-- تفعيل رئيسي -->
+        <div class="toggle-row tx-master-toggle">
+          <div class="toggle-icon-wrap">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div class="toggle-info">
+            <strong data-i18n="wa.tx.enableTitle">تفعيل تنبيهات العمليات</strong>
+            <span class="toggle-desc" data-i18n="wa.tx.enableDesc">يُرسل إشعاراً فورياً عبر واتساب عند تنفيذ أي عملية مالية محددة</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="txNotifyEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- المستلمون -->
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-share-nodes"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.tx.recipientsTitle">المستلمون</div>
+              <div class="tx-section-sub" data-i18n="wa.tx.recipientsSub">أضف الأرقام والمجموعات التي ستستقبل إشعارات العمليات</div>
+            </div>
+          </div>
+          <div class="recipients-layout">
+            <div class="recipients-section">
+              <h3 class="section-sub-title">
+                <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="wa.tx.phonesTitle">أرقام الهاتف</span>
+              </h3>
+              <div class="add-recipient-row">
+                <input type="text" id="txPhoneInput" class="recipient-input" placeholder="966501234567  (بدون +)" data-i18n-placeholder="wa.promo.phonePlaceholder" dir="ltr">
+                <button class="btn-add-recipient" id="btnAddTxPhone">
+                  <i class="fa-solid fa-plus"></i> <span data-i18n="wa.recipients.btnAdd">إضافة</span>
+                </button>
+              </div>
+              <div class="recipients-list" id="txPhonesList">
+                <div class="empty-state" id="txPhonesEmpty">
+                  <i class="fa-solid fa-phone-slash"></i>
+                  <p data-i18n="wa.tx.phonesEmpty">لم تُضف أي أرقام بعد</p>
+                </div>
+              </div>
+            </div>
+            <div class="recipients-section">
+              <h3 class="section-sub-title">
+                <i class="fa-solid fa-people-group"></i> <span data-i18n="wa.tx.groupsTitle">مجموعات واتساب</span>
+              </h3>
+              <div class="add-recipient-row">
+                <input type="text" id="txGroupInput" class="recipient-input" placeholder="اسم المجموعة كما يظهر في واتساب" data-i18n-placeholder="wa.recipients.groupPlaceholder">
+                <button class="btn-add-recipient" id="btnAddTxGroup">
+                  <i class="fa-solid fa-plus"></i> <span data-i18n="wa.recipients.btnAdd">إضافة</span>
+                </button>
+              </div>
+              <div class="recipients-list" id="txGroupsList">
+                <div class="empty-state" id="txGroupsEmpty">
+                  <i class="fa-solid fa-people-group"></i>
+                  <p data-i18n="wa.tx.groupsEmpty">لم تُضف أي مجموعات بعد</p>
+                </div>
+              </div>
+              <div class="groups-hint">
+                <i class="fa-solid fa-circle-info"></i>
+                <span data-i18n="wa.recipients.groupsHint">اكتب اسم المجموعة بالضبط كما يظهر في واتساب</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- أنواع العمليات -->
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-sliders"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.tx.eventsTitle">العمليات المُشغِّلة للإشعار</div>
+              <div class="tx-section-sub" data-i18n="wa.tx.eventsSub">اختر العمليات التي تريد الإشعار عند تنفيذها</div>
+            </div>
+          </div>
+          <div class="tx-events-grid">
+            <div class="tx-event-item" data-evt-color="emerald">
+              <div class="tx-event-icon-wrap"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+              <div class="tx-event-body">
+                <span class="tx-event-name" data-i18n="wa.tx.evtSales">فاتورة بيع</span>
+                <span class="tx-event-desc" data-i18n="wa.tx.evtSalesDesc">بيع المنتجات للعملاء</span>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="txEvtSalesInvoice"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="tx-event-item" data-evt-color="blue">
+              <div class="tx-event-icon-wrap"><i class="fa-solid fa-file-circle-plus"></i></div>
+              <div class="tx-event-body">
+                <span class="tx-event-name" data-i18n="wa.tx.evtPurchase">فاتورة شراء</span>
+                <span class="tx-event-desc" data-i18n="wa.tx.evtPurchaseDesc">مشتريات من الموردين</span>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="txEvtPurchaseInvoice"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="tx-event-item" data-evt-color="green">
+              <div class="tx-event-icon-wrap"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+              <div class="tx-event-body">
+                <span class="tx-event-name" data-i18n="wa.tx.evtReceipt">سند قبض</span>
+                <span class="tx-event-desc" data-i18n="wa.tx.evtReceiptDesc">استلام نقد وذهب</span>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="txEvtReceipt"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="tx-event-item" data-evt-color="amber">
+              <div class="tx-event-icon-wrap"><i class="fa-solid fa-money-bill-transfer"></i></div>
+              <div class="tx-event-body">
+                <span class="tx-event-name" data-i18n="wa.tx.evtVoucher">سند صرف</span>
+                <span class="tx-event-desc" data-i18n="wa.tx.evtVoucherDesc">صرف نقد وذهب</span>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="txEvtVoucher"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="tx-event-item" data-evt-color="violet">
+              <div class="tx-event-icon-wrap"><i class="fa-solid fa-book-open"></i></div>
+              <div class="tx-event-body">
+                <span class="tx-event-name" data-i18n="wa.tx.evtJournal">قيد يومية</span>
+                <span class="tx-event-desc" data-i18n="wa.tx.evtJournalDesc">قيود محاسبية يدوية</span>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="txEvtJournal"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- حفظ -->
+        <div class="tx-save-bar">
+          <div class="tx-save-hint">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="wa.tx.saveHint">التغييرات لا تُطبَّق إلا بعد الحفظ</span>
+          </div>
+          <button class="btn-save-tx" id="btnSaveTxNotify">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span data-i18n="wa.tx.btnSave">حفظ الإعدادات</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== بطاقة أرصدة العملاء والموردين ===== -->
+    <div class="wa-card card-balances">
+      <h2 class="card-title">
+        <i class="fa-solid fa-scale-balanced"></i> <span data-i18n="wa.balances.title">أرصدة العملاء والموردين</span>
+      </h2>
+
+      <div class="tx-notify-layout">
+        <div class="toggle-row tx-master-toggle">
+          <div class="toggle-icon-wrap">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div class="toggle-info">
+            <strong data-i18n="wa.balances.enableTitle">تفعيل إرسال الأرصدة</strong>
+            <span class="toggle-desc" data-i18n="wa.balances.enableDesc">يرسل الرصيد الحالي ريال / ذهب / فضة للعملاء والموردين المفعلين حسب الجدول</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="balancesEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.balances.scheduleTitle">جدولة إرسال الأرصدة</div>
+              <div class="tx-section-sub" data-i18n="wa.balances.scheduleSub">حدد متى يتم إرسال الأرصدة الحالية تلقائياً</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label><i class="fa-solid fa-repeat"></i> <span data-i18n="wa.schedule.repeatType">نوع التكرار</span></label>
+              <select id="balancesScheduleType">
+                <option value="interval" data-i18n="wa.schedule.interval">كل فترة زمنية</option>
+                <option value="daily" data-i18n="wa.schedule.daily">يومياً في وقت محدد</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="balancesIntervalSettings" class="sub-settings">
+            <div class="field-row">
+              <div class="field-group">
+                <label><i class="fa-solid fa-hourglass-half"></i> <span data-i18n="wa.schedule.every">كل</span></label>
+                <div class="interval-control">
+                  <button type="button" class="interval-btn" id="btnDecrBalancesInterval"><i class="fa-solid fa-minus"></i></button>
+                  <input type="number" id="balancesIntervalValue" class="interval-input" value="24" min="1" max="168">
+                  <button type="button" class="interval-btn" id="btnIncrBalancesInterval"><i class="fa-solid fa-plus"></i></button>
+                  <select id="balancesIntervalUnit" class="unit-select">
+                    <option value="minutes" data-i18n="wa.schedule.minutes">دقيقة</option>
+                    <option value="hours" selected data-i18n="wa.schedule.hours">ساعة</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="balancesDailySettings" class="sub-settings" style="display:none;">
+            <div class="field-row">
+              <div class="field-group">
+                <label><i class="fa-solid fa-clock"></i> <span data-i18n="wa.schedule.time">الوقت</span></label>
+                <input type="time" id="balancesDailyTime" value="08:00">
+              </div>
+            </div>
+          </div>
+
+          <div class="toggle-row balance-zero-toggle">
+            <div class="toggle-info">
+              <strong data-i18n="wa.balances.ignoreZeroTitle">تجاهل الأرصدة الصفرية</strong>
+              <span class="toggle-desc" data-i18n="wa.balances.ignoreZeroDesc">إذا كان رصيد العميل/المورد صفر ريال وصفر ذهب وصفر فضة فلن يتم الإرسال له</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="balancesIgnoreZero" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="next-send-info">
+            <i class="fa-solid fa-calendar-clock"></i>
+            <span>الإرسال القادم: <strong id="balancesNextSendText">—</strong></span>
+          </div>
+
+          <div class="last-send-info">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span><span data-i18n="wa.schedule.lastSend">آخر إرسال:</span> <strong id="balancesLastSendText" data-i18n="wa.schedule.notSentYet">لم يُرسل بعد</strong></span>
+          </div>
+        </div>
+
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-user-plus"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.balances.addTitle">إضافة عميل أو مورد</div>
+              <div class="tx-section-sub" data-i18n="wa.balances.addSub">اكتب الاسم أو رقم الحساب، أو اضغط F9 لعرض القائمة</div>
+            </div>
+          </div>
+
+          <div class="balance-lookup-actions">
+            <input type="text" id="balancePartySearchInput" class="account-search-input"
+              placeholder="اضغط F9 أو زر الاختيار لفتح نافذة البحث" data-i18n-placeholder="wa.balances.searchPlaceholder" autocomplete="off" readonly>
+            <button class="btn-add-account" id="btnAddBalanceParty">
+              <i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="wa.balances.btnAddParty">اختيار وإضافة</span>
+            </button>
+          </div>
+
+          <div class="groups-hint balance-targets-hint">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="wa.balances.targetsHint">يمكن تعبئة رقم واتساب واسم مجموعة واتساب معاً؛ عندها يتم إرسال رصيد نفس العميل/المورد/الحساب للرقم ومجموعة واتساب معاً.</span>
+          </div>
+        </div>
+
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-list-check"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.balances.listTitle">قائمة مستلمي الأرصدة</div>
+              <div class="tx-section-sub" data-i18n="wa.balances.listSub">فعّل أو عطّل كل عميل/مورد/حساب وحدد رقم واتساب أو مجموعة واتساب الخاصة به</div>
+            </div>
+          </div>
+
+          <div class="balance-summary-bar">
+            <div class="bsum-chip bsum-customers"><i class="fa-solid fa-user-tie"></i><div><span>عملاء</span><strong id="bsumCustomers">0</strong></div></div>
+            <div class="bsum-chip bsum-suppliers"><i class="fa-solid fa-truck-field"></i><div><span>موردون</span><strong id="bsumSuppliers">0</strong></div></div>
+            <div class="bsum-chip bsum-accounts"><i class="fa-solid fa-building-columns"></i><div><span>حسابات</span><strong id="bsumAccounts">0</strong></div></div>
+            <div class="bsum-chip bsum-ready"><i class="fa-solid fa-circle-check"></i><div><span>جاهز للإرسال</span><strong id="bsumReady">0</strong></div></div>
+            <div class="bsum-chip bsum-disabled"><i class="fa-solid fa-circle-pause"></i><div><span>معطل</span><strong id="bsumDisabled">0</strong></div></div>
+          </div>
+
+          <div class="balance-recipients-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="balanceRecipientsSearchInput"
+              placeholder="ابحث في القائمة المضافة..." data-i18n-placeholder="wa.balances.listSearchPlaceholder">
+          </div>
+          <div class="balance-recipients-list" id="balanceRecipientsList">
+            <div class="empty-state" id="balanceRecipientsEmpty">
+              <i class="fa-solid fa-address-book"></i>
+              <p data-i18n="wa.balances.empty">لم تُضف أي عملاء أو موردين أو حسابات بعد</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tx-save-bar">
+          <div class="tx-save-hint">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="wa.tx.saveHint">التغييرات لا تُطبَّق إلا بعد الحفظ</span>
+          </div>
+          <button class="btn-send-now" id="btnSendBalancesNow">
+            <i class="fa-solid fa-paper-plane"></i> <span data-i18n="wa.balances.btnSendNow">إرسال الأرصدة الآن</span>
+          </button>
+          <button class="btn-save-tx" id="btnSaveBalances">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span data-i18n="wa.balances.btnSave">حفظ إعدادات الأرصدة</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== بطاقة الرسائل الترويجية ===== -->
+    <div class="wa-card card-promo">
+      <h2 class="card-title">
+        <i class="fa-solid fa-bullhorn"></i> <span data-i18n="wa.promo.title">الرسائل الترويجية</span>
+      </h2>
+
+      <div class="tx-notify-layout">
+
+        <!-- تفعيل رئيسي -->
+        <div class="toggle-row tx-master-toggle">
+          <div class="toggle-icon-wrap">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <div class="toggle-info">
+            <strong data-i18n="wa.promo.enableTitle">تفعيل الرسائل الترويجية</strong>
+            <span class="toggle-desc" data-i18n="wa.promo.enableDesc">يُرسل الرسالة الترويجية تلقائياً حسب الجدول المحدد</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="promoEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- نص الرسالة -->
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-message"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.promo.messageTitle">نص الرسالة الترويجية</div>
+              <div class="tx-section-sub" data-i18n="wa.promo.messageSub">الصق أو اكتب الرسالة التي ستُرسل</div>
+            </div>
+          </div>
+          <div class="promo-editor-layout">
+            <div class="promo-editor-col">
+              <div class="promo-toolbar">
+                <button type="button" class="promo-fmt-btn" data-promo-fmt="bold" title="غامق"><b>B</b></button>
+                <button type="button" class="promo-fmt-btn" data-promo-fmt="italic" title="مائل"><i>I</i></button>
+                <button type="button" class="promo-fmt-btn" data-promo-fmt="strike" title="مشطوب"><s>S</s></button>
+                <span class="promo-toolbar-sep"></span>
+                <button type="button" class="promo-var-btn" data-promo-var="{اسم_العميل}">اسم العميل</button>
+                <button type="button" class="promo-var-btn" data-promo-var="{اسم_الشركة}">اسم الشركة</button>
+                <button type="button" class="promo-var-btn" data-promo-var="{التاريخ}">التاريخ</button>
+                <button type="button" class="promo-var-btn" data-promo-var="{الوقت}">الوقت</button>
+              </div>
+              <textarea id="promoMessage" class="promo-textarea"
+                placeholder="اكتب أو الصق الرسالة الترويجية هنا..." data-i18n-placeholder="wa.promo.messagePlaceholder"></textarea>
+              <div class="promo-char-count"><span id="promoCharCount">0</span> <span data-i18n="wa.promo.chars">حرف</span></div>
+            </div>
+            <div class="promo-preview-col">
+              <div class="promo-preview-label">معاينة الرسالة</div>
+              <div class="wa-bubble-wrap">
+                <div class="wa-bubble" id="promoBubble">
+                  <span class="wa-bubble-empty">سيظهر شكل الرسالة هنا أثناء الكتابة...</span>
+                </div>
+                <div class="wa-bubble-meta"><i class="fa-solid fa-check-double"></i> ٣:٢٢ ص</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الجدولة -->
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.promo.scheduleTitle">جدولة الإرسال</div>
+              <div class="tx-section-sub" data-i18n="wa.promo.scheduleSub">متى تُرسل الرسالة الترويجية تلقائياً</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label><i class="fa-solid fa-repeat"></i> <span data-i18n="wa.schedule.repeatType">نوع التكرار</span></label>
+              <select id="promoScheduleType">
+                <option value="interval" data-i18n="wa.schedule.interval">كل فترة زمنية</option>
+                <option value="daily" data-i18n="wa.schedule.daily">يومياً في وقت محدد</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="promoIntervalSettings" class="sub-settings">
+            <div class="field-row">
+              <div class="field-group">
+                <label><i class="fa-solid fa-hourglass-half"></i> <span data-i18n="wa.schedule.every">كل</span></label>
+                <div class="interval-control">
+                  <button type="button" class="interval-btn" id="btnDecrPromoInterval">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <input type="number" id="promoIntervalValue" class="interval-input" value="24" min="1" max="168">
+                  <button type="button" class="interval-btn" id="btnIncrPromoInterval">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                  <select id="promoIntervalUnit" class="unit-select">
+                    <option value="minutes" data-i18n="wa.schedule.minutes">دقيقة</option>
+                    <option value="hours" selected data-i18n="wa.schedule.hours">ساعة</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="promoDailySettings" class="sub-settings" style="display:none;">
+            <div class="field-row">
+              <div class="field-group">
+                <label><i class="fa-solid fa-clock"></i> <span data-i18n="wa.schedule.time">الوقت</span></label>
+                <input type="time" id="promoDailyTime" value="09:00">
+              </div>
+            </div>
+          </div>
+
+          <div class="next-send-info" id="promoNextSendInfo">
+            <i class="fa-solid fa-calendar-clock"></i>
+            <span><span data-i18n="wa.schedule.nextSend">الإرسال القادم:</span> <strong id="promoNextSendText">—</strong></span>
+          </div>
+          <div class="last-send-info" id="promoLastSendInfo">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span><span data-i18n="wa.schedule.lastSend">آخر إرسال:</span> <strong id="promoLastSendText" data-i18n="wa.schedule.notSentYet">لم يُرسل بعد</strong></span>
+          </div>
+        </div>
+
+        <!-- المستلمون -->
+        <div class="tx-notify-section">
+          <div class="tx-section-header">
+            <div class="tx-section-icon"><i class="fa-solid fa-share-nodes"></i></div>
+            <div>
+              <div class="tx-section-title" data-i18n="wa.promo.recipientsTitle">المستلمون</div>
+              <div class="tx-section-sub" data-i18n="wa.promo.recipientsSub">أرقام الهاتف أو المجموعات والمجتمعات التي ستستقبل الرسالة</div>
+            </div>
+          </div>
+          <div class="recipients-layout">
+            <div class="recipients-section">
+              <h3 class="section-sub-title">
+                <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="wa.promo.phonesTitle">أرقام الهاتف</span>
+              </h3>
+              <div class="add-recipient-row">
+                <input type="text" id="promoPhoneInput" class="recipient-input" placeholder="966501234567 (بدون +)" data-i18n-placeholder="wa.promo.phonePlaceholder" dir="ltr">
+                <button class="btn-add-recipient" id="btnAddPromoPhone">
+                  <i class="fa-solid fa-plus"></i> <span data-i18n="wa.recipients.btnAdd">إضافة</span>
+                </button>
+              </div>
+              <div class="recipients-list" id="promoPhonesList">
+                <div class="empty-state" id="promoPhonesEmpty">
+                  <i class="fa-solid fa-phone-slash"></i>
+                  <p data-i18n="wa.tx.phonesEmpty">لم تُضف أي أرقام بعد</p>
+                </div>
+              </div>
+            </div>
+            <div class="recipients-section">
+              <h3 class="section-sub-title">
+                <i class="fa-solid fa-people-group"></i> <span data-i18n="wa.promo.groupsTitle">مجموعات / مجتمعات</span>
+              </h3>
+              <div class="add-recipient-row">
+                <input type="text" id="promoGroupInput" class="recipient-input" placeholder="اسم المجموعة أو المجتمع" data-i18n-placeholder="wa.promo.groupPlaceholder">
+                <button class="btn-add-recipient" id="btnAddPromoGroup">
+                  <i class="fa-solid fa-plus"></i> <span data-i18n="wa.recipients.btnAdd">إضافة</span>
+                </button>
+              </div>
+              <div class="recipients-list" id="promoGroupsList">
+                <div class="empty-state" id="promoGroupsEmpty">
+                  <i class="fa-solid fa-people-group"></i>
+                  <p data-i18n="wa.tx.groupsEmpty">لم تُضف أي مجموعات بعد</p>
+                </div>
+              </div>
+              <div class="groups-hint">
+                <i class="fa-solid fa-circle-info"></i>
+                <span data-i18n="wa.promo.groupsHint">اكتب الاسم بالضبط كما يظهر في واتساب</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- حفظ وإرسال -->
+        <div class="tx-save-bar">
+          <div class="tx-save-hint">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="wa.tx.saveHint">التغييرات لا تُطبَّق إلا بعد الحفظ</span>
+          </div>
+          <button class="btn-send-now" id="btnSendPromoNow">
+            <i class="fa-solid fa-paper-plane"></i> <span data-i18n="wa.promo.btnSendNow">إرسال الآن</span>
+          </button>
+          <button class="btn-save-tx" id="btnSavePromo">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span data-i18n="wa.promo.btnSave">حفظ الإعدادات</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" id="confirmOverlay">
+    <div class="confirm-modal">
+      <div class="confirm-icon" id="confirmIcon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 id="confirmTitle" data-i18n="wa.confirm.title">تأكيد</h3>
+      <p id="confirmMessage" data-i18n="wa.confirm.message">هل أنت متأكد؟</p>
+      <div class="confirm-btns">
+        <button class="btn-confirm-ok" id="btnConfirmOk" data-i18n="wa.confirm.ok">تأكيد</button>
+        <button class="btn-confirm-cancel" id="btnConfirmCancel" data-i18n="wa.confirm.cancel">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="balance-lookup-modal" id="balanceLookupModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="balance-modal-backdrop" data-balance-lookup-close></div>
+    <div class="balance-modal-dialog" role="document">
+      <div class="balance-modal-header">
+        <h3 id="balanceLookupTitle">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span data-i18n="wa.balances.lookupTitle">بحث عميل</span>
+        </h3>
+        <button class="balance-modal-close" id="balanceLookupClose" type="button" data-i18n-title="wa.balances.close">
+          <i class="fa-regular fa-circle-xmark"></i>
+        </button>
+      </div>
+      <div class="balance-modal-body">
+        <div class="balance-lookup-tabs">
+          <button class="balance-lookup-tab active" type="button" data-balance-type="customer">
+            <i class="fa-solid fa-user"></i>
+            <span data-i18n="wa.balances.customer">عميل</span>
+          </button>
+          <button class="balance-lookup-tab" type="button" data-balance-type="supplier">
+            <i class="fa-solid fa-truck"></i>
+            <span data-i18n="wa.balances.supplier">مورد</span>
+          </button>
+          <button class="balance-lookup-tab" type="button" data-balance-type="account">
+            <i class="fa-solid fa-building-columns"></i>
+            <span data-i18n="wa.balances.account">حساب</span>
+          </button>
+        </div>
+        <input type="search" id="balanceLookupSearch" class="balance-lookup-search"
+          placeholder="اكتب رقم أو اسم للبحث..." data-i18n-placeholder="wa.balances.lookupSearchPlaceholder">
+        <div class="balance-lookup-table-wrap">
+          <table class="balance-lookup-table">
+            <thead>
+              <tr>
+                <th data-i18n="wa.balances.lookupNumber">الرقم</th>
+                <th data-i18n="wa.balances.lookupName">الاسم</th>
+              </tr>
+            </thead>
+            <tbody id="balanceLookupBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="balance-modal-footer">
+        <button class="btn-confirm-cancel" id="balanceLookupCancel" type="button">
+          <i class="fa-regular fa-circle-xmark"></i>
+          <span data-i18n="wa.confirm.cancel">إلغاء</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../shared-styles/permission-denied-modal.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <!-- Live status footer -->
+  <div class="wa-statusbar" id="waStatusBar">
+    <div class="wa-statusbar-item">
+      <span class="wa-sb-dot" id="waSbDot"></span>
+      <span class="wa-sb-text" id="waSbText">جاري التحقق…</span>
+    </div>
+    <div class="wa-statusbar-sep"></div>
+    <div class="wa-statusbar-item">
+      <i class="fa-solid fa-paper-plane"></i>
+      <span>القادم:</span>
+      <strong id="waSbNext">—</strong>
+    </div>
+    <div class="wa-statusbar-sep"></div>
+    <div class="wa-statusbar-item">
+      <i class="fa-solid fa-users"></i>
+      <span>مستلمون:</span>
+      <strong id="waSbRecipients">0</strong>
+    </div>
+    <div class="wa-statusbar-spacer"></div>
+    <button class="wa-statusbar-btn" id="waSbShortcuts" title="اختصارات لوحة المفاتيح">
+      <i class="fa-solid fa-keyboard"></i>
+    </button>
+  </div>
+
+  <!-- Shortcuts overlay -->
+  <div class="wa-shortcuts-overlay" id="waShortcutsOverlay" hidden>
+    <div class="wa-shortcuts-card">
+      <div class="wa-shortcuts-head">
+        <h3><i class="fa-solid fa-keyboard"></i> اختصارات لوحة المفاتيح</h3>
+        <button class="wa-shortcuts-close" id="waShortcutsClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="wa-shortcuts-body">
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>1</kbd><span>تبويب الاتصال</span></div>
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>2</kbd><span>تبويب تنبيهات العمليات</span></div>
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>3</kbd><span>تبويب الأرصدة</span></div>
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>4</kbd><span>تبويب الرسائل الترويجية</span></div>
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>S</kbd><span>حفظ الإعدادات</span></div>
+        <div class="wa-shortcut-row"><kbd>Ctrl</kbd><kbd>Enter</kbd><span>إرسال الأرصدة الآن</span></div>
+        <div class="wa-shortcut-row"><kbd>?</kbd><span>عرض هذه القائمة</span></div>
+        <div class="wa-shortcut-row"><kbd>Esc</kbd><span>إغلاق النوافذ</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

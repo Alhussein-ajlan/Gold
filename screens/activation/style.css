@@ -1,0 +1,568 @@
+/* ===============================================
+   Activation Screen Styles
+   شاشة تفعيل احترافية
+   =============================================== */
+
+:root {
+  --primary: #0d9488;
+  --primary-dark: #0f766e;
+  --primary-light: #14b8a6;
+  --secondary: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-gradient: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
+  --card-bg: #ffffff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.activation-container {
+  width: 100%;
+  max-width: 500px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.activation-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+  position: relative;
+}
+
+.lang-switcher {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.6), rgba(30, 41, 59, 0.5));
+  border-radius: 50px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lang-toggle-btn {
+  position: relative;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 42px;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.lang-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.lang-toggle-btn.active {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+}
+
+.lang-toggle-btn.active::before {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 
+    0 4px 20px rgba(13, 148, 136, 0.5),
+    0 0 30px rgba(20, 184, 166, 0.3);
+}
+
+.lang-toggle-btn:not(.active):hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.05);
+}
+
+.lang-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.lang-toggle-btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: rippleEffect 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.lang-switcher::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 52px;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.3), transparent, rgba(13, 148, 136, 0.2));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lang-switcher:hover::after {
+  opacity: 1;
+}
+
+.lang-toggle-btn i {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.lang-toggle-btn:hover i {
+  transform: rotate(20deg);
+  opacity: 1;
+}
+
+.lang-toggle-btn.active i {
+  animation: globeSpin 0.5s ease-out;
+}
+
+@keyframes globeSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.logo-wrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 15px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.activation-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.activation-header .subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Card */
+.activation-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+
+.card-header i {
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.card-header h2 {
+  font-size: 22px;
+  color: var(--text);
+}
+
+/* Machine ID */
+.machine-id-section {
+  margin-bottom: 25px;
+}
+
+.machine-id-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.machine-id-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  padding: 15px 20px;
+}
+
+.machine-id-box span {
+  flex: 1;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Consolas', 'Courier New', monospace;
+  color: var(--primary);
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.copy-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.copy-btn i {
+  font-size: 18px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* License Input */
+.license-input-section {
+  margin-bottom: 25px;
+}
+
+.license-input-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.license-input-section input {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  letter-spacing: 1px;
+  text-align: center;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  word-break: break-all;
+}
+
+.license-input-section input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+}
+
+.license-input-section input::placeholder {
+  color: #cbd5e1;
+  letter-spacing: 3px;
+}
+
+/* Activate Button */
+.activate-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+}
+
+.activate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.5);
+}
+
+.activate-btn:active {
+  transform: translateY(0);
+}
+
+.activate-btn i {
+  font-size: 20px;
+}
+
+/* Status Message */
+.status-message {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.status-message.hidden {
+  display: none;
+}
+
+.status-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.status-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.status-message.warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* License Status */
+.license-status {
+  margin-top: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0fdfa, #f0fdf4);
+  border-radius: 12px;
+  border: 1px solid #99f6e4;
+}
+
+.license-status.hidden {
+  display: none;
+}
+
+.license-status.expired {
+  background: linear-gradient(135deg, #fef2f2, #fff7ed);
+  border-color: #fecaca;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.status-row:last-child {
+  border-bottom: none;
+}
+
+.status-row .label {
+  font-size: 14px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-row .label i {
+  color: var(--primary);
+}
+
+.status-row .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.status-row .value.active {
+  color: var(--success);
+}
+
+.status-row .value.expired {
+  color: var(--danger);
+}
+
+.status-row .value.warning {
+  color: var(--warning);
+}
+
+/* Contact Section */
+.contact-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 25px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.contact-section h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  opacity: 0.95;
+}
+
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.contact-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.contact-item i {
+  font-size: 20px;
+}
+
+.contact-item.whatsapp i {
+  color: #25d366;
+}
+
+.contact-item.email i {
+  color: #fbbf24;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .activation-container {
+    padding: 15px;
+  }
+  
+  .activation-card {
+    padding: 20px;
+  }
+  
+  .machine-id-box span {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  
+  .contact-methods {
+    grid-template-columns: 1fr;
+  }
+}

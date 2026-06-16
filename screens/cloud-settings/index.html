@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="pageTitle">إعدادات السحابة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="page-shell" id="pageShell">
+    <div class="company-card cloud-db-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-cloud"></i>
+        <span data-i18n="cloudDbTitle">إعدادات السحابة</span>
+      </h2>
+
+      <div class="cloud-db-content">
+        <div class="cloud-db-grid">
+          <section class="db-subcard cloud-connection-subcard">
+            <div class="subcard-header">
+              <div class="subcard-icon cloud">
+                <i class="fa-solid fa-cloud"></i>
+              </div>
+              <div>
+                <h3 data-i18n="cloudConnectionTitle">الاتصال السحابي</h3>
+                <p data-i18n="cloudDbDesc">اتصل بقاعدة بيانات Turso على السحابة للوصول من أي مكان</p>
+              </div>
+            </div>
+
+            <div class="cloud-db-status-section">
+              <div class="status-indicator" id="cloudDbStatusIndicator">
+                <div class="status-dot disconnected" id="cloudDbStatusDot"></div>
+                <span class="status-text" id="cloudDbStatusText" data-i18n="cloudDbDisconnected">غير متصل</span>
+              </div>
+              <div class="last-sync-info" id="cloudDbLastSyncInfo">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span><span data-i18n="cloudDbLastSync">آخر مزامنة:</span> <strong id="cloudDbLastSyncTime" data-i18n="cloudDbNeverSynced">لم تتم المزامنة بعد</strong></span>
+              </div>
+            </div>
+
+            <div class="cloud-db-form">
+              <div class="cloud-field-group">
+                <label for="cloudDbUrl">
+                  <i class="fa-solid fa-link"></i>
+                  <span data-i18n="cloudDbUrl">رابط قاعدة البيانات</span>
+                </label>
+                <div class="input-with-icon">
+                  <input type="text" id="cloudDbUrl" data-i18n-placeholder="cloudDbUrlPlaceholder" placeholder="libsql://your-database.turso.io" dir="ltr" style="text-align:left;">
+                  <i class="fa-solid fa-globe input-icon"></i>
+                </div>
+              </div>
+
+              <div class="cloud-field-group">
+                <label for="cloudDbToken">
+                  <i class="fa-solid fa-key"></i>
+                  <span data-i18n="cloudDbToken">رمز الوصول (Token)</span>
+                </label>
+                <div class="input-with-icon token-input">
+                  <input type="password" id="cloudDbToken" data-i18n-placeholder="cloudDbTokenPlaceholder" placeholder="أدخل رمز الوصول الخاص بك" dir="ltr" style="text-align:left;">
+                  <button type="button" class="toggle-password-btn" id="toggleTokenVisibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="security-note">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span data-i18n="cloudDbSecurityNote">ملاحظة أمنية: يتم تخزين رمز الوصول محلياً على جهازك فقط</span>
+              </div>
+
+              <div class="cloud-mode-toggle" id="cloudModeToggleWrap">
+                <div class="toggle-header">
+                  <i class="fa-solid fa-shuffle"></i>
+                  <span data-i18n="cloudModeLabel">وضع قاعدة البيانات</span>
+                </div>
+                <div class="toggle-options">
+                  <label class="toggle-option">
+                    <input type="radio" name="dbMode" value="local" id="dbModeLocal">
+                    <span class="toggle-label">
+                      <i class="fa-solid fa-hard-drive"></i>
+                      <span data-i18n="cloudModeLocal">محلي (Offline)</span>
+                    </span>
+                  </label>
+                  <label class="toggle-option">
+                    <input type="radio" name="dbMode" value="cloud" id="dbModeCloud">
+                    <span class="toggle-label">
+                      <i class="fa-solid fa-cloud"></i>
+                      <span data-i18n="cloudModeCloud">سحابي (Cloud)</span>
+                    </span>
+                  </label>
+                </div>
+                <div class="cloud-mode-note" id="cloudModeNote">
+                  <i class="fa-solid fa-info-circle"></i>
+                  <span data-i18n="cloudModeNote">في الوضع السحابي، جميع العمليات تتم مباشرة على قاعدة البيانات السحابية</span>
+                </div>
+              </div>
+
+              <div class="cloud-db-actions">
+                <button class="btn-action primary" id="btnTestCloudDb">
+                  <i class="fa-solid fa-plug"></i>
+                  <span data-i18n="cloudDbTestConnection">اختبار الاتصال</span>
+                </button>
+                <button class="btn-save success" id="btnSaveCloudDb">
+                  <i class="fa-solid fa-check"></i>
+                  <span data-i18n="cloudDbSaveSettings">حفظ الإعدادات</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="db-subcard sync-subcard">
+            <div class="subcard-header">
+              <div class="subcard-icon sync">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </div>
+              <div>
+                <h3 data-i18n="syncCardTitle">المزامنة</h3>
+                <p data-i18n="syncCardDesc">تحكم كامل باتجاه المزامنة مع عرض تقدّم مباشر وتفاصيل السجلات</p>
+              </div>
+            </div>
+
+            <div class="sync-actions-grid">
+              <button class="btn-action primary" id="btnSyncLocalToCloud">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span data-i18n="syncLocalToCloud">مزامنة المحلي إلى السحابة</span>
+              </button>
+              <button class="btn-action secondary" id="btnSyncCloudToLocal">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+                <span data-i18n="syncCloudToLocal">مزامنة السحابة إلى المحلي</span>
+              </button>
+            </div>
+
+            <div class="sync-progress-panel" id="syncProgressPanel" style="display:none;">
+              <div class="sync-progress-hero">
+                <div class="sync-ring">
+                  <svg viewBox="0 0 120 120" class="sync-ring-svg">
+                    <circle cx="60" cy="60" r="52" class="sync-ring-bg"></circle>
+                    <circle cx="60" cy="60" r="52" class="sync-ring-fill" id="syncProgressRing"></circle>
+                  </svg>
+                  <div class="sync-ring-value" id="syncProgressPercent">0%</div>
+                </div>
+                <div class="sync-progress-texts">
+                  <h4 id="syncProgressTitle">—</h4>
+                  <p id="syncProgressSubtitle">—</p>
+                  <div class="sync-progress-count" id="syncProgressCount">0 / 0</div>
+                </div>
+              </div>
+              <div class="sync-details-list" id="syncDetailsList"></div>
+            </div>
+
+            <div class="auto-sync-box">
+              <div class="auto-sync-head">
+                <div>
+                  <strong data-i18n="autoSyncTitle">المزامنة التلقائية</strong>
+                  <span data-i18n="autoSyncDesc">تشغيل مزامنة دورية تلقائية بين المحلي والسحابة</span>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="autoSyncEnabled">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="auto-sync-controls" id="autoSyncControls">
+                <input type="number" id="autoSyncInterval" min="1" max="999" value="30">
+                <select id="autoSyncUnit">
+                  <option value="seconds" data-i18n="seconds">ثوانٍ</option>
+                  <option value="minutes" data-i18n="minutes">دقائق</option>
+                  <option value="hours" data-i18n="hours">ساعات</option>
+                </select>
+                <button class="btn-action primary" id="btnSaveAutoSync">
+                  <i class="fa-solid fa-timer"></i>
+                  <span data-i18n="saveAutoSync">حفظ وتشغيل</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="db-subcard local-connection-subcard">
+            <div class="subcard-header">
+              <div class="subcard-icon local">
+                <i class="fa-solid fa-hard-drive"></i>
+              </div>
+              <div>
+                <h3 data-i18n="localConnectionTitle">الاتصال المحلي</h3>
+                <p data-i18n="localConnectionDesc">حدد ملف قاعدة البيانات المحلية وتأكد من سلامة الاتصال</p>
+              </div>
+            </div>
+
+            <div class="local-db-controls">
+              <label for="dbPathInput" data-i18n="localDbPathLabel">مسار قاعدة البيانات المحلية</label>
+              <div class="local-path-row">
+                <input type="text" id="dbPathInput" data-i18n-placeholder="localDbPathPlaceholder" placeholder="D:\\gold\\sys\\database\\database.db" dir="ltr" style="text-align:left;">
+                <button class="btn-action secondary" id="btnSelectDbPath">
+                  <i class="fa-solid fa-folder-open"></i>
+                  <span data-i18n="selectPath">اختيار المسار</span>
+                </button>
+                <button class="btn-action secondary icon-only" id="btnCopyDbPath" title="نسخ المسار">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+              <button class="btn-action primary" id="btnConnectDb">
+                <i class="fa-solid fa-plug"></i>
+                <span data-i18n="connectBtn">اتصال</span>
+              </button>
+            </div>
+
+            <div class="connection-status info" id="dbConnectionStatus" style="display:none;">
+              <i class="fa-solid fa-circle-info"></i>
+              <span id="dbConnectionMessage"></span>
+            </div>
+          </section>
+
+          <section class="db-subcard upload-cloud-subcard">
+            <div class="subcard-header">
+              <div class="subcard-icon upload">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div>
+                <h3 data-i18n="uploadCloudTitle">رفع قاعدة البيانات المحلية للسحابة</h3>
+                <p data-i18n="uploadCloudDesc">رفع جميع البيانات من قاعدة البيانات المحلية إلى السحابة (يحل محل البيانات الموجودة)</p>
+              </div>
+            </div>
+
+            <button class="btn-upload-cloud" id="btnUploadLocalToCloud">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span data-i18n="uploadToCloud">رفع للسحابة</span>
+            </button>
+
+            <div class="sync-progress-panel" id="uploadProgressPanel" style="display:none;">
+              <div class="sync-progress-hero">
+                <div class="sync-ring">
+                  <svg viewBox="0 0 120 120" class="sync-ring-svg">
+                    <circle cx="60" cy="60" r="52" class="sync-ring-bg"></circle>
+                    <circle cx="60" cy="60" r="52" class="sync-ring-fill" id="uploadProgressRing"></circle>
+                  </svg>
+                  <div class="sync-ring-value" id="uploadProgressPercent">0%</div>
+                </div>
+                <div class="sync-progress-texts">
+                  <h4 id="uploadProgressTitle">—</h4>
+                  <p id="uploadProgressSubtitle">—</p>
+                  <div class="sync-progress-count" id="uploadProgressCount">0 / 0</div>
+                </div>
+              </div>
+              <div class="sync-details-list" id="uploadDetailsList"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="cloud-db-message" id="cloudDbMessage" style="display:none;">
+          <i class="message-icon"></i>
+          <span class="message-text"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div class="cloud-confirm-modal-overlay" id="cloudConfirmModalOverlay">
+    <div class="cloud-confirm-modal">
+      <div class="cloud-confirm-modal-icon" id="cloudConfirmModalIcon">
+        <i class="fa-solid fa-question-circle"></i>
+      </div>
+      <h3 class="cloud-confirm-modal-title" id="cloudConfirmModalTitle">تأكيد</h3>
+      <p class="cloud-confirm-modal-message" id="cloudConfirmModalMessage">هل أنت متأكد؟</p>
+      <div class="cloud-confirm-modal-actions">
+        <button class="cloud-confirm-modal-btn cancel" id="cloudConfirmModalCancel">
+          <i class="fa-solid fa-xmark"></i>
+          <span>إلغاء</span>
+        </button>
+        <button class="cloud-confirm-modal-btn confirm" id="cloudConfirmModalConfirm">
+          <i class="fa-solid fa-check"></i>
+          <span>تأكيد</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cloud-password-modal-overlay" id="cloudPasswordModalOverlay">
+    <div class="cloud-password-modal" role="dialog" aria-modal="true" aria-labelledby="cloudPasswordModalTitle">
+      <div class="cloud-password-modal-header">
+        <div class="cloud-password-modal-header-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="cloud-password-modal-title" id="cloudPasswordModalTitle">تأكيد العملية</h3>
+      </div>
+      <div class="cloud-password-modal-body">
+        <p class="cloud-password-modal-message" id="cloudPasswordModalMessage">أدخل كلمة مرور الادارة لمستخدم المحاسب الذكي لاكمال العملية</p>
+        <div class="cloud-password-modal-input-wrap">
+          <input type="password" id="cloudPasswordModalInput" class="cloud-password-modal-input" placeholder="••••••••" autocomplete="off">
+          <div class="cloud-password-modal-error" id="cloudPasswordModalError"></div>
+        </div>
+        <div class="cloud-password-modal-actions">
+          <button class="cloud-password-modal-btn cancel" id="cloudPasswordModalCancel">
+            <span>إلغاء</span>
+          </button>
+          <button class="cloud-password-modal-btn confirm" id="cloudPasswordModalConfirm">
+            <i class="fa-solid fa-check"></i>
+            <span id="cloudPasswordModalConfirmText">تأكيد</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../shared-styles/permission-denied-modal.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="../../shared-styles/confirm-modal.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

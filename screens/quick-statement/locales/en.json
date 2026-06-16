@@ -1,0 +1,58 @@
+{
+  "quickStatement": {
+    "title": "Quick Statement",
+    "subtitle": "View account balances by karat",
+    "filters": {
+      "type": "Type",
+      "number": "Number",
+      "name": "Name",
+      "namePlaceholder": "Customer/Supplier/Account name",
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "openingBalance": "Opening Balance",
+      "goldBasis": "Gold Balance Karat",
+      "silverBasis": "Silver Balance Karat",
+      "yes": "Yes",
+      "no": "No",
+      "pure": "Pure",
+      "view": "View"
+    },
+    "types": {
+      "customer": "Customer",
+      "supplier": "Supplier",
+      "account": "Account"
+    },
+    "summary": {
+      "goldTotal": "Total Gold",
+      "silverTotal": "Total Silver",
+      "cashBalance": "Cash Balance",
+      "gram": "g",
+      "karat": "Karat",
+      "riyal": "SAR"
+    },
+    "tables": {
+      "gold": "Gold",
+      "silver": "Silver",
+      "karat": "Karat",
+      "debit": "Debit",
+      "credit": "Credit",
+      "net": "Net",
+      "noGoldMovement": "No gold movement",
+      "noSilverMovement": "No silver movement"
+    },
+    "lookup": {
+      "search": "Search",
+      "searchCustomer": "Search Customer",
+      "searchSupplier": "Search Supplier",
+      "searchAccount": "Search Account",
+      "searchPlaceholder": "Type number or name to search...",
+      "noResults": "No results found",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "errors": {
+      "noId": "Please enter account number",
+      "fetchError": "Error fetching data"
+    }
+  }
+}

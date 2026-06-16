@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>فاتورة البيع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../company-settings/style.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="../../shared-styles/debt-limit-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/auto-journal-modal.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+    <script src="../../shared-styles/auto-journal-modal.js"></script>
+    <script src="../main/edit-confirm.js"></script>
+    <style>
+      /* Keep only the last action column transparent */
+      #si_detailsTable tbody td:last-child,
+      #si_detailsTable thead th:last-child{
+        background: transparent !important;
+      }
+      
+      /* Customer/Supplier lookup modal close buttons */
+      #lookupCustomerClose, #lookupSupplierClose {
+        background: linear-gradient(135deg, #00897B, #00695C) !important;
+        color: white !important;
+        border: 2px solid #00695C !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 50% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3) !important;
+      }
+      
+      #lookupCustomerClose:hover, #lookupSupplierClose:hover {
+        background: linear-gradient(135deg, #00695C, #004D40) !important;
+        transform: scale(1.05) rotate(-5deg) !important;
+        box-shadow: 0 8px 20px rgba(0, 137, 123, 0.4), 
+                    0 0 0 6px rgba(0, 137, 123, 0.2) !important;
+      }
+      
+      #lookupCustomerClose:active, #lookupSupplierClose:active {
+        transform: scale(0.95) !important;
+        box-shadow: 0 2px 8px rgba(0, 137, 123, 0.3) !important;
+      }
+      
+      #lookupCustomerClose i, #lookupSupplierClose i {
+        font-size: 20px !important;
+        transition: transform 0.3s ease !important;
+      }
+      
+      #lookupCustomerClose:hover i, #lookupSupplierClose:hover i {
+        transform: rotate(90deg) scale(1.1) !important;
+      }
+
+      /* ===== Chevron button styles are in style.css ===== */
+
+      @media (prefers-color-scheme: dark) {
+        #lookupCustomerClose, #lookupSupplierClose {
+          background: linear-gradient(135deg, #00BFA5, #00897B) !important;
+          border-color: #00BFA5 !important;
+          box-shadow: 0 4px 12px rgba(0, 191, 165, 0.3) !important;
+        }
+        
+        #lookupCustomerClose:hover, #lookupSupplierClose:hover {
+          background: linear-gradient(135deg, #00897B, #00695C) !important;
+          box-shadow: 0 8px 20px rgba(0, 191, 165, 0.4), 
+                      0 0 0 6px rgba(0, 191, 165, 0.2) !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section id="panel-sales-invoice" class="panel active" role="tabpanel" aria-labelledby="tab-sales-invoice">
+        <div class="toolbar">
+          <div class="actions">
+            <button class="btn primary" id="si_btnNew" title="فاتورة بيع جديدة"><span id="btnNewInvoiceText"><i class="fa-solid fa-wand-magic-sparkles"></i> جديد</span></button>
+            <button class="btn secondary" id="si_btnEditTop" title="تعديل"><span id="si_btnEditText"><i class="fa-solid fa-pen-to-square"></i> تعديل</span></button>
+            <button class="btn primary" id="si_btnSaveTop" title="حفظ"><span id="si_btnSaveText"><i class="fa-solid fa-circle-check"></i> حفظ</span></button>
+            <button class="btn danger" id="si_btnDeleteTop" title="حذف"><span id="si_btnDeleteText"><i class="fa-solid fa-circle-xmark"></i> حذف</span></button>
+            <button class="btn print" id="si_btnPrintTop" title="طباعة PDF"><span id="si_btnPrintText"><i class="fa-solid fa-file-pdf"></i> طباعة PDF</span></button>
+            <button class="btn btn-journal-view" id="si_btnJournalView" title="صورة الحركة" disabled><span><i class="fa-solid fa-file-invoice"></i> صورة الحركة</span></button>
+            <button class="btn whatsapp" id="si_btnWhatsApp" title="واتساب"><span><i class="fa-brands fa-whatsapp"></i> واتساب</span></button>
+            <button class="btn close-screen" id="si_btnClose" title="إغلاق"><span id="si_btnCloseText"><i class="fa-solid fa-arrow-right-from-bracket"></i> إغلاق</span></button>
+          </div>
+
+    <!-- Customer Lookup Modal (F9) -->
+    <div class="modal" id="lookupCustomerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="lc_modal_title">اختر عميل</h3>
+          <button class="icon-btn" id="lookupCustomerClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span id="lc_search_label">بحث عن عميل</span>
+            <input type="search" id="lc_search" placeholder="اكتب رقم العميل أو اسم العميل للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="lc_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th id="lc_th_id" style="width:140px">رقم العميل</th>
+                  <th id="lc_th_name">اسم العميل</th>
+                </tr>
+              </thead>
+              <tbody id="lc_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupCustomerCancel" style="display:inline-flex;align-items:center;gap:6px"><span id="lc_cancel_text"><i class="fa-regular fa-circle-xmark"></i> إلغاء</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unsaved Changes Confirmation Modal (Elegant Style) -->
+    <div class="permission-denied-modal" id="unsavedChangesModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="permission-denied-backdrop" data-close></div>
+      <div class="permission-denied-content" style="max-width:420px">
+        <!-- Elegant Header with Warning Gradient -->
+        <div class="permission-denied-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding:28px 24px 24px;">
+          <div class="permission-denied-icon" style="width:72px; height:72px; font-size:32px; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); border:3px solid rgba(255,255,255,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+            <i class="fa-solid fa-file-pen"></i>
+          </div>
+          <h3 class="permission-denied-title" id="unsavedChangesTitle" style="font-size:18px; margin-top:16px; text-shadow:0 2px 4px rgba(0,0,0,0.1);">تأكيد الخروج</h3>
+          <!-- Close button in corner -->
+          <button id="unsavedChangesClose" aria-label="إغلاق" style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.2); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; backdrop-filter:blur(4px);">
+            <i class="fa-solid fa-xmark" style="font-size:14px;"></i>
+          </button>
+        </div>
+        <!-- Body with elegant typography -->
+        <div class="permission-denied-body" style="padding:28px 24px 20px;">
+          <p class="permission-denied-message" id="unsavedChangesMessage" style="font-size:15px; font-weight:600; color:var(--text); margin:0 0 10px 0; line-height:1.7;">
+            لديك تعديلات غير محفوظة على هذه الفاتورة
+          </p>
+          <p class="permission-denied-detail" id="unsavedChangesDetail" style="font-size:13px; color:var(--subtle); margin:0; line-height:1.7; opacity:0.85;">
+            هل تريد الخروج بدون حفظ التغييرات؟ يمكنك العودة لإكمال التعديل أو المتابعة بدون حفظ.
+          </p>
+        </div>
+        <!-- Footer with elegant buttons -->
+        <div class="permission-denied-footer" style="padding:16px 24px 24px; display:flex; gap:12px; flex-direction:row-reverse;">
+          <button id="unsavedStayBtn" type="button" style="flex:1; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; font-size:14px; font-weight:600; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(16,185,129,0.3); transition:all 0.2s;">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            <span id="unsavedStayBtnText">العودة للتعديل</span>
+          </button>
+          <button id="unsavedLeaveBtn" type="button" style="flex:1; background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color:white; border:none; font-size:14px; font-weight:500; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(107,114,128,0.25); transition:all 0.2s;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span id="unsavedLeaveBtnText">الخروج بدون حفظ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supplier Lookup Modal (F9) -->
+    <div class="modal" id="lookupSupplierModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="ls_modal_title">اختر مورد</h3>
+          <button class="icon-btn" id="lookupSupplierClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span id="ls_search_label">بحث عن مورد</span>
+            <input type="search" id="ls_search" placeholder="اكتب رقم المورد أو اسم المورد للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="ls_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th id="ls_th_id" style="width:140px">رقم المورد</th>
+                  <th id="ls_th_name">اسم المورد</th>
+                </tr>
+              </thead>
+              <tbody id="ls_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupSupplierCancel" style="display:inline-flex;align-items:center;gap:6px"><span id="ls_cancel_text"><i class="fa-regular fa-circle-xmark"></i> إلغاء</span></button>
+        </div>
+      </div>
+    </div>
+        </div>
+
+    <!-- Item Lookup Modal (F9 / Right-Click on item number) -->
+    <div class="modal" id="lookupItemModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="li_modal_title">اختر صنف</h3>
+          <button class="icon-btn" id="lookupItemClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span id="li_search_label">بحث عن صنف</span>
+            <input type="search" id="li_search" placeholder="اكتب رقم الصنف أو اسم الصنف للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="li_table" style="min-width:520px">
+              <thead>
+                <tr>
+                  <th id="li_th_id" style="width:120px">رقم الصنف</th>
+                  <th id="li_th_name">اسم الصنف</th>
+                  <th id="li_th_karat" style="width:80px">العيار</th>
+                </tr>
+              </thead>
+              <tbody id="li_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="lookupItemCancel" style="display:inline-flex;align-items:center;gap:6px"><span id="li_cancel_text"><i class="fa-regular fa-circle-xmark"></i> إلغاء</span></button>
+        </div>
+      </div>
+    </div>
+
+        <div class="card form-card grid-span-3 fullwide">
+            <h3 style="margin:0 0 12px 0; display:flex; align-items:center; justify-content:space-between">
+              <span id="si_header_title">رأس فاتورة البيع</span>
+              <div style="display:flex; gap:12px; align-items:center">
+                <!-- نوع الفاتورة - مصغر -->
+                <div class="invoice-type-selector-compact" style="display:flex; gap:4px; padding:2px; background:var(--bg-muted); border-radius:8px; border:1px solid var(--border);">
+                  <button type="button" class="invoice-type-btn-compact" data-type="taskir" id="si_type_taskir" title="تسكير">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>تسكير</span>
+                  </button>
+                  <button type="button" class="invoice-type-btn-compact" data-type="mashghul" id="si_type_mashghul" title="مشغول">
+                    <i class="fa-solid fa-gem"></i>
+                    <span>مشغول</span>
+                  </button>
+                </div>
+                <div class="row nav-controls" style="gap:6px; align-items:center">
+                  <button class="icon-btn" type="button" id="si_nav_last" title="الأخير (Ctrl+→)"><i class="fa-solid fa-angles-right"></i></button>
+                  <button class="icon-btn" type="button" id="si_nav_next" title="التالي (→)"><i class="fa-solid fa-angle-right"></i></button>
+                  <input type="text" id="si_nav_id" inputmode="numeric" pattern="\\d*" placeholder="رقم" title="رقم الفاتورة" style="width:88px; text-align:center; padding:6px 10px; border:1px solid var(--border); border-radius:10px; background:var(--bg-muted); color:var(--text); outline:none">
+                  <span id="si_nav_counter" style="min-width:76px;text-align:center;color:var(--subtle);font-size:13px">0 / 0</span>
+                  <button class="icon-btn" type="button" id="si_nav_prev" title="السابق (←)"><i class="fa-solid fa-angle-left"></i></button>
+                  <button class="icon-btn" type="button" id="si_nav_first" title="الأول (Ctrl+←)"><i class="fa-solid fa-angles-left"></i></button>
+                  <input type="time" id="si_time" readonly style="width:auto;min-width:110px">
+                </div>
+              </div>
+            </h3>
+            <div class="row" style="gap:4px; flex-wrap:nowrap; overflow:auto; align-items:center">
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-hashtag" style="color:#f59e0b; margin-inline-end:6px"></i><span id="si_label_invoiceNo">رقم الفاتورة</span></span>
+                <input type="text" id="si_id" readonly disabled style="width:90px; text-align:center">
+              </label>
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-user-tag" style="color:#3b82f6; margin-inline-end:6px"></i><span id="si_label_customerNo">رقم العميل</span></span>
+                <input type="text" id="si_customer_no" placeholder="F9 أو يمين" title="اضغط F9 أو زر الماوس الأيمن للبحث عن عميل" style="width:100px; text-align:center; cursor:context-menu">
+              </label>
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-truck-field" style="color:#8b5cf6; margin-inline-end:6px"></i><span id="si_label_supplierNo">رقم المورد</span></span>
+                <input type="text" id="si_supplier_no" placeholder="F9 أو يمين" title="اضغط F9 أو زر الماوس الأيمن للبحث عن مورد" style="width:100px; text-align:center; cursor:context-menu">
+              </label>
+              <label class="form-field" style="flex:1; min-width:0; margin:0; padding:0">
+                <span><i class="fa-solid fa-id-card" style="color:#10b981; margin-inline-end:6px"></i><span id="si_label_name">الاسم</span></span>
+                <input type="text" id="si_name" placeholder="اسم العميل أو المورد" readonly style="margin:0; box-sizing:border-box; background:var(--bg-muted); cursor:not-allowed">
+              </label>
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-percent" style="color:#6366f1; margin-inline-end:6px"></i><span id="si_label_taxRate">الضريبة %</span></span>
+                <input type="number" id="si_tax_rate" placeholder="15" value="15" step="0.01" min="0" max="100" style="width:80px; text-align:center" title="نسبة الضريبة">
+              </label>
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-bookmark" style="color:#f97316; margin-inline-end:6px"></i><span id="si_label_refNo">رقم مرجعي</span></span>
+                <input type="text" id="si_ref_no" placeholder="الرقم المرجعي" style="width:120px; text-align:center">
+              </label>
+              <label class="form-field" style="margin:0; padding:0">
+                <span><i class="fa-solid fa-calendar-days" style="color:#ef4444; margin-inline-end:6px"></i><span id="si_label_date">التاريخ</span></span>
+                <input type="date" id="si_date">
+              </label>
+            </div>
+            <!-- User tracking info -->
+            <div id="si_user_tracking_info" style="display:none; margin-top:6px; padding:5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-muted); font-size:11px; color:var(--subtle);">
+              <div id="si_created_info" style="margin:0;"></div>
+              <div id="si_updated_info"></div>
+            </div>
+          </div>
+          <div class="card table-card grid-span-3 fullwide" id="sales-invoice-grid" style="margin-top:12px">
+            <div class="table-head">
+              <h3 id="si_details_title">تفاصيل فاتورة البيع</h3>
+              <input type="text" id="si_description" placeholder="البيان" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:12px; background:var(--bg-muted); color:var(--text); outline:none; min-height:42px">
+              <div class="row" style="align-items:center; gap:16px; flex-wrap:wrap;">
+                <!-- Tax Toggle Switches -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <label class="tax-toggle-btn" for="si_tax_on_labor">
+                    <input type="checkbox" id="si_tax_on_labor">
+                    <span class="toggle-btn-text">ضريبة الأجور</span>
+                  </label>
+                </div>
+                <!-- Payment Type Toggle Switches -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <label class="tax-toggle-btn" for="si_payment_cash">
+                    <input type="radio" name="si_payment_type" id="si_payment_cash" value="cash">
+                    <span class="toggle-btn-text">نقدي</span>
+                  </label>
+                  <label class="tax-toggle-btn" for="si_payment_credit">
+                    <input type="radio" name="si_payment_type" id="si_payment_credit" value="credit" checked>
+                    <span class="toggle-btn-text">آجل</span>
+                  </label>
+                </div>
+                <button class="btn primary" id="si_btnAddLine" type="button" style="width:auto;display:inline-flex;align-items:center;gap:6px"><span id="si_btnAddLineText"><i class="fa-solid fa-circle-plus"></i> إضافة سطر</span></button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="si_detailsTable">
+                <thead>
+                  <tr>
+                    <th id="si_th_item_no">رقم الصنف</th>
+                    <th id="si_th_item_name">اسم الصنف</th>
+                    <th id="si_th_karat">العيار</th>
+                    <th id="si_th_weight">الوزن</th>
+                    <th id="si_th_ounce" class="col-ounce">الأونصة</th>
+                    <th class="col-price"><span id="si_th_price">سعر الجرام</span> <small id="si_th_price_auto" style="font-weight:normal;opacity:0.7">(تلقائي)</small></th>
+                    <th id="si_th_labor" class="col-labor">الأجور</th>
+                    <th id="si_th_subtotal" class="col-subtotal">الاجمالي قبل الضريبة</th>
+                    <th id="si_th_tax" class="col-tax">اجمالي الضريبة</th>
+                    <th><span id="si_th_value">القيمة</span> <small id="si_th_value_auto" style="font-weight:normal;opacity:0.7">(تلقائي)</small></th>
+                    <th id="si_th_remove">إزالة</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Summary Card -->
+          <div class="card form-card grid-span-3 fullwide" style="margin-top:12px; padding:12px 16px;">
+            <h3 style="margin:0 0 8px 0; display:flex; align-items:center; gap:8px; font-size:15px;">
+              <i class="fa-solid fa-calculator" style="color:var(--primary); font-size:14px;"></i>
+              <span id="si_summary_title">الإجماليات</span>
+            </h3>
+            <div class="summary-row">
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_total_weight">إجمالي الوزن</span>
+                <span class="summary-value" id="si_total_weight">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_total_value">إجمالي القيمة</span>
+                <span class="summary-value" id="si_total_value">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_gold24">ذهب 24</span>
+                <span class="summary-value" id="si_karat_24">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_gold22">ذهب 22</span>
+                <span class="summary-value" id="si_karat_22">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_gold21">ذهب 21</span>
+                <span class="summary-value" id="si_karat_21">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_gold18">ذهب 18</span>
+                <span class="summary-value" id="si_karat_18">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_silver999" style="color:#9ca3af">فضة 999</span>
+                <span class="summary-value" id="si_silver_999" style="color:#9ca3af">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_silver925" style="color:#9ca3af">فضة 925</span>
+                <span class="summary-value" id="si_silver_925" style="color:#9ca3af">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_silver900" style="color:#9ca3af">فضة 900</span>
+                <span class="summary-value" id="si_silver_900" style="color:#9ca3af">0.00</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label" id="si_lbl_silver800" style="color:#9ca3af">فضة 800</span>
+                <span class="summary-value" id="si_silver_800" style="color:#9ca3af">0.00</span>
+              </div>
+            </div>
+          </div>
+      </section>
+    </main>
+
+    <!-- Confirm Delete Modal (Invoice header) -->
+    <div class="modal" id="confirmInvoiceDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span id="confirmInvoiceDelTitle">تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmInvoiceDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+          </div>
+          <p id="confirmInvoiceDelMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6">هل أنت متأكد من أنك تريد حذف هذه الفاتورة؟</p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmInvoiceDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px;display:inline-flex;align-items:center;gap:6px">
+            <span id="confirmInvoiceDelYesText"><i class="fa-regular fa-circle-check"></i> نعم، احذف</span>
+          </button>
+          <button class="btn secondary" id="confirmInvoiceDelNo" style="font-size:14px; padding:10px 24px;display:inline-flex;align-items:center;gap:6px">
+            <span id="confirmInvoiceDelNoText"><i class="fa-regular fa-circle-xmark"></i> إلغاء الأمر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal (Detail row) -->
+    <div class="modal" id="confirmDetailDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span id="confirmDetailDelTitle">تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmDetailDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+          </div>
+          <p id="confirmDetailDelMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6">هل أنت متأكد من حذف هذا السطر؟</p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmDetailDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px;display:inline-flex;align-items:center;gap:6px">
+            <span id="confirmDetailDelYesText"><i class="fa-regular fa-circle-check"></i> نعم، احذف</span>
+          </button>
+          <button class="btn secondary" id="confirmDetailDelNo" style="font-size:14px; padding:10px 24px;display:inline-flex;align-items:center;gap:6px">
+            <span id="confirmDetailDelNoText"><i class="fa-regular fa-circle-xmark"></i> إلغاء الأمر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Duplicate Reference Number Warning Modal -->
+    <div class="permission-denied-modal" id="duplicateRefModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="permission-denied-backdrop" data-close></div>
+      <div class="permission-denied-content">
+        <div class="permission-denied-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+          <div class="permission-denied-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <h3 class="permission-denied-title" id="duplicateRefModalTitle">تحذير - رقم مرجعي مكرر</h3>
+        </div>
+        <div class="permission-denied-body">
+          <p class="permission-denied-message" id="duplicateRefMessage">الرقم المرجعي المدخل موجود مسبقاً!</p>
+          <p class="permission-denied-detail" id="duplicateRefDetail">يرجى إدخال رقم مرجعي مختلف لتجنب التكرار.</p>
+        </div>
+        <div class="permission-denied-footer">
+          <button class="permission-denied-close-btn" id="duplicateRefClose" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);display:inline-flex;align-items:center;gap:6px">
+            <span id="duplicateRefCloseText"><i class="fa-solid fa-check"></i> حسناً</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+    
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="../../shared-styles/debt-limit-modal.js"></script>
+    <script src="../../shared-styles/inactive-entity-modal.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

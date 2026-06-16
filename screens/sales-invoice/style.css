@@ -1,0 +1,853 @@
+@import url('../customers/style.css');
+
+/* تطبيق خط Cairo على عناصر الإدخال والجداول */
+#panel-sales-invoice input[type="text"],
+#panel-sales-invoice input[type="number"],
+#panel-sales-invoice input[type="date"],
+#panel-sales-invoice input[type="time"],
+#panel-sales-invoice select,
+#panel-sales-invoice textarea,
+#panel-sales-invoice option,
+#panel-sales-invoice button,
+#panel-sales-invoice label,
+#panel-sales-invoice .form-field,
+#panel-sales-invoice .totals-card,
+#si_linesTable input,
+#si_linesTable select,
+#si_linesTable option,
+#si_linesTable td,
+#si_linesTable th,
+#si_linesTable button,
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="email"],
+.modal input[type="tel"],
+.modal input[type="search"],
+.modal select,
+.modal option,
+.modal textarea,
+.modal td,
+.modal th,
+.modal button,
+.modal label,
+.modal .modal-body,
+.modal .modal-header,
+.modal .modal-footer,
+.toast,
+.si-hint {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* إصلاح ارتفاع النص في القوائم المنسدلة */
+#panel-sales-invoice select,
+#si_linesTable select,
+.modal select {
+  line-height: 2.2 !important;
+  vertical-align: middle !important;
+  padding-top: 5px !important;
+}
+
+/* إصلاح ارتفاع النص في خيارات القوائم المنسدلة */
+#panel-sales-invoice option,
+#si_linesTable option,
+.modal option {
+  line-height: 1.8 !important;
+  padding: 8px 12px !important;
+}
+
+/* حجم أكبر قليلاً للعناوين في الجدول */
+#si_linesTable th {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+/* ===== Invoice Type Selector (مشغول/تسكير) ===== */
+.invoice-type-selector {
+  display: flex;
+  gap: 10px;
+  padding: 4px;
+  background: var(--bg-muted);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.invoice-type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--subtle);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.invoice-type-btn i {
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.invoice-type-btn:hover {
+  background: rgba(var(--primary-rgb), 0.08);
+  color: var(--text);
+}
+
+.invoice-type-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-600));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.35);
+}
+
+.invoice-type-btn.active i {
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+/* لون مختلف لكل نوع */
+.invoice-type-btn[data-type="mashghul"].active {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+}
+
+.invoice-type-btn[data-type="taskir"].active {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35);
+}
+
+/* ===== Invoice Type Selector Compact (نسخة مصغرة) ===== */
+.invoice-type-selector-compact {
+  display: flex;
+  gap: 4px;
+  padding: 2px;
+  background: var(--bg-muted);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.invoice-type-btn-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  min-height: 32px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--subtle);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: 'Cairo', sans-serif;
+  white-space: nowrap;
+}
+
+.invoice-type-btn-compact i {
+  font-size: 11px;
+  transition: all 0.25s ease;
+}
+
+.invoice-type-btn-compact:hover {
+  background: rgba(var(--primary-rgb), 0.08);
+  color: var(--text);
+}
+
+.invoice-type-btn-compact.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-600));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+/* لون مختلف لكل نوع - نسخة مصغرة */
+.invoice-type-btn-compact[data-type="mashghul"].active {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.invoice-type-btn-compact[data-type="taskir"].active {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* إصلاح محاذاة خلايا جدول التفاصيل */
+#si_detailsTable td {
+  vertical-align: middle;
+}
+
+#si_detailsTable .ounce-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transform: translateY(1px);
+}
+
+#si_detailsTable .ounce-adj-indicator {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+/* إزالة الأسهم من جميع حقول الأرقام */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Tax Toggle Button Styles */
+.tax-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  min-height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+  background: var(--bg-muted);
+  color: var(--subtle);
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.tax-toggle-btn input {
+  display: none;
+}
+
+.tax-toggle-btn:hover {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.tax-toggle-btn:has(input:checked) {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-color: #16a34a;
+  color: white;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.tax-toggle-btn:has(input:checked) .toggle-btn-text::before {
+  content: "✓ ";
+}
+
+.tax-toggle-btn:has(input:checked):hover {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+/* السماح بالتمرير على الشاشة بسبب وجود بطاقات إضافية */
+body {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+#panel-sales-invoice {
+  overflow: visible !important;
+  height: auto !important;
+  padding-bottom: 20px !important;
+}
+
+/* Sales Invoice specific layout */
+.header-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media (max-width:900px){.header-grid{grid-template-columns:1fr}}
+.header-grid .box{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card)}
+.header-grid .row{display:grid;grid-template-columns:1fr 2fr}
+.header-grid .cell{padding:10px;border-bottom:1px solid var(--border)}
+.header-grid .row:last-child .cell{border-bottom:0}
+.header-grid .lbl{background:var(--bg-muted);color:var(--subtle);font-weight:600}
+.header-grid .val input{width:100%;padding:6px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-muted);color:var(--text);text-align:center;min-height:34px}
+
+/* تطبيق نفس تصميم قائمة العملاء تماماً */
+#sales-invoice-grid {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+}
+
+#sales-invoice-grid .table-head {
+  flex-shrink: 0;
+}
+
+#sales-invoice-grid .table-responsive {
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+  max-height: 40vh;
+}
+
+/* تأكد من أن الجدول يأخذ كامل المساحة */
+#sales-invoice-grid.table-card.fullwide {
+  overflow: visible;
+}
+
+/* ✅ أنماط الجدول - نسخ مطابق 100% من شاشة القبض */
+#si_detailsTable{
+  min-width:700px; 
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ✅ رأس الجدول - مطابق لشاشة القبض */
+#si_detailsTable thead th{
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  color: var(--subtle);
+  text-align: center;
+  font-weight: 600;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+/* ✅ خلايا الجدول - مطابق لشاشة القبض */
+#si_detailsTable tbody td{
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* ✅ الصفوف الزوجية والـ hover - مطابق لشاشة القبض */
+#si_detailsTable tbody tr:nth-child(even){
+  background: rgba(255,255,255,.02);
+}
+
+#si_detailsTable tbody tr:hover{
+  background: rgba(255,255,255,.04);
+}
+
+/* تنسيق الإدخالات داخل الجدول - بسيط ونظيف مثل شاشة القبض */
+#si_detailsTable input[type="number"],
+#si_detailsTable input[type="text"],
+#si_detailsTable select{
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 600;
+  width: 100%; 
+  box-sizing: border-box;
+  min-height: 42px;
+}
+
+/* Readonly fields */
+#si_detailsTable input[readonly] {
+  background: var(--card);
+  cursor: not-allowed;
+}
+
+/* Select dropdowns */
+#si_detailsTable select {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+#si_detailsTable input[type="number"]:focus,
+#si_detailsTable input[type="text"]:focus,
+#si_detailsTable select:focus{ 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 6px var(--ring);
+}
+
+/* Dark mode adjustments */
+html[data-theme='dark'] {
+  #si_detailsTable input[type="number"],
+  #si_detailsTable input[type="text"],
+  #si_detailsTable select{
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+  
+  #si_detailsTable input[readonly] {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  #si_detailsTable .detail-value {
+    background-color: #1f2937 !important;
+    color: #f9fafb !important;
+    border: 1.5px solid #374151 !important;
+  }
+  
+  /* Force override any inline styles */
+  #si_detailsTable td .detail-value[style] {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+}
+
+/* إظهار أسهم العداد في حقول الأرقام */
+#si_detailsTable input[type="number"] {
+  -moz-appearance: number-input !important;
+  appearance: auto !important;
+}
+
+#si_detailsTable input[type="number"]::-webkit-inner-spin-button,
+#si_detailsTable input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: inner-spin-button !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  background: none !important;
+  border: 0 !important;
+  filter: brightness(0.8) !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* ✅ زر الحذف الحديث - مطابق لشاشة القبض */
+#si_detailsTable .icon-btn.act-delete{
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--error);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#si_detailsTable .icon-btn.act-delete i{ 
+  color: var(--error);
+  font-size: 18px;
+  transition: all .25s ease;
+}
+#si_detailsTable .icon-btn.act-delete:hover{
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--error) 15%, transparent), 
+    color-mix(in oklab, var(--error) 8%, transparent)
+  );
+  border-color: color-mix(in oklab, var(--error) 35%, transparent);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--error) 25%, transparent);
+}
+#si_detailsTable .icon-btn.act-delete:hover i{ 
+  color: var(--error);
+  transform: scale(1.1);
+}
+#si_detailsTable .icon-btn.act-delete:active{
+  transform: scale(0.95) rotate(0deg);
+}
+
+#si_detailsTable thead th:nth-child(1){ width:100px }
+#si_detailsTable thead th:nth-child(2){ width:120px }
+#si_detailsTable thead th:nth-child(3){ width:120px }
+#si_detailsTable thead th:nth-child(4){ width:120px }
+#si_detailsTable thead th:nth-child(5){ width:140px }
+#si_detailsTable thead th:nth-child(6){ width:64px }
+
+/* تنسيق موحد لحقل العيار */
+#si_detailsTable tbody td input[list="si_karat_list"],
+#si_detailsTable tbody td select.karat-select {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 5%, var(--card)), 
+    color-mix(in oklab, #ffa500 3%, var(--card))
+  ) !important;
+  color: var(--text) !important;
+  border: 2px solid color-mix(in oklab, #ffa500 35%, transparent) !important;
+  box-shadow: 0 2px 6px rgba(255, 165, 0, 0.12), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+#si_detailsTable tbody td input[list="si_karat_list"]:focus,
+#si_detailsTable tbody td select.karat-select:focus {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 0 6px rgba(255, 140, 0, 0.15), 
+              0 4px 12px rgba(255, 140, 0, 0.25) !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 8%, var(--card)), 
+    color-mix(in oklab, #ffa500 5%, var(--card))
+  ) !important;
+}
+
+/* Dark mode لحقل العيار */
+html[data-theme='dark'] #si_detailsTable tbody td input[list="si_karat_list"],
+html[data-theme='dark'] #si_detailsTable tbody td select.karat-select {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 12%, #1f2937), 
+    color-mix(in oklab, #ff8c00 8%, #1f2937)
+  ) !important;
+  color: #f9fafb !important;
+  border-color: color-mix(in oklab, #ffa500 45%, transparent) !important;
+}
+
+html[data-theme='dark'] #si_detailsTable tbody td input[list="si_karat_list"]:focus,
+html[data-theme='dark'] #si_detailsTable tbody td select.karat-select:focus {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 15%, #1f2937), 
+    color-mix(in oklab, #ff8c00 10%, #1f2937)
+  ) !important;
+}
+
+/* Enhanced Modal Close Button */
+.modal .modal-header .icon-btn {
+  position: relative;
+  background: none;
+  border: 2px solid transparent;
+  color: #e74c3c;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  margin: -8px -8px -8px 8px;
+  padding: 0;
+}
+
+/* Hover and Focus States for Modal Close Button */
+.modal .modal-header .icon-btn:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  transform: scale(1.1);
+}
+
+.modal .modal-header .icon-btn:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.5);
+  transform: scale(1.1);
+}
+
+.modal .modal-header .icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Dark mode adjustments */
+html[data-theme='dark'] {
+  .modal .modal-header .icon-btn {
+    color: #ff6b6b;
+  }
+  
+  .modal .modal-header .icon-btn:hover {
+    background-color: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+  }
+  
+  .modal .modal-header .icon-btn:focus {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+  }
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn {
+  color: #ff6b6b;
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn:hover {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+}
+
+/* Modern delete button */
+#si_detailsTable .btn.danger{
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 2px solid transparent !important;
+  background: transparent !important;
+  color: var(--error) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 !important;
+  margin: 0;
+}
+#si_detailsTable .btn.danger i{ 
+  color: var(--error) !important;
+  font-size: 15px;
+  transition: all .25s ease;
+}
+#si_detailsTable .btn.danger:hover{
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--error) 15%, transparent), 
+    color-mix(in oklab, var(--error) 8%, transparent)
+  ) !important;
+  border-color: color-mix(in oklab, var(--error) 35%, transparent) !important;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--error) 25%, transparent) !important;
+}
+#si_detailsTable .btn.danger:hover i{ 
+  color: var(--error) !important;
+  transform: scale(1.1);
+}
+#si_detailsTable .btn.danger:active{
+  transform: scale(0.95) rotate(0deg);
+}
+
+/* Nav controls */
+.nav-controls{display:flex;gap:6px;align-items:center;padding:6px 8px;border:1px solid var(--border);border-radius:12px;background:color-mix(in oklab, var(--card) 88%, transparent);box-shadow:0 6px 20px rgba(0,0,0,.12) inset, 0 6px 14px rgba(0,0,0,.08)}
+.nav-controls .icon-btn{width:42px;height:42px;min-height:42px;padding:0;box-sizing:border-box;border-radius:12px;border:1px solid color-mix(in oklab, var(--ring,#7cd2c6) 55%, #000);background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.35));display:grid;place-items:center;color:var(--text);transition:transform .12s ease, box-shadow .15s ease, background .2s ease, border-color .15s ease;outline:none;box-shadow:0 8px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.5);cursor:pointer}
+.nav-controls .icon-btn i{color:var(--primary,#0aa39a);font-size:18px;line-height:1;vertical-align:middle;display:flex;align-items:center;justify-content:center;width:18px;height:18px}
+.nav-controls .icon-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,.09), 0 0 0 6px color-mix(in oklab, var(--primary,#0aa39a) 25%, transparent)}
+.nav-controls .icon-btn:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.nav-controls .icon-btn:focus-visible{box-shadow:0 0 0 6px var(--ring)}
+.nav-controls .icon-btn:disabled{opacity:.45;filter:saturate(.6) contrast(.9) grayscale(.3);cursor:not-allowed;pointer-events:all}
+#si_nav_id{border:1px solid var(--border);border-radius:10px;background:var(--bg-muted);color:var(--text);outline:none;text-align:center;transition:border-color .15s ease, box-shadow .15s ease}
+#si_nav_id:focus{border-color:var(--primary);box-shadow:0 0 0 6px var(--ring)}
+#si_nav_counter{min-width:76px;display:grid;place-items:center;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:color-mix(in oklab, var(--bg-muted) 92%, transparent);color:var(--subtle)}
+
+/* Dark mode tweaks for nav arrows */
+html[data-theme='dark'] {
+  .nav-controls .icon-btn{border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff);background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35));box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05)}
+  .nav-controls .icon-btn i{color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%)}
+  #si_nav_counter{border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff);background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35));color:#f2f6f5}
+}
+:root[data-theme="dark"] .nav-controls .icon-btn{border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff);background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35));box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05)}
+:root[data-theme="dark"] .nav-controls .icon-btn i{color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%)}
+:root[data-theme="dark"] #si_nav_counter{border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff);background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35));color:#f2f6f5}
+
+/* Summary Card - Compact layout */
+.summary-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 12px;
+  padding: 4px 8px;
+}
+
+.summary-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  flex: 1;
+  min-width: 80px;
+}
+
+.summary-label{
+  font-size: 9px;
+  color: var(--subtle);
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.summary-value{
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 1024px) {
+  .summary-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .summary-item {
+    min-width: 70px;
+  }
+  
+  .summary-value {
+    font-size: 16px;
+  }
+  
+  .summary-label {
+    font-size: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   إخفاء/إظهار الأعمدة حسب نوع الفاتورة
+   ═══════════════════════════════════════════════════════════════ */
+
+/* نوع تسكير: إخفاء أعمدة الأجور والضريبة */
+body.invoice-type-taskir .col-labor,
+body.invoice-type-taskir .col-subtotal,
+body.invoice-type-taskir .col-tax,
+body.invoice-type-taskir #si_tax_rate,
+body.invoice-type-taskir label:has(#si_tax_rate),
+body.invoice-type-taskir .tax-toggle-btn:has(#si_tax_on_labor) {
+  display: none !important;
+}
+
+/* نوع مشغول: إخفاء أعمدة سعر الأونصة وسعر الجرام */
+body.invoice-type-mashghul .col-ounce,
+body.invoice-type-mashghul .col-price {
+  display: none !important;
+}
+
+/* ===== Chevron Connected Buttons Style ===== */
+.toolbar .actions {
+  display: flex;
+  gap: 0 !important;
+  align-items: center;
+}
+
+html[dir='ltr'] .toolbar .actions,
+:root[dir='ltr'] .toolbar .actions {
+  flex-direction: row-reverse;
+}
+
+.toolbar .actions .btn {
+  position: relative;
+  margin-left: -8px !important;
+  height: 60px !important;
+  min-width: 90px !important;
+  width: auto !important;
+  padding: 6px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+/* إظهار النصوص أسفل الأيقونات */
+.toolbar .actions .btn span {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.toolbar .actions .btn span i {
+  font-size: 20px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+/* أول زر - مسطح من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:first-child {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%) !important;
+  padding-right: 24px !important;
+  padding-left: 16px !important;
+  margin-left: 0 !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+/* آخر زر - مسطح من اليسار، محفور من اليمين */
+.toolbar .actions .btn:last-child {
+  clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%, 88% 50%) !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  border-radius: 10px 0 0 10px !important;
+}
+
+/* الأزرار الوسطى - محفور من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:not(:first-child):not(:last-child) {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%, 88% 50%) !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+
+.toolbar .actions .btn:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+  filter: brightness(1.15) !important;
+}
+
+.toolbar .actions .btn:active {
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Tooltip عند التمرير */
+.toolbar .actions .btn::before {
+  display: none !important;
+}
+
+/* إلغاء التأثيرات من shared-styles */
+.toolbar .actions .btn::after {
+  display: none !important;
+}
+
+/* ألوان مخصصة للأزرار */
+.toolbar .actions .btn.primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+}
+
+/* زر الحفظ بلون مختلف */
+.toolbar .actions .btn.primary#si_btnSaveTop {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important;
+  border-color: #0d9488 !important;
+}
+
+.toolbar .actions .btn.secondary {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}
+
+.toolbar .actions .btn.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #dc2626 !important;
+}
+
+.toolbar .actions .btn.print {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-color: #2563eb !important;
+}
+
+.toolbar .actions .btn.btn-journal-view {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border-color: #d97706 !important;
+}
+
+.toolbar .actions .btn.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  border-color: #128c7e !important;
+}
+
+.toolbar .actions .btn.close-screen {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}

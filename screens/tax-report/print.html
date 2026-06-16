@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طباعة تقرير الضرائب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      margin: 8mm;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+      background: #f5f5f5;
+      padding: 10px;
+      font-size: 14px;
+      color: #2c3e50;
+      min-height: 100vh;
+    }
+
+    .report-container {
+      max-width: 297mm;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    /* Header Section */
+    .report-header {
+      background: linear-gradient(135deg, #e8f5f3 0%, #d4edea 100%);
+      color: #2c3e50;
+      padding: 20px 15px;
+      border: 2px solid #00897B;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 0;
+    }
+
+    .header-top {
+      /* ثلاث أعمدة: معلومات عربية - الشعار - معلومات إنجليزية، مع بقاء الشعار في المنتصف دائماً */
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      margin-bottom: 12px;
+      width: 100%;
+      direction: ltr;
+      column-gap: 20px;
+    }
+
+    .company-info {
+      text-align: right;
+      direction: rtl;
+    }
+
+    .company-info h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0 0 8px 0;
+    }
+
+    .company-info .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* RTL: start = right, so icon يلتصق بالطرف الأيمن */
+      gap: 8px;
+      font-size: 11px;
+      color: #2c3e50;
+      margin: 4px 0;
+    }
+
+    .company-info .info-item i {
+      color: #00897B;
+      font-size: 12px;
+    }
+
+    .company-logo {
+      width: 130px;
+      height: 130px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      border: 4px solid #00897B;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,137,123,0.2);
+      margin: 0 auto;
+    }
+    
+    .company-logo img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+    }
+
+    .company-info-left {
+      text-align: left;
+      direction: ltr;
+    }
+
+    .company-info-left h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0 0 8px 0;
+    }
+
+    .company-info-left .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      font-size: 11px;
+      color: #2c3e50;
+      margin: 4px 0;
+    }
+
+    .company-info-left .info-item i {
+      color: #00897B;
+      font-size: 12px;
+    }
+
+    .report-title {
+      text-align: center;
+      background: #e8f5f3;
+      padding: 4px 15px;
+      border-radius: 12px;
+      border: 2px solid #00897B;
+      margin: 5px 0;
+    }
+
+    .report-title h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0;
+    }
+
+    /* Report Details */
+    .report-details {
+      padding: 6px 15px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .details-box {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .details-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .details-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-field {
+      display: flex;
+      align-items: center;
+      padding: 3px 6px;
+      gap: 6px;
+      border-left: 1px solid #ddd;
+    }
+
+    .detail-field:first-child {
+      border-left: none;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #2c3e50;
+      white-space: nowrap;
+    }
+
+    .field-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    /* Summary Section */
+    .summary-section {
+      padding: 10px 15px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .summary-card {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .summary-card.sales {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+
+    .summary-card.purchases {
+      border-color: #0ea5e9;
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    }
+
+    .summary-card.net-tax {
+      border-color: #8b5cf6;
+      background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+    }
+
+    .summary-card h3 {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #2c3e50;
+    }
+
+    .summary-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 5px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+    }
+
+    .detail-label {
+      font-size: 9px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      font-size: 11px;
+      font-weight: 700;
+      color: #2c3e50;
+      font-family: 'Courier New', monospace;
+    }
+
+    .detail-value.highlight {
+      color: #dc2626;
+      font-size: 12px;
+    }
+
+    .summary-value {
+      font-size: 18px;
+      font-weight: 900;
+      color: #2c3e50;
+      margin: 5px 0;
+    }
+
+    .summary-label {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    /* Table Section */
+    .report-table {
+      padding: 0 15px 10px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+    }
+
+    .table-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      background: linear-gradient(to bottom, #e8f4f8, #d0e8f0);
+      border-radius: 6px;
+      border: 2px solid #2c3e50;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: 15px;
+      border: 3px solid #2c3e50;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    thead {
+      background: linear-gradient(to bottom, #e8f4f8, #d0e8f0);
+      border-bottom: 3px solid #2c3e50;
+    }
+
+    thead th {
+      padding: 6px 4px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 10px;
+      color: #2c3e50;
+      border-right: 1px solid #b0c4ce;
+      border-bottom: 1px solid #b0c4ce;
+      line-height: 1.1;
+    }
+
+    thead th:last-child {
+      border-right: none;
+    }
+
+    tbody td {
+      padding: 5px 4px;
+      text-align: center;
+      font-size: 10px;
+      color: #2c3e50;
+      border-right: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody td:last-child {
+      border-right: none;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    tbody tr:hover {
+      background: #e8f4f8;
+    }
+
+    .number-cell {
+      font-family: 'Cairo', monospace;
+      font-weight: 600;
+      direction: ltr;
+    }
+
+    .tax-cell {
+      color: #0ea5e9;
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .report-footer {
+      padding: 10px 15px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      text-align: center;
+      font-size: 10px;
+      color: #64748b;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .report-container {
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    /* Print Button */
+    .print-button {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: linear-gradient(135deg, #00897B 0%, #00695C 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,137,123,0.4);
+      transition: all 0.3s;
+      z-index: 1000;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .print-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0,137,123,0.5);
+    }
+
+    .print-button i {
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container" id="printArea">
+    <!-- Header -->
+    <div class="report-header">
+      <div class="header-top">
+        <!-- English Company Info (Left in LTR = First) -->
+        <div class="company-info-left">
+          <h1 id="companyNameEn">Company Name</h1>
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span id="companyPhoneEn">+966 XX XXX XXXX</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span id="companyEmailEn">info@company.com</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span>Tax No: <span id="companyTaxNoEn">XXXXXX</span></span>
+          </div>
+        </div>
+
+        <!-- Logo (Center) -->
+        <div class="company-logo">
+          <img id="companyLogo" src="../../data/logos/company_logo.png" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-building\'></i>'">
+        </div>
+
+        <!-- Arabic Company Info (Right in LTR = Last) -->
+        <div class="company-info">
+          <h1 id="companyNameAr">اسم الشركة</h1>
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span id="companyPhone">+966 XX XXX XXXX</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span id="companyEmail">info@company.com</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span id="companyTaxNo">الرقم الضريبي: XXXXXX</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-title">
+        <h2 id="reportTitle">تقرير المبيعات والمشتريات وضريبة القيمة المضافة</h2>
+      </div>
+    </div>
+
+    <!-- Report Details -->
+    <div class="report-details">
+      <div class="details-box">
+        <div class="details-row">
+          <div class="detail-field">
+            <span class="field-label">من تاريخ:</span>
+            <span class="field-value" id="fromDate">-</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">إلى تاريخ:</span>
+            <span class="field-value" id="toDate">-</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">نوع التقرير:</span>
+            <span class="field-value" id="reportType">الكل</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">تاريخ الطباعة:</span>
+            <span class="field-value" id="printDate">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <div class="summary-grid">
+        <div class="summary-card sales">
+          <h3>المبيعات (المخرجات)</h3>
+          <div class="summary-details">
+            <div class="detail-row">
+              <span class="detail-label">قبل الضريبة:</span>
+              <span class="detail-value" id="salesBeforeTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">قيمة الضريبة:</span>
+              <span class="detail-value highlight" id="salesTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">بعد الضريبة:</span>
+              <span class="detail-value" id="salesAfterTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">المبيعات الصفرية:</span>
+              <span class="detail-value" id="salesZeroRated">0.00</span>
+            </div>
+          </div>
+        </div>
+        <div class="summary-card purchases">
+          <h3>المشتريات (المدخلات)</h3>
+          <div class="summary-details">
+            <div class="detail-row">
+              <span class="detail-label">قبل الضريبة:</span>
+              <span class="detail-value" id="purchasesBeforeTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">قيمة الضريبة:</span>
+              <span class="detail-value highlight" id="purchasesTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">بعد الضريبة:</span>
+              <span class="detail-value" id="purchasesAfterTax">0.00</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">المشتريات الصفرية:</span>
+              <span class="detail-value" id="purchasesZeroRated">0.00</span>
+            </div>
+          </div>
+        </div>
+        <div class="summary-card net-tax">
+          <h3>صافي الضريبة</h3>
+          <div class="summary-value" id="netTaxTotal">0.00</div>
+          <div class="summary-label" id="netTaxStatus">مستحقة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales Table -->
+    <div class="report-table" id="salesTableSection" style="display:none">
+      <div class="table-title">تفاصيل المبيعات</div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>رقم الفاتورة</th>
+            <th>التاريخ</th>
+            <th>العميل</th>
+            <th>الرقم الضريبي</th>
+            <th>قبل الضريبة</th>
+            <th>نسبة %</th>
+            <th>قيمة الضريبة</th>
+            <th>الإجمالي</th>
+            <th>النوع</th>
+            <th>الدفع</th>
+          </tr>
+        </thead>
+        <tbody id="salesTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Purchases Table -->
+    <div class="report-table" id="purchasesTableSection" style="display:none">
+      <div class="table-title">تفاصيل المشتريات</div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>رقم الفاتورة</th>
+            <th>التاريخ</th>
+            <th>المورد</th>
+            <th>الرقم الضريبي</th>
+            <th>قبل الضريبة</th>
+            <th>نسبة %</th>
+            <th>قيمة الضريبة</th>
+            <th>الإجمالي</th>
+            <th>النوع</th>
+            <th>الدفع</th>
+          </tr>
+        </thead>
+        <tbody id="purchasesTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="report-footer">
+      <p>تم إنشاء هذا التقرير بواسطة نظام المحاسب الذكي (BenAjlan) - جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+
+  <!-- Print Button -->
+  <button class="print-button no-print" onclick="window.print()">
+    <i class="fa-solid fa-print"></i>
+    طباعة التقرير
+  </button>
+
+  <script>
+    // Bridge APIs from opener window
+    (function bridgeAPIs() {
+      try {
+        if (window.opener) {
+          if (!window.db && window.opener.db) {
+            window.db = window.opener.db;
+          }
+          if (!window.api && window.opener.api) {
+            window.api = window.opener.api;
+          }
+        }
+      } catch (e) {
+      }
+    })();
+
+    function getStoredBranchScopeMode() {
+      try {
+        const raw = localStorage.getItem('branchScope');
+        const parsed = raw ? JSON.parse(raw) : null;
+        return String(parsed?.mode || parsed?.scope || '').trim().toLowerCase() === 'all' ? 'all' : 'branch';
+      } catch (e) {
+        return 'branch';
+      }
+    }
+
+    function shouldShowInvoiceBranchDetails() {
+      return getStoredBranchScopeMode() === 'all';
+    }
+
+    function getInvoiceDisplayNumber(inv) {
+      return String(inv?.branch_local_number || inv?.invoice_id || '').trim() || '-';
+    }
+
+    function getInvoiceBranchText(inv) {
+      const branchCode = String(inv?.branch_code || '').trim();
+      const branchName = String(inv?.branch_name || '').trim();
+      if (branchCode && branchName) return `${branchCode} - ${branchName}`;
+      return branchName || branchCode || '';
+    }
+
+    function getInvoiceDisplayText(inv) {
+      const invoiceNumber = getInvoiceDisplayNumber(inv);
+      const branchText = getInvoiceBranchText(inv);
+      if (!shouldShowInvoiceBranchDetails() || !branchText) return invoiceNumber;
+      return `${invoiceNumber} • ${branchText}`;
+    }
+
+    // This script will be populated with data from the parent window
+    window.addEventListener('message', function(event) {
+      if (event.data.type === 'PRINT_TAX_REPORT') {
+        populateReport(event.data.data);
+      }
+    });
+
+    async function populateReport(data) {
+      // Load company info
+      await loadCompanyInfo();
+
+      // Report details
+      document.getElementById('fromDate').textContent = data.fromDate || '-';
+      document.getElementById('toDate').textContent = data.toDate || '-';
+      document.getElementById('reportType').textContent = data.reportType || 'الكل';
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('ar-SA');
+
+      // Summary - Sales breakdown
+      document.getElementById('salesBeforeTax').textContent = formatNumber(data.salesBeforeTax || 0);
+      document.getElementById('salesTax').textContent = formatNumber(data.salesTax || 0);
+      document.getElementById('salesAfterTax').textContent = formatNumber(data.salesAfterTax || 0);
+      document.getElementById('salesZeroRated').textContent = formatNumber(data.salesZeroRated || 0);
+
+      // Summary - Purchases breakdown
+      document.getElementById('purchasesBeforeTax').textContent = formatNumber(data.purchasesBeforeTax || 0);
+      document.getElementById('purchasesTax').textContent = formatNumber(data.purchasesTax || 0);
+      document.getElementById('purchasesAfterTax').textContent = formatNumber(data.purchasesAfterTax || 0);
+      document.getElementById('purchasesZeroRated').textContent = formatNumber(data.purchasesZeroRated || 0);
+
+      // Net tax
+      document.getElementById('netTaxTotal').textContent = formatNumber(Math.abs(data.netTax || 0));
+      document.getElementById('netTaxStatus').textContent = (data.netTax >= 0) ? 'مستحقة' : 'مستردة';
+
+      // Sales table
+      if (data.sales && data.sales.length > 0) {
+        document.getElementById('salesTableSection').style.display = '';
+        const salesBody = document.getElementById('salesTableBody');
+        salesBody.innerHTML = '';
+        data.sales.forEach((inv, idx) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${getInvoiceDisplayText(inv)}</td>
+            <td>${inv.date || ''}</td>
+            <td>${inv.customer_name || ''}</td>
+            <td>${inv.tax_no || '-'}</td>
+            <td class="number-cell">${formatNumber(inv.before_tax || 0)}</td>
+            <td class="number-cell">${formatNumber(inv.tax_rate || 0)}%</td>
+            <td class="number-cell tax-cell">${formatNumber(inv.tax_value || 0)}</td>
+            <td class="number-cell">${formatNumber((Number(inv.before_tax) || 0) + (Number(inv.tax_value) || 0))}</td>
+            <td>${inv.invoice_type === 'taskir' ? 'تسكير' : 'مشغول'}</td>
+            <td>${inv.payment_type === 'cash' ? 'نقدي' : 'آجل'}</td>
+          `;
+          salesBody.appendChild(row);
+        });
+      }
+
+      // Purchases table
+      if (data.purchases && data.purchases.length > 0) {
+        document.getElementById('purchasesTableSection').style.display = '';
+        const purchasesBody = document.getElementById('purchasesTableBody');
+        purchasesBody.innerHTML = '';
+        data.purchases.forEach((inv, idx) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${getInvoiceDisplayText(inv)}</td>
+            <td>${inv.date || ''}</td>
+            <td>${inv.supplier_name || ''}</td>
+            <td>${inv.tax_no || '-'}</td>
+            <td class="number-cell">${formatNumber(inv.before_tax || 0)}</td>
+            <td class="number-cell">${formatNumber(inv.tax_rate || 0)}%</td>
+            <td class="number-cell tax-cell">${formatNumber(inv.tax_value || 0)}</td>
+            <td class="number-cell">${formatNumber((Number(inv.before_tax) || 0) + (Number(inv.tax_value) || 0))}</td>
+            <td>${inv.invoice_type === 'taskir' ? 'تسكير' : 'مشغول'}</td>
+            <td>${inv.payment_type === 'cash' ? 'نقدي' : 'آجل'}</td>
+          `;
+          purchasesBody.appendChild(row);
+        });
+      }
+    }
+
+    // Load company info
+    async function loadCompanyInfo() {
+      try {
+        let company = null;
+        
+        // Try to get company info from API
+        const api = window.api || (window.opener && window.opener.api) || null;
+        
+        if (api && api.invoke) {
+          try {
+            const companyResult = await api.invoke('get-company-info');
+            if (companyResult && companyResult.success) {
+              company = companyResult.company;
+            }
+          } catch (err) {
+            // Error calling get-company-info
+          }
+        }
+        
+        // Fallback: Try db.getCompanyInfo if available
+        if (!company) {
+          const db = window.db || (window.opener && window.opener.db) || null;
+          if (db && db.getCompanyInfo) {
+            const companyResult = await db.getCompanyInfo();
+            if (companyResult && companyResult.success) {
+              company = companyResult.data || companyResult.company;
+            }
+          }
+        }
+        
+        if (company) {
+          // Get company data
+          const nameAr = company.name || '';
+          const nameEn = company.name_en || '';
+          const taxNum = company.tax || '';
+          const phone = company.phone || '';
+          const email = company.email || '';
+          
+          // Update Arabic company info (right side)
+          document.getElementById('companyNameAr').textContent = nameAr || 'اسم الشركة';
+          document.getElementById('companyPhone').textContent = phone || '';
+          document.getElementById('companyEmail').textContent = email || '';
+          document.getElementById('companyTaxNo').textContent = taxNum ? 'الرقم الضريبي: ' + taxNum : '';
+          
+          // Update English company info (left side)
+          document.getElementById('companyNameEn').textContent = nameEn || 'Company Name';
+          document.getElementById('companyPhoneEn').textContent = phone || '';
+          document.getElementById('companyEmailEn').textContent = email || '';
+          document.getElementById('companyTaxNoEn').textContent = taxNum || '';
+          
+          // Update logo - use logoData first, then logo path
+          const logoElement = document.getElementById('companyLogo');
+          if (company.logoData) {
+            logoElement.src = company.logoData;
+          } else if (company.logo_base64) {
+            logoElement.src = company.logo_base64;
+          } else if (company.logo) {
+            logoElement.src = company.logo + '?v=' + Date.now();
+          }
+        }
+      } catch (error) {
+        // Error loading company info
+      }
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+      }).format(num);
+    }
+  </script>
+</body>
+</html>

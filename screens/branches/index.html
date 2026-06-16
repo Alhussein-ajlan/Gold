@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>الفروع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <main class="branches-page" id="branchesPage">
+      <header class="page-header">
+        <div class="header-title">
+          <div class="title-icon">
+            <i class="fa-solid fa-code-branch"></i>
+          </div>
+          <div>
+            <h1 id="pageTitle">الفروع</h1>
+            <p id="pageSubtitle">إدارة الفروع المتاحة في النظام</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-primary" id="btnAddBranch">
+            <i class="fa-solid fa-plus"></i>
+            <span id="btnAddBranchText">إضافة فرع</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="stats-grid">
+        <article class="stat-card" data-tone="primary">
+          <div class="stat-icon"><i class="fa-solid fa-building-circle-arrow-right"></i></div>
+          <div class="stat-content">
+            <span class="stat-label" id="totalBranchesLabel">إجمالي الفروع</span>
+            <strong class="stat-value" id="totalBranchesValue">0</strong>
+          </div>
+        </article>
+        <article class="stat-card" data-tone="success">
+          <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-content">
+            <span class="stat-label" id="activeBranchesLabel">الفروع النشطة</span>
+            <strong class="stat-value" id="activeBranchesValue">0</strong>
+            <span class="stat-sub" id="inactiveBranchesText">غير النشطة: 0</span>
+          </div>
+        </article>
+        <article class="stat-card" data-tone="accent">
+          <div class="stat-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="stat-content">
+            <span class="stat-label" id="branchFocusLabel">الفرع الحالي</span>
+            <strong class="stat-value stat-value-text" id="branchFocusValue">—</strong>
+            <span class="stat-sub" id="mainBranchText">الفرع الرئيسي: —</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="table-card" id="branches-grid">
+        <div class="table-head">
+          <h2 id="tableTitle">قائمة الفروع</h2>
+          <div class="head-search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="searchInput" placeholder="بحث عن فرع..." aria-label="بحث عن فرع">
+          </div>
+          <div class="row">
+            <button type="button" class="icon-btn" id="btnRefresh" title="تحديث">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th id="thId">#</th>
+                <th id="thCode">الرمز</th>
+                <th id="thName">الاسم</th>
+                <th id="thNameEn">الاسم بالإنجليزية</th>
+                <th id="thPhone">الهاتف</th>
+                <th id="thStatus">الحالة</th>
+                <th id="thMain">الرئيسي</th>
+                <th id="thCreatedAt">تاريخ الإنشاء</th>
+                <th id="thActions">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="branchesTableBody">
+              <tr>
+                <td colspan="9" class="empty-cell" id="loadingRow">جاري التحميل...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-overlay" id="branchModal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modalTitle">إضافة فرع</h3>
+          <button type="button" class="icon-btn" id="modalClose" aria-label="إغلاق" title="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="branchForm">
+            <input type="hidden" id="branchId">
+            <div class="form-grid two-cols">
+              <label class="form-field">
+                <span id="labelCode">رمز الفرع</span>
+                <input type="text" id="branchCode" maxlength="30" placeholder="مثال: MAIN" required>
+              </label>
+              <label class="form-field">
+                <span id="labelPhone">الهاتف</span>
+                <input type="text" id="branchPhone" maxlength="100" placeholder="رقم الهاتف">
+              </label>
+            </div>
+            <div class="form-grid two-cols">
+              <label class="form-field">
+                <span id="labelName">اسم الفرع</span>
+                <input type="text" id="branchName" maxlength="150" placeholder="اسم الفرع" required>
+              </label>
+              <label class="form-field">
+                <span id="labelNameEn">الاسم بالإنجليزية</span>
+                <input type="text" id="branchNameEn" maxlength="150" placeholder="اسم الفرع بالإنجليزية">
+              </label>
+            </div>
+            <label class="form-field">
+              <span id="labelAddress">العنوان</span>
+              <textarea id="branchAddress" rows="3" placeholder="عنوان الفرع"></textarea>
+            </label>
+            <div class="toggle-grid">
+              <label class="toggle-card">
+                <span id="labelActive">نشط</span>
+                <span class="switch">
+                  <input type="checkbox" id="branchActive" checked>
+                  <span class="slider"></span>
+                </span>
+              </label>
+              <label class="toggle-card">
+                <span id="labelMain">فرع رئيسي</span>
+                <span class="switch">
+                  <input type="checkbox" id="branchIsMain">
+                  <span class="slider"></span>
+                </span>
+              </label>
+            </div>
+          </form>
+          <p class="form-error" id="formError"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="modalCancel">
+            <i class="fa-regular fa-circle-xmark"></i>
+            <span id="cancelText">إلغاء</span>
+          </button>
+          <button type="button" class="btn-primary" id="modalSave">
+            <i class="fa-regular fa-floppy-disk"></i>
+            <span id="saveText">حفظ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal" aria-hidden="true">
+      <div class="modal-card modal-small">
+        <div class="modal-header danger">
+          <h3 id="deleteTitle">تأكيد الحذف</h3>
+          <button type="button" class="icon-btn" id="deleteClose" aria-label="إغلاق" title="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="delete-text" id="deleteMessage">هل أنت متأكد من حذف هذا الفرع؟</p>
+          <strong class="delete-name" id="deleteBranchName"></strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="deleteCancel">
+            <i class="fa-regular fa-circle-xmark"></i>
+            <span id="deleteCancelText">إلغاء</span>
+          </button>
+          <button type="button" class="btn-danger" id="deleteConfirm">
+            <i class="fa-solid fa-trash"></i>
+            <span id="deleteConfirmText">حذف</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

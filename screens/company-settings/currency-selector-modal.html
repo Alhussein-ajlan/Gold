@@ -1,0 +1,48 @@
+<!-- Currency Selector Modal -->
+<div id="currencySelectorModal" class="modal-overlay currency-selector-modal" aria-hidden="true">
+  <div class="modal-dialog currency-selector-dialog" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-coins"></i> اختيار العملة الافتراضية</h3>
+      <button class="modal-close" id="btnCloseCurrencySelector" title="إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Search -->
+      <div class="currency-search-box">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" id="currencySearch" placeholder="ابحث عن عملة بالاسم أو الرمز..." />
+      </div>
+
+      <!-- Tabs -->
+      <div class="currency-tabs">
+        <button class="currency-tab active" data-tab="all">
+          <i class="fa-solid fa-globe"></i> جميع العملات
+        </button>
+        <button class="currency-tab" data-tab="arab">
+          <i class="fa-solid fa-earth-americas"></i> عملات عربية
+        </button>
+        <button class="currency-tab" data-tab="world">
+          <i class="fa-solid fa-chart-line"></i> عملات عالمية
+        </button>
+      </div>
+
+      <!-- Currency List -->
+      <div class="currency-list-wrapper">
+        <div class="currency-list" id="currencyList">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn secondary" id="btnCancelCurrency">
+        <i class="fa-solid fa-xmark"></i> إلغاء
+      </button>
+      <button class="btn primary" id="btnConfirmCurrency" disabled>
+        <i class="fa-solid fa-check"></i> تأكيد الاختيار
+      </button>
+    </div>
+  </div>
+</div>

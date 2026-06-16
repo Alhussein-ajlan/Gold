@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>شجرة الحسابات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+</head>
+<body>
+  <div class="coa-container">
+    <!-- Header -->
+    <header class="coa-header">
+      <div class="header-title">
+        <div class="title-icon">
+          <i class="fa-solid fa-sitemap"></i>
+        </div>
+        <div>
+          <h1 id="pageTitle">شجرة الحسابات</h1>
+          <p id="pageSubtitle">Chart of Accounts</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="searchInput" placeholder="بحث عن حساب...">
+          <button class="clear-search" id="clearSearch" title="مسح"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <button class="btn-action" id="btnExpandAll" title="توسيع الكل">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+        <button class="btn-action" id="btnCollapseAll" title="طي الكل">
+          <i class="fa-solid fa-compress"></i>
+        </button>
+        <button class="btn-action" id="btnRefresh" title="تحديث">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button class="btn-primary" id="btnAddAccount">
+          <i class="fa-solid fa-plus"></i>
+          <span id="btnAddAccountText">إضافة حساب</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Last Update Bar -->
+    <div class="last-update-bar" id="lastUpdateBar">
+      <i class="fa-regular fa-clock"></i>
+      <span id="lastUpdateLabel">آخر تحديث</span>
+      <span id="lastUpdateTime">--</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card assets">
+        <div class="stat-icon">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="statAssetsLabel">الأصول</span>
+          <span class="stat-value" id="statAssetsValue">0</span>
+        </div>
+      </div>
+      <div class="stat-card liabilities">
+        <div class="stat-icon">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="statLiabilitiesLabel">الخصوم</span>
+          <span class="stat-value" id="statLiabilitiesValue">0</span>
+        </div>
+      </div>
+      <div class="stat-card equity">
+        <div class="stat-icon">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="statEquityLabel">حقوق الملكية</span>
+          <span class="stat-value" id="statEquityValue">0</span>
+        </div>
+      </div>
+      <div class="stat-card revenue">
+        <div class="stat-icon">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="statRevenueLabel">الإيرادات</span>
+          <span class="stat-value" id="statRevenueValue">0</span>
+        </div>
+      </div>
+      <div class="stat-card expenses">
+        <div class="stat-icon">
+          <i class="fa-solid fa-arrow-trend-down"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="statExpensesLabel">المصروفات</span>
+          <span class="stat-value" id="statExpensesValue">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="coa-content">
+      <!-- Tree Panel -->
+      <div class="tree-panel">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-folder-tree"></i> <span id="treePanelTitle">الحسابات</span></h2>
+          <span class="account-count" id="accountCount">0 حساب</span>
+        </div>
+        <div class="tree-container" id="treeContainer">
+          <div class="loading-indicator" id="loadingIndicator">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span id="loadingText">جاري التحميل...</span>
+          </div>
+          <ul class="tree-root" id="accountsTree"></ul>
+        </div>
+      </div>
+
+      <!-- Details Panel -->
+      <div class="details-panel">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-circle-info"></i> <span id="detailsPanelTitle">تفاصيل الحساب</span></h2>
+        </div>
+        <div class="details-content" id="detailsContent">
+          <div class="no-selection" id="noSelection">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <p id="noSelectionText">اختر حساباً لعرض تفاصيله</p>
+          </div>
+          <div class="account-details" id="accountDetails" style="display: none;">
+            <div class="account-detail-header">
+              <div class="detail-icon" id="detailIcon">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div class="detail-name" id="detailName"></div>
+              <div class="detail-name-en" id="detailNameEn"></div>
+              <div class="detail-code" id="detailCode"></div>
+            </div>
+            <div class="detail-rows">
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-layer-group"></i> <span id="labelAccountType">نوع الحساب</span></span>
+                <span class="detail-value" id="detailType"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-scale-balanced"></i> <span id="labelNature">الطبيعة</span></span>
+                <span class="detail-value" id="detailNature"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-stairs"></i> <span id="labelLevel">المستوى</span></span>
+                <span class="detail-value" id="detailLevel"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-folder"></i> <span id="labelParent">الحساب الأب</span></span>
+                <span class="detail-value" id="detailParent"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-code-branch"></i> <span id="labelBranch">الفرع</span></span>
+                <span class="detail-value" id="detailBranch"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-coins"></i> <span id="labelBalance">الرصيد</span></span>
+                <span class="detail-value" id="detailBalance"></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label"><i class="fa-solid fa-toggle-on"></i> <span id="labelStatus">الحالة</span></span>
+                <span class="detail-value" id="detailStatus"></span>
+              </div>
+            </div>
+            <div class="detail-actions">
+              <button class="btn-edit" id="btnEditAccount">
+                <i class="fa-solid fa-pen"></i>
+                <span id="btnEditText">تعديل</span>
+              </button>
+              <button class="btn-add-child" id="btnAddChild">
+                <i class="fa-solid fa-plus"></i>
+                <span id="btnAddChildText">إضافة فرعي</span>
+              </button>
+              <button class="btn-delete" id="btnDeleteAccount">
+                <i class="fa-solid fa-trash"></i>
+                <span id="btnDeleteText">حذف</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Account Modal -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-plus-circle"></i> <span id="modalTitle">إضافة حساب جديد</span></h3>
+        <button class="modal-close" id="modalClose"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="accountForm">
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-hashtag"></i> <span id="labelCode">رمز الحساب</span></label>
+              <input type="text" id="accountCode" required>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-folder"></i> <span id="labelParentAccount">الحساب الأب</span></label>
+              <select id="parentAccount">
+                <option value="">-- حساب رئيسي --</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-signature"></i> <span id="labelNameAr">اسم الحساب (عربي)</span></label>
+              <input type="text" id="accountName" required>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-language"></i> <span id="labelNameEn">اسم الحساب (إنجليزي)</span></label>
+              <input type="text" id="accountNameEn">
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-layer-group"></i> <span id="labelType">نوع الحساب</span></label>
+              <select id="accountType">
+                <option value="asset">أصول</option>
+                <option value="liability">خصوم</option>
+                <option value="equity">حقوق ملكية</option>
+                <option value="revenue">إيرادات</option>
+                <option value="expense">مصروفات</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-scale-balanced"></i> <span id="labelNatureForm">الطبيعة</span></label>
+              <select id="accountNature">
+                <option value="debit">مدين</option>
+                <option value="credit">دائن</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label><i class="fa-solid fa-align-left"></i> <span id="labelDescription">الوصف</span></label>
+              <textarea id="accountDescription" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="form-row checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" id="isParent">
+              <span><i class="fa-solid fa-folder-open"></i> <span id="labelIsParent">حساب رئيسي (له فروع)</span></span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="shareAcrossBranches">
+              <span><i class="fa-solid fa-share-nodes"></i> <span id="labelShareAcrossBranches">مشترك بين جميع الفروع</span></span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="isActive" checked>
+              <span><i class="fa-solid fa-check-circle"></i> <span id="labelIsActive">نشط</span></span>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btnCancel">
+          <i class="fa-solid fa-times"></i>
+          <span id="btnCancelText">إلغاء</span>
+        </button>
+        <button class="btn-save" id="btnSave">
+          <i class="fa-solid fa-check"></i>
+          <span id="btnSaveText">حفظ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-container modal-small">
+      <div class="modal-header danger">
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> <span id="deleteModalTitle">تأكيد الحذف</span></h3>
+        <button class="modal-close" id="deleteModalClose"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-warning">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <p id="deleteWarningText">هل أنت متأكد من حذف هذا الحساب؟</p>
+          <strong id="deleteAccountName"></strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="deleteCancel">
+          <i class="fa-solid fa-times"></i>
+          <span id="deleteCancelText">إلغاء</span>
+        </button>
+        <button class="btn-danger" id="deleteConfirm">
+          <i class="fa-solid fa-trash"></i>
+          <span id="deleteConfirmText">حذف</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications (like sales-invoice) -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../../shared-styles/common-utils.js"></script>
+  <script src="../../shared-styles/inactive-entity-modal.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

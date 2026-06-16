@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ميزان المراجعة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active" id="panel-trial-balance" role="tabpanel" aria-labelledby="tab-trial-balance">
+        <div class="tb-topbar">
+          <div class="tb-title">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <h2>ميزان المراجعة</h2>
+          </div>
+          <div class="tb-actions">
+            <button class="tb-btn" id="btnTbRefresh" type="button" title="تحديث">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>تحديث</span>
+            </button>
+            <button class="tb-btn tb-btn-icon tb-excel" id="btnTbExportExcel" type="button" title="تصدير Excel" disabled>
+              <i class="fa-solid fa-file-excel"></i>
+            </button>
+            <button class="tb-btn tb-btn-icon tb-pdf" id="btnTbExportPdf" type="button" title="تصدير PDF" disabled>
+              <i class="fa-solid fa-file-pdf"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="tbFiltersCard">
+          <div class="tb-filter-grid">
+            <label class="form-field">
+              <span>من تاريخ</span>
+              <input type="date" id="tbFrom">
+            </label>
+            <label class="form-field">
+              <span>إلى تاريخ</span>
+              <input type="date" id="tbTo">
+            </label>
+            <label class="form-field">
+              <span>نوع الحساب</span>
+              <select id="tbAccountType">
+                <option value="" selected>الكل</option>
+                <option value="asset">الأصول</option>
+                <option value="liability">الخصوم</option>
+                <option value="equity">حقوق الملكية</option>
+                <option value="revenue">الإيرادات</option>
+                <option value="expense">المصروفات</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span>الافتتاحية</span>
+              <select id="tbIncludeOpening">
+                <option value="1" selected>نعم</option>
+                <option value="0">لا</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span>الحسابات الفارغة</span>
+              <select id="tbShowEmpty">
+                <option value="0" selected>إخفاء</option>
+                <option value="1">إظهار</option>
+              </select>
+            </label>
+            <div class="tb-filter-actions">
+              <button class="tb-btn tb-primary premium-view-btn" id="btnTbView" type="button">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>عرض</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card table-card fullwide" id="tbGrid">
+          <div class="table-head">
+            <h3>نتائج ميزان المراجعة</h3>
+            <div class="head-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" id="tbSearch" aria-label="بحث">
+            </div>
+            <div class="row">
+              <button class="icon-btn" id="btnTbPrint" title="طباعة" disabled><i class="fa-solid fa-print"></i></button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="tbTable" data-format-numbers>
+              <thead>
+                <tr>
+                  <th rowspan="2">رمز الحساب</th>
+                  <th rowspan="2">اسم الحساب</th>
+                  <th colspan="2">نقد (ريال)</th>
+                  <th colspan="2">ذهب (جرام 21)</th>
+                  <th colspan="2">فضة (جرام 999)</th>
+                </tr>
+                <tr>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                </tr>
+              </thead>
+              <tfoot id="tbTableFoot" hidden>
+                <tr class="totals-row">
+                  <td colspan="2"><strong>الإجمالي</strong></td>
+                  <td id="totalCashDebit">0</td>
+                  <td id="totalCashCredit">0</td>
+                  <td id="totalGoldDebit">0</td>
+                  <td id="totalGoldCredit">0</td>
+                  <td id="totalSilverDebit">0</td>
+                  <td id="totalSilverCredit">0</td>
+                </tr>
+              </tfoot>
+              <tbody id="tbTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding: 40px; color: var(--subtle);">لا توجد بيانات</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

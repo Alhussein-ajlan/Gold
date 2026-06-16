@@ -1,0 +1,421 @@
+<!-- Modal for Export/Import Table Selection -->
+<div id="exportImportModal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-dialog export-import-modal">
+    <div class="modal-header">
+      <h3 id="modalTitle" data-i18n="exportDbTitle">تصدير قاعدة البيانات</h3>
+      <button class="modal-close" id="btnCloseModal" data-i18n-title="close" title="إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Table Selection -->
+      <div class="tables-selection">
+        <div class="select-all-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="selectAllTables" checked>
+            <span class="checkbox-custom"></span>
+            <span class="label-text"><strong data-i18n="selectAll">تحديد الكل (تصدير ملف .db كامل)</strong></span>
+          </label>
+          <div style="font-size: 12px; color: var(--subtle, #a2acc7); margin-top: 4px; margin-right: 32px;" data-i18n="selectAllHint">
+            💡 عند تحديد الكل: يتم تصدير/استيراد ملف قاعدة البيانات (.db) كامل
+          </div>
+        </div>
+        
+        <div class="tables-grid" id="tablesGrid">
+          <!-- Tables will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Progress Section (hidden initially) -->
+      <div class="progress-section" id="progressSection" style="display:none;">
+        <div class="progress-header">
+          <div class="progress-status" id="progressStatus" data-i18n="preparing">جار التحضير...</div>
+          <div class="progress-percentage" id="progressPercentage">0%</div>
+        </div>
+        
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill" id="progressBarFill" style="width:0%"></div>
+        </div>
+        
+        <div class="progress-details" id="progressDetails">
+          <div class="current-table" id="currentTable"></div>
+          <div class="current-item" id="currentItem"></div>
+        </div>
+        
+        <div class="progress-summary" id="progressSummary"></div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn secondary" id="btnCancelOperation" data-i18n="cancel">إلغاء</button>
+      <button class="btn primary" id="btnStartOperation">
+        <i class="fa-solid fa-file-export"></i>
+        <span id="btnOperationText" data-i18n="startExport">ابدأ التصدير</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+:root[data-theme="light"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-overlay[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.export-import-modal {
+  background: var(--card, #1e293b);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay[aria-hidden="false"] .export-import-modal {
+  transform: scale(1);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text, #fff);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-muted, #94a3b8);
+  transition: color 0.2s;
+  padding: 4px 8px;
+}
+
+.modal-close:hover {
+  color: var(--text, #fff);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.tables-selection {
+  margin-bottom: 20px;
+}
+
+.select-all-row {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.checkbox-label input:checked + .checkbox-custom {
+  background: #fff;
+  border-color: #fff;
+}
+
+.checkbox-label input:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #10b981;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.select-all-row .label-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.table-checkbox-item {
+  padding: 12px 16px;
+  background: var(--input-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.table-checkbox-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #10b981;
+}
+
+:root[data-theme="light"] .table-checkbox-item {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+:root[data-theme="light"] .table-checkbox-item:hover {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: #10b981;
+}
+
+.table-checkbox-item .label-text {
+  color: var(--text, #fff);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.table-checkbox-item .checkbox-custom {
+  border-color: var(--border, rgba(255, 255, 255, 0.3));
+}
+
+.progress-section {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+:root[data-theme="light"] .progress-section {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.03));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-status {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text, #fff);
+}
+
+.progress-percentage {
+  font-size: 24px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.progress-bar-wrapper {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669, #047857);
+  background-size: 200% 100%;
+  animation: progressShimmer 2s infinite;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+@keyframes progressShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.progress-details {
+  margin-bottom: 12px;
+}
+
+.current-table {
+  font-size: 14px;
+  color: #10b981;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.current-item {
+  font-size: 13px;
+  color: var(--text-muted, #94a3b8);
+  font-style: italic;
+}
+
+.progress-summary {
+  padding: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  color: #10b981;
+  font-size: 14px;
+  font-weight: 500;
+  display: none;
+}
+
+.progress-summary.show {
+  display: block;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-footer .btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-footer .btn.primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
+.modal-footer .btn.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.modal-footer .btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text, #fff);
+}
+
+.modal-footer .btn.secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modal-footer .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Light Mode Support */
+:root[data-theme="light"] .export-import-modal {
+  background: white;
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .modal-header {
+  border-color: #e2e8f0;
+}
+
+:root[data-theme="light"] .modal-header h3 {
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .modal-close {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .modal-close:hover {
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .modal-footer {
+  border-color: #e2e8f0;
+}
+
+:root[data-theme="light"] .modal-footer .btn.secondary {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .modal-footer .btn.secondary:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+:root[data-theme="light"] .table-checkbox-item .label-text {
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .progress-status {
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .current-item {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .checkbox-custom {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+:root[data-theme="light"] .table-checkbox-item .checkbox-custom {
+  border-color: #cbd5e1;
+}
+</style>

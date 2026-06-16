@@ -1,0 +1,449 @@
+<!-- Invoice Settings Card -->
+<div class="company-card invoice-settings-card">
+  <h2 class="card-title">
+    <i class="fa-solid fa-file-invoice-dollar"></i>
+    <span data-i18n="invoiceSettings">إعدادات الفواتير</span>
+  </h2>
+
+  <div class="invoice-settings-content">
+    
+    <!-- Tax Settings Section -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon tax-icon">
+          <i class="fas fa-percent"></i>
+        </div>
+        <div class="section-title">
+          <h3 data-i18n="taxSettings">إعدادات الضريبة</h3>
+          <p data-i18n="taxSettingsDesc">إدارة ضريبة القيمة المضافة وتطبيقها</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <!-- Tax Enable & Rate in One Row -->
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-toggle-on"></i>
+              <span data-i18n="enableTax">تفعيل الضريبة</span>
+            </label>
+            <p class="setting-description" data-i18n="enableTaxDesc">تفعيل ضريبة القيمة المضافة</p>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="taxEnabled" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label" for="taxRate">
+              <i class="fas fa-calculator"></i>
+              <span data-i18n="taxRate">نسبة الضريبة (%)</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <div class="input-with-icon">
+              <input type="number" id="taxRate" class="setting-input" value="15" min="0" max="100" step="0.01">
+              <span class="input-icon">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-hammer"></i>
+              <span data-i18n="taxOnLabor">الضريبة على الأجور</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="taxOnLabor" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-file-alt"></i>
+              <span data-i18n="defaultInvoiceType">نوع الفاتورة الافتراضي</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="defaultInvoiceType" value="taskir" checked>
+                <span class="radio-label">
+                  <i class="fas fa-circle-notch"></i>
+                  <span data-i18n="taskir">تسكير</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="defaultInvoiceType" value="mashghul">
+                <span class="radio-label">
+                  <i class="fas fa-cog"></i>
+                  <span data-i18n="mashghul">مشغول</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lock Settings -->
+        <div class="setting-divider">
+          <i class="fas fa-lock"></i>
+          <span data-i18n="lockSettings">قفل الإعدادات</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-lock"></i>
+              <span data-i18n="lockTaxRate">قفل نسبة الضريبة</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="lockTaxRate">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-lock"></i>
+              <span data-i18n="lockTaxOnLabor">قفل الضريبة على الأجور</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="lockTaxOnLabor">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-exchange-alt"></i>
+              <span data-i18n="allowInvoiceTypeChange">السماح بتغيير نوع الفاتورة</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="allowInvoiceTypeChange" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ounce Calculation Settings Section -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon ounce-icon">
+          <i class="fas fa-balance-scale"></i>
+        </div>
+        <div class="section-title">
+          <h3 data-i18n="ounceSettings">إعدادات حساب الأونصة</h3>
+          <p data-i18n="ounceSettingsDesc">تحديد طريقة حساب سعر الجرام من الأونصة</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <!-- Calculation Type -->
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label" for="ounceCalculationType">
+              <i class="fas fa-function"></i>
+              <span data-i18n="calculationType">نوع الحساب</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <select id="ounceCalculationType" class="setting-select">
+              <option value="default" data-i18n="calcTypeDefault">افتراضي (دولار)</option>
+              <option value="gold" data-i18n="calcTypeGold">ذهبي (× 0.12056)</option>
+              <option value="gold2" data-i18n="calcTypeGold2">ثالث (× 0.120555)</option>
+              <option value="custom" data-i18n="calcTypeCustom">مخصص</option>
+              <option value="manual" data-i18n="calcTypeManual">يدوي</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Conversion Factor (for default type only) -->
+        <div class="setting-row" id="conversionFactorRow">
+          <div class="setting-info">
+            <label class="setting-label" for="conversionFactor">
+              <i class="fas fa-weight"></i>
+              <span data-i18n="conversionFactor">معامل التحويل</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <input type="number" id="conversionFactor" class="setting-input" value="31.1035" step="0.0001">
+          </div>
+        </div>
+
+        <!-- Exchange Rate (for default type only) -->
+        <div class="setting-row" id="exchangeRateRow">
+          <div class="setting-info">
+            <label class="setting-label" for="exchangeRate">
+              <i class="fas fa-dollar-sign"></i>
+              <span data-i18n="exchangeRate">سعر الصرف</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <input type="number" id="exchangeRate" class="setting-input" value="3.75" step="0.01">
+            <div class="template-buttons">
+              <button type="button" class="template-btn" data-rate="3.75" title="السعودية">
+                <i class="fas fa-flag"></i>
+                <small>3.75</small>
+              </button>
+              <button type="button" class="template-btn" data-rate="3.67" title="الإمارات">
+                <i class="fas fa-flag"></i>
+                <small>3.67</small>
+              </button>
+              <button type="button" class="template-btn" data-rate="30.90" title="مصر">
+                <i class="fas fa-flag"></i>
+                <small>30.90</small>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gold Multiplier (for gold type) -->
+        <div class="setting-row" id="goldMultiplierRow" style="display: none;">
+          <div class="setting-info">
+            <label class="setting-label" for="goldMultiplier">
+              <i class="fas fa-coins"></i>
+              <span data-i18n="goldMultiplier">معامل الذهب</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <input type="number" id="goldMultiplier" class="setting-input" value="0.12056" step="0.00001">
+          </div>
+        </div>
+
+        <!-- Gold2 Multiplier (for gold2 type) -->
+        <div class="setting-row" id="gold2MultiplierRow" style="display: none;">
+          <div class="setting-info">
+            <label class="setting-label" for="gold2Multiplier">
+              <i class="fas fa-coins"></i>
+              <span data-i18n="gold2Multiplier">معامل النوع الثالث</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <input type="number" id="gold2Multiplier" class="setting-input" value="0.120555" step="0.000001">
+          </div>
+        </div>
+
+        <!-- Custom Multiplier (for custom type) -->
+        <div class="setting-row" id="customMultiplierRow" style="display: none;">
+          <div class="setting-info">
+            <label class="setting-label" for="customMultiplier">
+              <i class="fas fa-times"></i>
+              <span data-i18n="customMultiplier">معامل مخصص</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <input type="number" id="customMultiplier" class="setting-input" value="1" step="0.001">
+          </div>
+        </div>
+
+        <!-- Formula Preview -->
+        <div class="formula-preview">
+          <div class="formula-header">
+            <i class="fas fa-function"></i>
+            <span data-i18n="currentFormula">المعادلة الحالية</span>
+          </div>
+          <div class="formula-content" id="formulaPreview">
+            سعر الجرام = الأونصة ÷ 31.1035 × 3.75
+          </div>
+        </div>
+
+        <!-- Example Calculation -->
+        <div class="example-calculation">
+          <div class="example-header">
+            <i class="fas fa-lightbulb"></i>
+            <span data-i18n="exampleCalculation">مثال توضيحي</span>
+          </div>
+          <div class="example-content">
+            <div class="example-input">
+              <span data-i18n="ouncePrice">أونصة:</span>
+              <strong>5000</strong>
+            </div>
+            <i class="fas fa-arrow-left example-arrow"></i>
+            <div class="example-output">
+              <span data-i18n="gramPrice">جرام:</span>
+              <strong id="exampleResult">602.800</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Settings Section -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon payment-icon">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div class="section-title">
+          <h3 data-i18n="paymentSettings">إعدادات الدفع</h3>
+          <p data-i18n="paymentSettingsDesc">تحديد نوع الدفع الافتراضي</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-money-bill-wave"></i>
+              <span data-i18n="defaultPaymentType">نوع الدفع الافتراضي</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="defaultPaymentType" value="cash">
+                <span class="radio-label">
+                  <i class="fas fa-money-bill"></i>
+                  <span data-i18n="cash">نقدي</span>
+                </span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="defaultPaymentType" value="credit" checked>
+                <span class="radio-label">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span data-i18n="credit">آجل</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-lock"></i>
+              <span data-i18n="lockPaymentType">قفل نوع الدفع</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="lockPaymentType">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation Settings Section -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon validation-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="section-title">
+          <h3 data-i18n="validationSettings">التحذيرات والتحقق</h3>
+          <p data-i18n="validationSettingsDesc">إعدادات التحقق من البيانات</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span data-i18n="warnDeleteLine">تحذير حذف سطر</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="warnDeleteLine" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span data-i18n="warnDeleteInvoice">تحذير حذف فاتورة</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="warnDeleteInvoice" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-check-circle"></i>
+              <span data-i18n="requireOunceTaskir">إلزام الأونصة (تسكير)</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="requireOunceTaskir" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-check-circle"></i>
+              <span data-i18n="requireKarat">إلزام تحديد العيار</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="requireKarat" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <label class="setting-label">
+              <i class="fas fa-copy"></i>
+              <span data-i18n="warnDuplicateRef">تحذير تكرار المرجع</span>
+            </label>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="warnDuplicateRef" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="settings-actions">
+      <button type="button" class="btn-secondary" id="resetInvoiceSettings">
+        <i class="fas fa-undo"></i>
+        <span data-i18n="resetToDefault">إعادة تعيين</span>
+      </button>
+      <button type="button" class="btn-save" id="saveInvoiceSettings">
+        <i class="fas fa-save"></i>
+        <span data-i18n="saveSettings">حفظ الإعدادات</span>
+      </button>
+    </div>
+
+  </div>
+</div>

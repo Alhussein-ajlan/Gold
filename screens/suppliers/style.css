@@ -1,0 +1,28 @@
+@import url('../customers/style.css');
+
+/* Overrides for suppliers if needed later */
+
+/* تحسين عرض جدول الموردين */
+#suppliers-grid {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#suppliers-grid .table-head {
+  flex-shrink: 0;
+}
+
+#suppliers-grid .table-responsive {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+/* Suppliers specific styling - ensure Cairo font */
+body {
+  font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}

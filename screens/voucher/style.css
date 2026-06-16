@@ -1,0 +1,727 @@
+@import url('../customers/style.css');
+
+/* تطبيق خط Cairo على عناصر الإدخال والجداول */
+#panel-voucher input[type="text"],
+#panel-voucher input[type="number"],
+#panel-voucher input[type="date"],
+#panel-voucher input[type="time"],
+#panel-voucher select,
+#panel-voucher textarea,
+#panel-voucher option,
+#panel-voucher button,
+#panel-voucher label,
+#panel-voucher .form-field,
+#panel-voucher .totals-card,
+#hv_linesTable input,
+#hv_linesTable select,
+#hv_linesTable option,
+#hv_linesTable td,
+#hv_linesTable th,
+#hv_linesTable button,
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="email"],
+.modal input[type="tel"],
+.modal input[type="search"],
+.modal select,
+.modal option,
+.modal textarea,
+.modal td,
+.modal th,
+.modal button,
+.modal label,
+.modal .modal-body,
+.modal .modal-header,
+.modal .modal-footer,
+#hv_confirmVoucherDel .modal-body,
+#hv_confirmLineDel .modal-body,
+#hv_lookupCustomer .modal-body,
+#hv_lookupSupplier .modal-body,
+#hv_lookupAccount .modal-body,
+.toast,
+.hv-hint {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* إصلاح ارتفاع النص في القوائم المنسدلة */
+#panel-voucher select,
+#hv_linesTable select,
+.modal select {
+  line-height: 2.2 !important;
+  vertical-align: middle !important;
+  padding-top: 2px !important;
+}
+
+/* إصلاح ارتفاع النص في خيارات القوائم المنسدلة */
+#panel-voucher option,
+#hv_linesTable option,
+.modal option {
+  line-height: 1.8 !important;
+  padding: 8px 12px !important;
+}
+
+/* حجم أكبر قليلاً للعناوين في الجدول */
+#hv_linesTable th {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+/* إزالة التمرير من الشاشة وجعله فقط في الجدول */
+body {
+  overflow-y: hidden !important;
+  height: 100vh !important;
+}
+
+#panel-voucher {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  position: relative !important;
+  --voucher-totals-height: 72px;
+  --voucher-totals-left: 0px;
+  --voucher-totals-width: 100vw;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+
+#panel-voucher > .toolbar {
+  flex-shrink: 0;
+}
+
+/* تحسين عرض شاشة الصرف لتمتد إلى نهاية الشاشة */
+#panel-voucher .grid.cards-3 {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: calc(var(--voucher-totals-height, 72px) + 1px);
+  margin-bottom: 0;
+  box-sizing: border-box;
+}
+
+/* Voucher-specific layout */
+.header-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+@media (max-width:900px){.header-grid{grid-template-columns:1fr}}
+.header-grid .box{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card)}
+.header-grid .row{display:grid;grid-template-columns:1fr 2fr}
+.header-grid .cell{padding:10px;border-bottom:1px solid var(--border)}
+.header-grid .row:last-child .cell{border-bottom:0}
+.header-grid .lbl{background:var(--bg-muted);color:var(--subtle);font-weight:600}
+.header-grid .val input{width:100%;padding:6px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-muted);color:var(--text);text-align:center;min-height:34px}
+
+/* مطابقة تنسيق البطاقات */
+#panel-voucher .card.form-card.grid-span-3.fullwide {
+  margin-bottom: 8px !important;
+}
+
+#panel-voucher .card.form-card.grid-span-3.fullwide:first-of-type {
+  flex-shrink: 0;
+}
+
+#panel-voucher #voucher-lines-grid {
+  margin-bottom: 0 !important;
+}
+
+/* تطبيق نفس تصميم قائمة العملاء تماماً */
+#voucher-lines-grid {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+#voucher-lines-grid .table-head {
+  flex-shrink: 0;
+}
+
+#voucher-lines-grid .table-responsive {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+/* تأكد من أن الجدول يأخذ كامل المساحة */
+#voucher-lines-grid.table-card.fullwide {
+  overflow: hidden;
+}
+
+/* أنماط إضافية للجدول - الباقي يرث من customers/style.css */
+#hv_linesTable{
+  min-width:860px; 
+}
+
+/* تنسيق الإدخالات داخل الجدول - مثل الفواتير */
+#hv_linesTable input[type="number"],
+#hv_linesTable input[type="text"],
+#hv_linesTable select{
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%; 
+  box-sizing: border-box;
+  padding: 10px 14px;
+  min-height: 42px;
+  font-weight: 600;
+}
+
+/* Readonly fields */
+#hv_linesTable input[readonly] {
+  background: var(--card);
+  cursor: not-allowed;
+}
+
+/* Select dropdowns */
+#hv_linesTable select {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+#hv_linesTable input[type="number"]:focus,
+#hv_linesTable input[type="text"]:focus,
+#hv_linesTable select:focus{ 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 6px var(--ring);
+}
+
+/* Enhanced field styling with modern gradients */
+#hv_linesTable tbody td:nth-child(5) input {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 3%, var(--card)), 
+    var(--card)
+  ) !important;
+  border: 2px solid color-mix(in oklab, var(--primary) 25%, transparent) !important;
+}
+
+#hv_linesTable tbody td:nth-child(5) input:focus {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 5%, var(--card)), 
+    var(--card)
+  ) !important;
+  border-color: color-mix(in oklab, var(--primary) 65%, transparent) !important;
+  box-shadow: 0 0 0 6px rgba(0, 169, 157, 0.1), 
+              0 4px 12px rgba(0, 169, 157, 0.15) !important;
+}
+
+/* Gold field styling (column 6) - Golden border like karat field */
+#hv_linesTable tbody td:nth-child(6) input {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 5%, var(--card)), 
+    color-mix(in oklab, #ffa500 3%, var(--card))
+  ) !important;
+  color: var(--text) !important;
+  border: 2px solid color-mix(in oklab, #ffa500 35%, transparent) !important;
+  box-shadow: 0 2px 6px rgba(255, 165, 0, 0.12), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+#hv_linesTable tbody td:nth-child(6) input:focus {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 0 6px rgba(255, 140, 0, 0.15), 
+              0 4px 12px rgba(255, 140, 0, 0.25) !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 8%, var(--card)), 
+    color-mix(in oklab, #ffa500 5%, var(--card))
+  ) !important;
+}
+
+/* Dark mode adjustments - Unified styling like invoices */
+html[data-theme='dark'] {
+  #hv_linesTable input[type="number"],
+  #hv_linesTable input[type="text"],
+  #hv_linesTable select{
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  #hv_linesTable input[readonly] {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  /* Amount field (cash) dark mode */
+  #hv_linesTable tbody td:nth-child(5) input {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, var(--primary) 8%, #1f2937), 
+      #1f2937
+    ) !important;
+  }
+  
+  #hv_linesTable tbody td:nth-child(5) input:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, var(--primary) 12%, #1f2937), 
+      #1f2937
+    ) !important;
+  }
+  
+  /* Gold field dark mode - golden styling */
+  #hv_linesTable tbody td:nth-child(6) input {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 12%, #1f2937), 
+      color-mix(in oklab, #ff8c00 8%, #1f2937)
+    ) !important;
+    color: #f9fafb !important;
+    border-color: color-mix(in oklab, #ffa500 45%, transparent) !important;
+  }
+  
+  #hv_linesTable tbody td:nth-child(6) input:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+  }
+}
+
+#hv_linesTable td input[type="number"]{ 
+  text-align: center;
+}
+#hv_linesTable thead th:nth-child(1){ width:110px }
+#hv_linesTable thead th:nth-child(2){ width:110px }
+#hv_linesTable thead th:nth-child(3){ width:110px }
+#hv_linesTable thead th:nth-child(4){ width:220px }
+#hv_linesTable thead th:nth-child(5){ 
+  width:120px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--primary) 12%, var(--card)), 
+    color-mix(in oklab, var(--primary) 8%, var(--card))
+  ) !important;
+  color: var(--primary) !important;
+  border-bottom: 2px solid color-mix(in oklab, var(--primary) 45%, transparent) !important;
+}
+#hv_linesTable thead th:nth-child(6){ 
+  width:120px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 12%, var(--card)), 
+    color-mix(in oklab, #ff8c00 8%, var(--card))
+  ) !important;
+  color: #ff8c00 !important;
+  border-bottom: 2px solid color-mix(in oklab, #ffa500 55%, transparent) !important;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.3) !important;
+}
+#hv_linesTable thead th:nth-child(7){ 
+  width:100px;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffa500 12%, var(--card)), 
+    color-mix(in oklab, #ff8c00 8%, var(--card))
+  ) !important;
+  color: #ff8c00 !important;
+  border-bottom: 2px solid color-mix(in oklab, #ffa500 55%, transparent) !important;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.3) !important;
+}
+#hv_linesTable thead th:nth-child(8){ width:240px }
+#hv_linesTable thead th:nth-child(9){ width:64px }
+
+/* Enhanced styling for Karat field (column 7) */
+#hv_linesTable tbody td:nth-child(7) input {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 5%, var(--card)), 
+    color-mix(in oklab, #ffa500 3%, var(--card))
+  ) !important;
+  color: var(--text) !important;
+  border: 2px solid color-mix(in oklab, #ffa500 35%, transparent) !important;
+  box-shadow: 0 2px 6px rgba(255, 165, 0, 0.12), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  width: 80px !important;
+}
+
+#hv_linesTable tbody td:nth-child(7) input:focus {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 0 0 6px rgba(255, 140, 0, 0.15), 
+              0 4px 12px rgba(255, 140, 0, 0.25) !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #ffd700 8%, var(--card)), 
+    color-mix(in oklab, #ffa500 5%, var(--card))
+  ) !important;
+}
+
+/* Karat field placeholder */
+#hv_linesTable tbody td:nth-child(7) input::placeholder {
+  color: color-mix(in oklab, #ffa500 40%, transparent);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Gold field placeholder */
+#hv_linesTable tbody td:nth-child(6) input::placeholder {
+  color: color-mix(in oklab, #ffa500 40%, transparent);
+  font-weight: 600;
+}
+
+/* Karat datalist dropdown styling */
+#hv_karat_list option {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  color: #ff8c00;
+}
+
+/* Dark mode adjustments for karat and gold fields */
+html[data-theme='dark'] {
+  /* Karat field dark mode */
+  #hv_linesTable tbody td:nth-child(7) input {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 12%, #1f2937), 
+      color-mix(in oklab, #ff8c00 8%, #1f2937)
+    ) !important;
+    color: #f9fafb !important;
+    border-color: color-mix(in oklab, #ffa500 45%, transparent) !important;
+  }
+  
+  #hv_linesTable tbody td:nth-child(7) input:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+  }
+  
+  #hv_linesTable tbody td:nth-child(7) input::placeholder {
+    color: color-mix(in oklab, #ffa500 50%, transparent);
+  }
+  
+  /* Karat field header dark mode */
+  #hv_linesTable thead th:nth-child(7) {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+    color: #ffd700 !important;
+  }
+  
+  /* Gold field header dark mode */
+  #hv_linesTable thead th:nth-child(6) {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #ffa500 15%, #1f2937), 
+      color-mix(in oklab, #ff8c00 10%, #1f2937)
+    ) !important;
+    color: #ffd700 !important;
+  }
+  
+  /* Gold field placeholder dark mode */
+  #hv_linesTable tbody td:nth-child(6) input::placeholder {
+    color: color-mix(in oklab, #ffa500 50%, transparent);
+  }
+}
+
+/* Enhanced Modal Close Button */
+.modal .modal-header .icon-btn {
+  position: relative;
+  background: none;
+  border: 2px solid transparent;
+  color: #e74c3c;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  margin: -8px -8px -8px 8px;
+  padding: 0;
+}
+
+/* Hover and Focus States for Modal Close Button */
+.modal .modal-header .icon-btn:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  transform: scale(1.1);
+}
+
+.modal .modal-header .icon-btn:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.5);
+  transform: scale(1.1);
+}
+
+.modal .modal-header .icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Dark mode adjustments */
+html[data-theme='dark'] {
+  .modal .modal-header .icon-btn {
+    color: #ff6b6b;
+  }
+  
+  .modal .modal-header .icon-btn:hover {
+    background-color: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+  }
+  
+  .modal .modal-header .icon-btn:focus {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+  }
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn {
+  color: #ff6b6b;
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn:hover {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+:root[data-theme="dark"] .modal .modal-header .icon-btn:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
+}
+
+/* Modern delete button */
+#hv_linesTable .icon-btn.act-delete,
+#hv_linesTable .icon-btn.hv-remove{
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 2px solid transparent !important;
+  background: transparent !important;
+  color: var(--error) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 !important;
+  margin: 0;
+}
+#hv_linesTable .icon-btn.act-delete i,
+#hv_linesTable .icon-btn.hv-remove i{ 
+  color: var(--error) !important;
+  font-size: 18px;
+  transition: all .25s ease;
+}
+#hv_linesTable .icon-btn.act-delete:hover,
+#hv_linesTable .icon-btn.hv-remove:hover{
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, var(--error) 15%, transparent), 
+    color-mix(in oklab, var(--error) 8%, transparent)
+  ) !important;
+  border-color: color-mix(in oklab, var(--error) 35%, transparent) !important;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--error) 25%, transparent) !important;
+}
+#hv_linesTable .icon-btn.act-delete:hover i,
+#hv_linesTable .icon-btn.hv-remove:hover i{ 
+  color: var(--error) !important;
+  transform: scale(1.1);
+}
+#hv_linesTable .icon-btn.act-delete:active,
+#hv_linesTable .icon-btn.hv-remove:active{
+  transform: scale(0.95) rotate(0deg);
+}
+
+/* Nav controls */
+.nav-controls{display:flex;gap:6px;align-items:center;padding:6px 8px;border:1px solid var(--border);border-radius:12px;background:color-mix(in oklab, var(--card) 88%, transparent);box-shadow:0 6px 20px rgba(0,0,0,.12) inset, 0 6px 14px rgba(0,0,0,.08)}
+.nav-controls .icon-btn{width:42px;height:42px;min-height:42px;padding:0;box-sizing:border-box;border-radius:12px;border:1px solid color-mix(in oklab, var(--ring,#7cd2c6) 55%, #000);background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.35));display:grid;place-items:center;color:var(--text);transition:transform .12s ease, box-shadow .15s ease, background .2s ease, border-color .15s ease;outline:none;box-shadow:0 8px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.5)}
+.nav-controls .icon-btn i{color:var(--primary,#0aa39a);font-size:18px;line-height:1;vertical-align:middle;display:flex;align-items:center;justify-content:center;width:18px;height:18px}
+.nav-controls .icon-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,.09), 0 0 0 6px color-mix(in oklab, var(--primary,#0aa39a) 25%, transparent)}
+.nav-controls .icon-btn:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.nav-controls .icon-btn:focus-visible{box-shadow:0 0 0 6px var(--ring)}
+.nav-controls .icon-btn:disabled{opacity:.45;filter:saturate(.6) contrast(.9) grayscale(.3);cursor:not-allowed}
+#hv_nav_id{border:1px solid var(--border);border-radius:10px;background:var(--bg-muted);color:var(--text);outline:none;text-align:center;transition:border-color .15s ease, box-shadow .15s ease}
+#hv_nav_id:focus{border-color:var(--primary);box-shadow:0 0 0 6px var(--ring)}
+#hv_nav_counter{min-width:76px;display:grid;place-items:center;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:color-mix(in oklab, var(--bg-muted) 92%, transparent);color:var(--subtle)}
+
+/* Dark mode tweaks for nav arrows */
+html[data-theme='dark'] {
+  .nav-controls .icon-btn{border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff);background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35));box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05)}
+  .nav-controls .icon-btn i{color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%)}
+  #hv_nav_counter{border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff);background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35));color:#f2f6f5}
+}
+:root[data-theme="dark"] .nav-controls .icon-btn{border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff);background:linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35));box-shadow:0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05)}
+:root[data-theme="dark"] .nav-controls .icon-btn i{color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%)}
+:root[data-theme="dark"] #hv_nav_counter{border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff);background:linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35));color:#f2f6f5}
+
+/* Inline hint bubble */
+.hv-hint{position:fixed;z-index:9999;background:var(--card);color:var(--text);border:2px solid color-mix(in oklab, var(--primary) 35%, var(--border));border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.2);padding:10px 12px;font-size:13px;max-width:360px;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .15s ease, transform .15s ease}
+.hv-hint.show{opacity:1;transform:translateY(0)}
+
+/* Totals card - ضمن الشبكة وبنفس منطق بطاقة الجدول */
+#voucher_totals{
+  flex-shrink: 0;
+  align-self: stretch;
+  position: fixed !important;
+  left: var(--voucher-totals-left, 0px) !important;
+  right: auto !important;
+  bottom: 0 !important;
+  inset-block: auto 0 !important;
+  z-index: 20 !important;
+  width: var(--voucher-totals-width, 100vw) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  border-top: 0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  backdrop-filter: saturate(1.05) blur(8px) !important;
+  background: var(--card) !important;
+}
+
+#panel-voucher > #voucher_totals{
+  margin-bottom: 0 !important;
+}
+
+#voucher_totals > div{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px 20px !important;
+  flex-wrap: wrap !important;
+  padding: 2px 0 !important;
+}
+.hv-hint.error{border-color: var(--error); color: var(--error)}
+
+/* ===== Chevron Connected Buttons Style ===== */
+.toolbar .actions {
+  display: flex;
+  gap: 0 !important;
+  align-items: center;
+}
+
+html[dir='ltr'] .toolbar .actions,
+:root[dir='ltr'] .toolbar .actions {
+  flex-direction: row-reverse;
+}
+
+.toolbar .actions .btn {
+  position: relative;
+  margin-left: -8px !important;
+  height: 60px !important;
+  min-width: 90px !important;
+  width: auto !important;
+  padding: 6px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+/* إظهار النصوص أسفل الأيقونات */
+.toolbar .actions .btn span {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.toolbar .actions .btn span i {
+  font-size: 20px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+/* أول زر - مسطح من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:first-child {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%) !important;
+  padding-right: 24px !important;
+  padding-left: 16px !important;
+  margin-left: 0 !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+/* آخر زر - مسطح من اليسار، محفور من اليمين */
+.toolbar .actions .btn:last-child {
+  clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%, 88% 50%) !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  border-radius: 10px 0 0 10px !important;
+}
+
+/* الأزرار الوسطى - محفور من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:not(:first-child):not(:last-child) {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%, 88% 50%) !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+
+.toolbar .actions .btn:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+  filter: brightness(1.15) !important;
+}
+
+.toolbar .actions .btn:active {
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Tooltip عند التمرير */
+.toolbar .actions .btn::before {
+  display: none !important;
+}
+
+/* إلغاء التأثيرات من shared-styles */
+.toolbar .actions .btn::after {
+  display: none !important;
+}
+
+/* ألوان مخصصة للأزرار */
+.toolbar .actions .btn.primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+}
+
+/* زر الحفظ بلون مختلف */
+.toolbar .actions .btn.primary#hv_btnSaveTop {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important;
+  border-color: #0d9488 !important;
+}
+
+.toolbar .actions .btn.secondary {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}
+
+.toolbar .actions .btn.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #dc2626 !important;
+}
+
+.toolbar .actions .btn.print {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-color: #2563eb !important;
+}
+
+.toolbar .actions .btn.btn-journal-view {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border-color: #d97706 !important;
+}
+
+.toolbar .actions .btn.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  border-color: #128c7e !important;
+}
+
+.toolbar .actions .btn.close-screen {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}

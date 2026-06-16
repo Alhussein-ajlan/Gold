@@ -1,0 +1,189 @@
+{
+  "openPositions": {
+    "title": "Open Positions",
+    "subtitle": "Manage Open Positions for Customers and Suppliers",
+    "tabs": {
+      "sellPositions": "Open Sell Positions",
+      "buyPositions": "Open Buy Positions"
+    },
+    "cards": {
+      "needsCoverage": "Needs Coverage",
+      "safeAccounts": "Safe Accounts",
+      "xauPrice": "Gold Ounce Price",
+      "lastUpdate": "Last Update",
+      "reconnect": "Reconnect MT5",
+      "connecting": "Connecting...",
+      "change24h": "Change (24h)",
+      "high": "High",
+      "low": "Low",
+      "party": "Party",
+      "parties": "Parties",
+      "gram": "g",
+      "customersCount": "Customers Count:",
+      "totalGold": "Total Gold:",
+      "totalCash": "Total Cash:",
+      "avgCoverage": "Average Coverage:",
+      "rate": "Rate:",
+      "avgPosition": "Customer Position:",
+      "summary": "Positions Summary",
+      "cashDebit": "Cash Debit",
+      "cashCredit": "Cash Credit",
+      "goldCredit": "Gold Credit",
+      "goldDebit": "Gold Debit",
+      "eventTime": "Event Time"
+    },
+    "filters": {
+      "comparePrice": "Compare Price:",
+      "status": "Status:",
+      "all": "All",
+      "needsCoverage": "Needs Coverage",
+      "safe": "Safe",
+      "search": "Search by name or number...",
+      "agreedRate": "Agreed Rate %:",
+      "priceAdjustment": "Addition/Deduction:",
+      "priceAdjustmentHint": "Positive value = addition, negative value = deduction from ounce price",
+      "danger": "Warning",
+      "warning": "Alert"
+    },
+    "table": {
+      "title": "Parties with Gold Credit and Cash Debit",
+      "titleBuy": "Parties with Cash Credit and Gold Debit",
+      "number": "#",
+      "type": "Type",
+      "id": "ID",
+      "name": "Name",
+      "goldBalance": "Gold Balance",
+      "cashBalance": "Cash Balance",
+      "coveragePrice": "Coverage Price",
+      "customerPosition": "Customer Position",
+      "status": "Status",
+      "actions": "Actions",
+      "customer": "Customer",
+      "supplier": "Supplier",
+      "needsCoverage": "Coverage",
+      "safe": "Safe",
+      "statement": "Statement",
+      "notify": "Notify",
+      "noData": "No data available",
+      "cashDebit": "Cash Debit",
+      "cashCredit": "Cash Credit",
+      "goldCredit": "Gold Credit",
+      "goldDebit": "Gold Debit",
+      "total": "Total",
+      "requiredCoverage": "Required Coverage"
+    },
+    "actions": {
+      "export": "Export",
+      "exportExcel": "Export Excel",
+      "exportPDF": "Export PDF",
+      "print": "Print",
+      "refresh": "Refresh"
+    },
+    "notification": {
+      "title": "Account Support Notification",
+      "warningTitle": "Account Support Notification",
+      "warningMessage": "Dear customer, we inform you that the support level for your open positions has fallen below the minimum agreed rate.",
+      "entityInfo": {
+        "entityNumber": "Number",
+        "name": "Name",
+        "taxNumber": "Tax Number",
+        "phone": "Phone Number",
+        "region": "Region",
+        "customer": "Customer",
+        "supplier": "Supplier"
+      },
+      "table": {
+        "metal": "Metal",
+        "balance": "Balance (gram)",
+        "customerPosition": "Customer Position",
+        "marketPrice": "Market Price Now"
+      },
+      "cards": {
+        "agreedRate": "Agreed Rate:",
+        "amounts": "Amounts:",
+        "currentBalance": "Your Current Balance:",
+        "balance": "Balance (gram)",
+        "currentRate": "Your Current Rate:",
+        "requiredAmount": "Required Amount Immediately:"
+      },
+      "warning": {
+        "title": "Account Protection Required Immediately",
+        "message": "Please provide the following immediately via WhatsApp:",
+        "transferAmount": "Transfer Amount:",
+        "dueDate": "Due Date:",
+        "immediate": "Immediate",
+        "method": "Via any bank"
+      },
+      "footer": "This notification is automatically printed by computer and does not require a signature",
+      "printButton": "Print",
+      "modal": {
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Information",
+        "ok": "OK",
+        "imageCopied": "Notification copied to clipboard",
+        "noNotice": "Notification not found",
+        "libraryMissing": "Image capture library not available",
+        "copyFailed": "Failed to copy image",
+        "copySuccess": "Notification image copied to clipboard. You can paste it with Ctrl+V",
+        "noPhone": "No valid phone number for this customer",
+        "whatsappSuccess": "Notification image copied to clipboard and WhatsApp opened."
+      },
+      "whatsapp": {
+        "title": "⚠️ Account Support Notification",
+        "dear": "Dear customer:",
+        "message": "We inform you that the support level for your open positions has fallen below the minimum agreed rate.",
+        "details": "📊 Account Details:",
+        "balanceLabel": "• Balance (gram):",
+        "agreedRateLabel": "• Agreed Rate:",
+        "currentRateLabel": "• Your Current Rate:",
+        "amountsLabel": "• Amounts:",
+        "currentBalanceLabel": "• Your Current Balance:",
+        "requiredLabel": "💰 Required Amount Immediately:",
+        "pleaseSupport": "⚠️ Please support the account immediately.",
+        "thanks": "Thank you for your cooperation 🙏"
+      },
+      "buttons": {
+        "usd": "USD",
+        "sar": "SAR",
+        "whatsapp": "WhatsApp",
+        "print": "Print"
+      }
+    },
+    "export": {
+      "filename": "Open_Positions",
+      "sheetName": "Open Positions",
+      "sellPositions": "Open Sell Positions",
+      "buyPositions": "Open Buy Positions",
+      "reportTitle": "Open Positions Report",
+      "date": "Date:",
+      "comparePrice": "Compare Price:",
+      "xauPrice": "XAU/USD Price:",
+      "summary": "Summary",
+      "needsCoverage": "Total Coverage Required (SAR)",
+      "safeAccounts": "Total Safe Positions (SAR)"
+    },
+    "print": {
+      "reportBasis": "Report Basis",
+      "reportBasisHint": "Shows the price and criteria used to prepare this report",
+      "appliedOuncePrice": "Applied ounce price in this report",
+      "liveOuncePrice": "Live ounce price",
+      "priceAddition": "Addition to ounce price",
+      "priceDeduction": "Deduction from ounce price",
+      "agreedRate": "Agreed rate",
+      "usdPerOunce": "USD/Ounce"
+    },
+    "messages": {
+      "loading": "Loading...",
+      "error": "Error loading data",
+      "noData": "No data available",
+      "accountNotFound": "Account data not found",
+      "exportSuccess": "Export successful",
+      "exportError": "Export error",
+      "reconnecting": "Reconnecting...",
+      "reconnectSuccess": "Reconnected successfully",
+      "reconnectError": "Reconnection failed"
+    }
+  }
+}

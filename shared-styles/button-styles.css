@@ -1,0 +1,43 @@
+/* ===== Shared Button Styles ===== */
+/* This file contains common button styles used across multiple screens */
+
+/* Basic button reset and common styles are already defined in individual screen CSS files */
+/* This file is kept for future shared button styles if needed */
+
+/* ===== Icon Spacing Fix ===== */
+/* Ensure proper spacing between icons and text in all buttons and UI elements */
+
+/* Icons before text */
+.btn i,
+button i,
+.modal-footer i,
+.modal-header i,
+.modal-body i,
+a i,
+span i,
+div i {
+  margin-inline-end: 6px;
+}
+
+/* Icons after text (last child) */
+.btn i:last-child,
+button i:last-child,
+a i:last-child,
+span i:last-child {
+  margin-inline-end: 0;
+  margin-inline-start: 6px;
+}
+
+/* Icons that are the only child (no text) */
+.btn i:only-child,
+button i:only-child,
+a i:only-child,
+span i:only-child {
+  margin: 0;
+}
+
+/* Fix for inline-flex buttons with gap already defined */
+.btn[style*="gap"] i,
+button[style*="gap"] i {
+  margin: 0 !important;
+}

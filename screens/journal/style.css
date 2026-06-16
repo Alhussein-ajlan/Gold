@@ -1,0 +1,879 @@
+/* Journal-specific styles */
+
+/* تطبيق خط Cairo على عناصر الإدخال والجداول */
+#panel-journal input[type="text"],
+#panel-journal input[type="number"],
+#panel-journal input[type="date"],
+#panel-journal input[type="time"],
+#panel-journal select,
+#panel-journal textarea,
+#panel-journal option,
+#panel-journal button,
+#panel-journal label,
+#panel-journal .form-field,
+#panel-journal .totals-card,
+#j_linesTable input,
+#j_linesTable select,
+#j_linesTable option,
+#j_linesTable td,
+#j_linesTable th,
+#j_linesTable button,
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="email"],
+.modal input[type="tel"],
+.modal input[type="search"],
+.modal select,
+.modal option,
+.modal textarea,
+.modal td,
+.modal th,
+.modal button,
+.modal label,
+.modal .modal-body,
+.modal .modal-header,
+.modal .modal-footer,
+#j_confirmVoucherDel .modal-body,
+#j_confirmLineDel .modal-body,
+#j_lookupAccount .modal-body,
+.toast,
+.j-hint {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* إصلاح ارتفاع النص في القوائم المنسدلة */
+#panel-journal select,
+#j_linesTable select,
+.modal select {
+  line-height: 2.2 !important;
+  vertical-align: middle !important;
+  padding-top: 2px !important;
+}
+
+/* إصلاح ارتفاع النص في خيارات القوائم المنسدلة */
+#panel-journal option,
+#j_linesTable option,
+.modal option {
+  line-height: 1.8 !important;
+  padding: 8px 12px !important;
+}
+
+/* حجم أكبر قليلاً للعناوين في الجدول */
+#j_linesTable th {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+.grid-span-3 {
+  grid-column: span 3;
+}
+
+/* إزالة التمرير من الشاشة */
+body {
+  overflow-y: hidden !important;
+  height: 100vh !important;
+}
+
+#panel-journal {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  position: relative !important;
+  --journal-bottom-height: 72px;
+  --journal-bottom-left: 0px;
+  --journal-bottom-width: 100vw;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+}
+
+#panel-journal > .toolbar {
+  flex-shrink: 0;
+}
+
+/* إصلاح عرض بطاقات القيود اليومية - تطبيق نفس النمط من شاشات الموردين والعملاء */
+section[role="tabpanel"] .grid.cards-3 {
+  flex: 1;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  grid-template-rows: auto 1fr !important;
+  min-height: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+  padding-bottom: calc(var(--journal-bottom-height, 72px) - 10px);
+  box-sizing: border-box;
+}
+
+section[role="tabpanel"] .card.form-card.fullwide {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* ضمان أن البطاقات تأخذ العرض الكامل عبر الأعمدة الثلاثة */
+#panel-journal .grid.cards-3 .card.grid-span-3 {
+  grid-column: 1 / -1;
+}
+
+/* مطابقة تنسيق البطاقات مع شاشة الافتتاحية */
+#panel-journal .card.form-card.grid-span-3.fullwide {
+  margin-bottom: 8px !important;
+}
+
+#panel-journal .card.form-card.grid-span-3.fullwide:first-of-type {
+  flex-shrink: 0;
+}
+
+#panel-journal #journalGrid {
+  margin-bottom: 0 !important;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  margin-top: 0 !important;
+  transform: translateY(4px);
+}
+
+#journalGrid .table-head {
+  flex-shrink: 0;
+}
+
+#journalGrid .table-responsive {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+#journalGrid.table-card.fullwide {
+  overflow: hidden;
+}
+
+/* Toolbar actions */
+.toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.toolbar .actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Danger & Print buttons use shared-styles/button-styles.css - no override needed */
+
+/* Top-right pager (elegant container) */
+.toolbar .pager { 
+  position: absolute; 
+  top: -12px; 
+  inset-inline-end: -4px; 
+  display: flex; 
+  gap: 8px; 
+  align-items: center;
+  z-index: 2;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, rgba(10, 163, 154, 0.12) 0%, rgba(10, 163, 154, 0.06) 100%);
+  border: 1px solid rgba(10, 163, 154, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
+}
+
+.toolbar .pager .btn.icon { 
+  width: 36px; 
+  height: 36px; 
+  padding: 0; 
+  box-sizing: border-box; 
+  border-radius: 12px; 
+  border: 1px solid color-mix(in oklab, var(--ring,#7cd2c6) 55%, #000); 
+  background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.35));
+  display: grid; 
+  place-items: center; 
+  text-align: center; 
+  color: var(--text); 
+  box-shadow: 0 8px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.5);
+  transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.toolbar .pager .btn.icon i { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 18px; 
+  height: 18px; 
+  color: var(--primary,#0aa39a); 
+  font-size: 18px; 
+  line-height: 1; 
+  vertical-align: middle;
+}
+
+.toolbar .pager .btn.icon:hover { 
+  transform: translateY(-1px); 
+  box-shadow: 0 10px 28px rgba(0,0,0,.09), 0 0 0 6px color-mix(in oklab, var(--primary,#0aa39a) 25%, transparent);
+}
+
+.toolbar .pager .btn.icon:active { 
+  transform: translateY(0);
+}
+
+.toolbar .pager .btn.icon:disabled { 
+  opacity: .45; 
+  filter: saturate(.2); 
+  cursor: not-allowed;
+}
+
+.toolbar .pager .counter { 
+  min-width: 86px; 
+  height: 36px; 
+  padding: 0 12px; 
+  display: grid; 
+  place-items: center; 
+  border-radius: 12px; 
+  border: 1px solid color-mix(in oklab, var(--ring,#7cd2c6) 45%, #000); 
+  background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.25)); 
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+.toolbar .pager .nav-id, #nav_id { 
+  width: 110px; 
+  height: 36px; 
+  border-radius: 12px; 
+  border: 1px solid color-mix(in oklab, var(--ring,#7cd2c6) 45%, #000); 
+  background: rgba(255,255,255,.6); 
+  padding: 0 10px; 
+  outline: none; 
+  transition: box-shadow .15s ease, border-color .15s ease;
+  text-align: center;
+  color: var(--text);
+}
+
+#nav_id:focus { 
+  border-color: #ffbf3b; 
+  box-shadow: 0 0 0 2px #ffbf3b, 0 0 0 8px color-mix(in oklab, var(--primary) 30%, transparent);
+}
+
+/* Dark mode tweaks */
+html[data-theme='dark'] {
+  .toolbar .pager .btn.icon { 
+    border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff); 
+    background: linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35)); 
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .toolbar .pager .btn.icon i { 
+    color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%);
+  }
+  .toolbar .pager .counter { 
+    border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); 
+    background: linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35)); 
+    color: color-mix(in oklab, #ffffff 85%, var(--text,#dfe7e6) 15%);
+  }
+  .toolbar .pager .nav-id, #nav_id { 
+    border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); 
+    background: rgba(60,60,60,.65); 
+    color: #f5f7f6;
+  }
+}
+
+:root[data-theme="dark"] .toolbar .pager .btn.icon { 
+  border-color: color-mix(in oklab, var(--primary,#0aa39a) 55%, #fff); 
+  background: linear-gradient(180deg, rgba(40,40,40,.7), rgba(40,40,40,.35)); 
+  box-shadow: 0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+:root[data-theme="dark"] .toolbar .pager .btn.icon i { 
+  color: color-mix(in oklab, var(--primary,#0aa39a) 85%, #ffffff 15%);
+}
+
+:root[data-theme="dark"] .toolbar .pager .counter { 
+  border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); 
+  background: linear-gradient(180deg, rgba(50,50,50,.7), rgba(50,50,50,.35)); 
+  color: color-mix(in oklab, #ffffff 85%, var(--text,#dfe7e6) 15%);
+}
+
+:root[data-theme="dark"] .toolbar .pager .nav-id,
+:root[data-theme="dark"] #nav_id { 
+  border-color: color-mix(in oklab, var(--primary,#0aa39a) 45%, #fff); 
+  background: rgba(60,60,60,.65); 
+  color: #f5f7f6;
+}
+
+/* Toolbar actions buttons - chevron styles at end of file */
+
+/* Journal lines table */
+#journalLinesTable {
+  table-layout: fixed;
+  min-width: 1400px;
+  width: max-content;
+}
+
+#journalLinesTable input[type="text"],
+#journalLinesTable select {
+  height: 42px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 600;
+}
+
+/* Readonly fields */
+#journalLinesTable input[readonly] {
+  background: var(--card);
+  cursor: not-allowed;
+}
+
+/* Select dropdowns */
+#journalLinesTable select {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+#journalLinesTable input[type="text"]:focus,
+#journalLinesTable select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 6px var(--ring);
+}
+
+/* Dark mode adjustments - Unified styling like invoices */
+html[data-theme='dark'] {
+  #journalLinesTable input[type="number"],
+  #journalLinesTable input[type="text"],
+  #journalLinesTable select{
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  #journalLinesTable input[readonly] {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+  
+  /* Debit field dark mode */
+  #journalLinesTable .debit-input {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #dc3545 8%, #1f2937), 
+      #1f2937
+    ) !important;
+    color: #f9fafb !important;
+  }
+  
+  #journalLinesTable .debit-input:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #dc3545 12%, #1f2937), 
+      #1f2937
+    ) !important;
+  }
+  
+  /* Credit field dark mode */
+  #journalLinesTable .credit-input {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #28a745 8%, #1f2937), 
+      #1f2937
+    ) !important;
+    color: #f9fafb !important;
+  }
+  
+  #journalLinesTable .credit-input:focus {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #28a745 12%, #1f2937), 
+      #1f2937
+    ) !important;
+  }
+  
+  /* Column headers dark mode */
+  #journalLinesTable thead th:nth-child(6) {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #dc3545 15%, #1f2937), 
+      color-mix(in oklab, #dc3545 10%, #1f2937)
+    ) !important;
+    color: #ff6b6b !important;
+  }
+  
+  #journalLinesTable thead th:nth-child(7) {
+    background: linear-gradient(135deg, 
+      color-mix(in oklab, #28a745 15%, #1f2937), 
+      color-mix(in oklab, #28a745 10%, #1f2937)
+    ) !important;
+    color: #51cf66 !important;
+  }
+}
+
+/* Debit and Credit inputs - center aligned with enhanced styling */
+#journalLinesTable .debit-input {
+  text-align: center;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #dc3545 3%, var(--card)), 
+    var(--card)
+  ) !important;
+  border: 2px solid color-mix(in oklab, #dc3545 25%, transparent) !important;
+}
+
+#journalLinesTable .debit-input:focus {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #dc3545 5%, var(--card)), 
+    var(--card)
+  ) !important;
+  box-shadow: 0 0 0 6px color-mix(in oklab, #dc3545 12%, transparent), 
+              0 4px 12px rgba(220, 53, 69, 0.15) !important;
+  border-color: #dc3545 !important;
+}
+
+#journalLinesTable .credit-input {
+  text-align: center;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #28a745 3%, var(--card)), 
+    var(--card)
+  ) !important;
+  border: 2px solid color-mix(in oklab, #28a745 25%, transparent) !important;
+}
+
+#journalLinesTable .credit-input:focus {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #28a745 5%, var(--card)), 
+    var(--card)
+  ) !important;
+  box-shadow: 0 0 0 6px color-mix(in oklab, #28a745 12%, transparent), 
+              0 4px 12px rgba(40, 167, 69, 0.15) !important;
+  border-color: #28a745 !important;
+}
+
+/* Customer, Supplier, Account inputs */
+#journalLinesTable .customer-select,
+#journalLinesTable .supplier-select,
+#journalLinesTable .account-select {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Name input (readonly) */
+#journalLinesTable .name-input {
+  background: var(--bg-muted);
+  cursor: not-allowed;
+  font-weight: 500;
+  color: var(--text);
+}
+
+#journalLinesTable select {
+  height: 42px;
+  min-height: 42px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-muted);
+  color: var(--text);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+#journalLinesTable select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 6px var(--ring);
+}
+
+/* تم نقل أنماط التمرير إلى #journalGrid .table-responsive */
+
+/* Sticky header for better usability */
+#journalLinesTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--card);
+}
+
+/* Enhanced column headers for Debit and Credit */
+#journalLinesTable thead th:nth-child(6) {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #dc3545 12%, var(--card)), 
+    color-mix(in oklab, #dc3545 8%, var(--card))
+  ) !important;
+  color: #dc3545 !important;
+  border-bottom: 2px solid color-mix(in oklab, #dc3545 45%, transparent) !important;
+}
+
+#journalLinesTable thead th:nth-child(7) {
+  background: linear-gradient(135deg, 
+    color-mix(in oklab, #28a745 12%, var(--card)), 
+    color-mix(in oklab, #28a745 8%, var(--card))
+  ) !important;
+  color: #28a745 !important;
+  border-bottom: 2px solid color-mix(in oklab, #28a745 45%, transparent) !important;
+}
+
+#journalLinesTable tfoot td {
+  background: var(--bg-muted);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 10px 8px;
+  vertical-align: middle;
+  border-right: 1px solid var(--border);
+}
+
+#journalLinesTable tfoot td:first-child {
+  border-right: none;
+}
+
+#journalLinesTable tfoot td div {
+  line-height: 1.4;
+  margin: 2px 0;
+}
+
+#journalLinesTable tfoot td div:first-child {
+  font-size: 10px;
+  color: var(--subtle);
+  font-weight: 500;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+#journalLinesTable tfoot td div:last-child {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+#balanceCash div:last-child,
+#balanceGold div:last-child {
+  font-weight: 800;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* Gold columns with karat notation */
+#journalLinesTable tfoot td div[style*="font-style:italic"] {
+  font-weight: 400;
+  color: #888 !important;
+}
+
+#totalDebitCash, #totalDebitGold, #totalCreditCash, #totalCreditGold {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Delete button in lines */
+#journalLinesTable .icon-btn.act-delete {
+  color: var(--error);
+}
+
+#journalLinesTable .icon-btn.act-delete:hover {
+  background: color-mix(in oklab, var(--error) 35%, transparent);
+  color: #fff;
+}
+
+/* Toast notifications (match voucher style) */
+.toast-wrap {
+  position: fixed;
+  inset-inline-end: 14px;
+  bottom: 14px;
+  display: grid;
+  gap: 8px;
+  z-index: 99999;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 360px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 10px 26px rgba(0,0,0,.20);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn .2s ease forwards;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.toast.success {
+  border-color: var(--success);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--success) 15%, transparent);
+}
+
+.toast.error {
+  border-color: var(--error);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--error) 15%, transparent);
+}
+
+.toast .icon {
+  font-size: 16px;
+}
+
+.toast .close {
+  margin-inline-start: auto;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal footer two columns */
+.modal-footer.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn.secondary {
+  background: rgba(128, 128, 128, 0.15);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn.secondary:hover {
+  background: rgba(128, 128, 128, 0.25);
+}
+
+/* Account selector dropdown */
+.account-dropdown {
+  position: relative;
+}
+
+.account-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  margin-top: 4px;
+}
+
+.account-list.show {
+  display: block;
+}
+
+.account-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-item:last-child {
+  border-bottom: none;
+}
+
+.account-item:hover {
+  background: var(--bg-muted);
+}
+
+/* البطاقة السفلية الثابتة */
+#journal_bottom {
+  flex-shrink: 0;
+  align-self: stretch;
+  position: fixed !important;
+  left: var(--journal-bottom-left, 0px) !important;
+  right: auto !important;
+  bottom: 0 !important;
+  inset-block: auto 0 !important;
+  z-index: 20 !important;
+  width: var(--journal-bottom-width, 100vw) !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  border-top: 0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  backdrop-filter: saturate(1.05) blur(8px) !important;
+  background: var(--card) !important;
+}
+
+#panel-journal > #journal_bottom {
+  margin-bottom: 0 !important;
+}
+
+#journal_bottom > div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px 20px !important;
+  flex-wrap: wrap !important;
+  padding: 2px 0 !important;
+}
+
+.account-item .account-code {
+  font-weight: 600;
+  color: var(--primary);
+  margin-left: 8px;
+}
+
+.account-item .account-name {
+  color: var(--text);
+}
+
+/* ===== Chevron Connected Buttons Style ===== */
+.toolbar .actions {
+  display: flex;
+  gap: 0 !important;
+  align-items: center;
+}
+
+html[dir='ltr'] .toolbar .actions,
+:root[dir='ltr'] .toolbar .actions {
+  flex-direction: row-reverse;
+}
+
+.toolbar .actions .btn {
+  position: relative;
+  margin-left: -8px !important;
+  height: 60px !important;
+  min-width: 90px !important;
+  width: auto !important;
+  padding: 6px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+/* إظهار النصوص أسفل الأيقونات */
+.toolbar .actions .btn span {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+.toolbar .actions .btn span i {
+  font-size: 20px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+/* أول زر - مسطح من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:first-child {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%) !important;
+  padding-right: 24px !important;
+  padding-left: 16px !important;
+  margin-left: 0 !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+/* آخر زر - مسطح من اليسار، محفور من اليمين */
+.toolbar .actions .btn:last-child {
+  clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%, 88% 50%) !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  border-radius: 10px 0 0 10px !important;
+}
+
+/* الأزرار الوسطى - محفور من اليمين، مدبب من اليسار */
+.toolbar .actions .btn:not(:first-child):not(:last-child) {
+  clip-path: polygon(100% 0%, 12% 0%, 0% 50%, 12% 100%, 100% 100%, 88% 50%) !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+
+.toolbar .actions .btn:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  z-index: 10 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+  filter: brightness(1.15) !important;
+}
+
+.toolbar .actions .btn:active {
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Tooltip عند التمرير */
+.toolbar .actions .btn::before {
+  display: none !important;
+}
+
+/* إلغاء التأثيرات من shared-styles */
+.toolbar .actions .btn::after {
+  display: none !important;
+}
+
+/* ألوان مخصصة للأزرار */
+.toolbar .actions .btn.primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+}
+
+/* زر الحفظ بلون مختلف */
+.toolbar .actions .btn.primary#btnSaveTop {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important;
+  border-color: #0d9488 !important;
+}
+
+.toolbar .actions .btn.secondary {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}
+
+.toolbar .actions .btn.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #dc2626 !important;
+}
+
+.toolbar .actions .btn.print {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-color: #2563eb !important;
+}
+
+.toolbar .actions .btn.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  border-color: #128c7e !important;
+}
+
+.toolbar .actions .btn.close-screen {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+  border-color: #4b5563 !important;
+}

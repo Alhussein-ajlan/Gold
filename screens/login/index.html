@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>تسجيل الدخول</title>
+    <style>
+      /* Prevent flash of unstyled content - apply theme immediately */
+      /* Prevent layout shift from font loading */
+      body {
+        font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      }
+      html { visibility: hidden; }
+      html.theme-loaded { visibility: visible; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="./login.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <div class="lang-switcher" id="langSwitcher">
+          <button type="button" class="lang-toggle-btn active" data-lang="ar" aria-label="العربية">
+            <i class="fa-solid fa-globe" style="margin-inline-end:4px;font-size:10px;opacity:0.8"></i>ع
+          </button>
+          <button type="button" class="lang-toggle-btn" data-lang="en" aria-label="English">
+            <i class="fa-solid fa-globe" style="margin-inline-end:4px;font-size:10px;opacity:0.8"></i>EN
+          </button>
+        </div>
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <img id="loginCompanyLogo" alt="شعار الشركة" />
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          </div>
+          <h1 class="title" id="loginTitle">مرحباً بك</h1>
+          <p class="subtitle" id="loginSubtitle">سجّل الدخول للمتابعة</p>
+        </div>
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="branch" id="labelBranch"><i class="fa-solid fa-building-columns label-icon" aria-hidden="true"></i>الفرع</label>
+            <div class="input-wrap">
+              <select id="branch" name="branch" required>
+                <option id="branchPlaceholder" value="" disabled selected>اختر الفرع</option>
+              </select>
+            </div>
+            <p class="error" id="branchError" role="alert" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="username" id="labelUsername"><i class="fa-solid fa-user-tie label-icon" aria-hidden="true"></i>اسم المستخدم</label>
+            <div class="input-wrap">
+              <select id="username" name="username" required>
+                <option id="usernamePlaceholder" value="" disabled selected>اختر اسم المستخدم</option>
+              </select>
+            </div>
+            <p class="error" id="usernameError" role="alert" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="password" id="labelPassword"><i class="fa-solid fa-lock label-icon" aria-hidden="true"></i>كلمة المرور</label>
+            <div class="password-wrap">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+              <button type="button" class="icon-btn" id="togglePassword" aria-label="إظهار كلمة المرور" aria-pressed="false"><i class="fa-regular fa-eye" aria-hidden="true"></i></button>
+            </div>
+            <p class="error" id="passwordError" role="alert" aria-live="polite"></p>
+          </div>
+          <div class="row between">
+            <label class="checkbox">
+              <input type="checkbox" id="rememberMe"> <span id="labelRememberMe">تذكّرني</span>
+            </label>
+            <a href="#" class="link" id="forgotLink"><span id="forgotLinkText">نسيت كلمة المرور؟</span></a>
+          </div>
+          <button id="submitBtn" class="btn primary login-btn" type="submit">
+            <span class="login-btn-content">
+              <span class="login-btn-copy">
+                <span id="submitBtnText" class="login-btn-title">تسجيل الدخول</span>
+                <span id="submitBtnHintText" class="login-btn-subtext">وصول آمن إلى حسابك</span>
+              </span>
+              <span class="login-btn-trail" aria-hidden="true">
+                <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+              </span>
+            </span>
+            <span class="login-btn-loader" aria-hidden="true">
+              <span class="login-btn-loader-top">
+                <span class="login-loader-visual" aria-hidden="true">
+                  <span class="login-dots-ring" role="presentation">
+                    <i></i><i></i><i></i><i></i><i></i>
+                  </span>
+                </span>
+                <span class="login-loader-copy">
+                  <span id="loginLoadingText">جار التحقق من بيانات الدخول...</span>
+                  <span id="loginLoadingHintText" class="login-btn-subtext">نتأكد من الهوية وتأمين الجلسة</span>
+                </span>
+              </span>
+              <span class="login-loader-progress" aria-hidden="true">
+                <span class="login-loader-progress-bar"></span>
+              </span>
+            </span>
+            <span class="login-btn-success" aria-hidden="true">
+              <span class="login-success-icon" aria-hidden="true">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              </span>
+              <span class="login-success-copy">
+                <span id="loginSuccessText">تم الدخول</span>
+                <span id="loginSuccessHintText" class="login-btn-subtext">جاري فتح مساحة العمل</span>
+              </span>
+            </span>
+          </button>
+          <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+        </form>
+        <button class="theme-toggle icon-btn" id="themeToggle" aria-label="التبديل للوضع الداكن"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></button>
+      </section>
+      
+      <!-- Password Hint Tooltip -->
+      <div class="hint-tooltip" id="hintTooltip" aria-hidden="true">
+        <div class="hint-content">
+          <button class="hint-close" id="hintClose" aria-label="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="hint-icon">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <div class="hint-text">
+            <h4 id="hintTitle">تلميح كلمة المرور</h4>
+            <p id="hintMessage"></p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="forgotModalTitle">استعادة كلمة المرور</h3>
+          <button class="icon-btn" id="forgotClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <div style="text-align:center;margin-bottom:20px">
+            <p id="forgotModalBodyText" style="color:var(--text);line-height:1.8;font-size:15px;margin-bottom:16px">لإصلاح مشكلتك وتغيير كلمة المرور<br>يجب عليك التواصل مع مبرمج ومطور النظام</p>
+            <div style="background:linear-gradient(135deg, rgba(0,169,157,.1), rgba(0,199,182,.05));border:1px solid rgba(0,169,157,.2);border-radius:12px;padding:16px;margin-bottom:20px">
+              <h4 style="margin:0 0 8px 0;color:var(--primary);font-size:18px">م.الحسين بن عجلان</h4>
+              <p style="margin:0;color:var(--subtle);font-size:13px">مبرمج ومطور نظام Gold</p>
+            </div>
+          </div>
+          
+          <div style="display:grid;gap:12px">
+            <div style="background:var(--bg-muted);border:1px solid var(--border);border-radius:12px;padding:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:36px;height:36px;background:linear-gradient(135deg, var(--primary), #00c7b6);border-radius:10px;display:grid;place-items:center;color:white">
+                    <i class="fa-solid fa-flag" style="font-size:16px"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight:600;color:var(--text);font-size:14px">السعودية (SAR)</div>
+                    <div style="color:var(--subtle);font-size:13px;direction:ltr;text-align:right">0575813910</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="contact-btn whatsapp-btn" data-phone="966575813910" data-country="SAR" title="واتساب">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </button>
+                  <button class="contact-btn telegram-btn" data-phone="966575813910" data-country="SAR" title="تيليجرام">
+                    <i class="fa-brands fa-telegram"></i>
+                  </button>
+                  <button class="contact-btn facebook-btn" data-url="https://www.facebook.com/share/1CjGrdQA4Y/" title="فيسبوك">
+                    <i class="fa-brands fa-facebook-f"></i>
+                  </button>
+                  <button class="contact-btn instagram-btn" data-url="https://www.instagram.com/eng.alhussein.ben.ajlan?igsh=ZWVycTFlYjdpZDI0" title="انستقرام">
+                    <i class="fa-brands fa-instagram"></i>
+                  </button>
+                  <button class="contact-btn youtube-btn" data-url="https://youtube.com/@ben_ajlan?si=Pu-Dz5T7cQ6dYORq" title="يوتيوب">
+                    <i class="fa-brands fa-youtube"></i>
+                  </button>
+                  <button class="contact-btn tiktok-btn" data-url="https://www.tiktok.com/@alhussein.ajlan?_r=1&_t=ZS-91M387c3BnM" title="تيك توك">
+                    <i class="fa-brands fa-tiktok"></i>
+                  </button>
+                  <button class="contact-btn twitter-btn" data-url="https://x.com/alhussein_ajlan?t=ZJ1g6WXF7LsHNgCxJ2rYHA&s=09" title="تويتر">
+                    <i class="fa-brands fa-x-twitter"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div style="background:var(--bg-muted);border:1px solid var(--border);border-radius:12px;padding:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:36px;height:36px;background:linear-gradient(135deg, var(--primary), #00c7b6);border-radius:10px;display:grid;place-items:center;color:white">
+                    <i class="fa-solid fa-flag" style="font-size:16px"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight:600;color:var(--text);font-size:14px">اليمن (YEM)</div>
+                    <div style="color:var(--subtle);font-size:13px;direction:ltr;text-align:right">771889030</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="contact-btn whatsapp-btn" data-phone="967771889030" data-country="YEM" title="واتساب">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </button>
+                  <button class="contact-btn telegram-btn" data-phone="967771889030" data-country="YEM" title="تيليجرام">
+                    <i class="fa-brands fa-telegram"></i>
+                  </button>
+                  <button class="contact-btn facebook-btn" data-url="https://www.facebook.com/share/1CjGrdQA4Y/" title="فيسبوك">
+                    <i class="fa-brands fa-facebook-f"></i>
+                  </button>
+                  <button class="contact-btn instagram-btn" data-url="https://www.instagram.com/eng.alhussein.ben.ajlan?igsh=ZWVycTFlYjdpZDI0" title="انستقرام">
+                    <i class="fa-brands fa-instagram"></i>
+                  </button>
+                  <button class="contact-btn youtube-btn" data-url="https://youtube.com/@ben_ajlan?si=Pu-Dz5T7cQ6dYORq" title="يوتيوب">
+                    <i class="fa-brands fa-youtube"></i>
+                  </button>
+                  <button class="contact-btn tiktok-btn" data-url="https://www.tiktok.com/@alhussein.ajlan?_r=1&_t=ZS-91M387c3BnM" title="تيك توك">
+                    <i class="fa-brands fa-tiktok"></i>
+                  </button>
+                  <button class="contact-btn twitter-btn" data-url="https://x.com/alhussein_ajlan?t=ZJ1g6WXF7LsHNgCxJ2rYHA&s=09" title="تويتر">
+                    <i class="fa-brands fa-x-twitter"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="forgotCancel"><i class="fa-regular fa-circle-xmark"></i> <span id="forgotCancelText">إغلاق</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="modal license-expiry-modal" id="licenseExpiryModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" id="licenseExpiryBackdrop"></div>
+      <div class="modal-dialog license-expiry-dialog" role="document">
+        <div class="license-expiry-shell">
+          <div class="license-expiry-hero">
+            <span class="license-expiry-badge" id="licenseExpiryBadge">تنبيه قرب انتهاء الاشتراك</span>
+            <h3 class="license-expiry-title" id="licenseExpiryTitle">ينتهي الترخيص بعد يومين</h3>
+            <p class="license-expiry-note" id="licenseExpiryNote">سيظهر هذا التنبيه عند كل مرة يتم فيها تشغيل البرنامج حتى يتم تجديد الاشتراك.</p>
+          </div>
+          <div class="license-expiry-layout">
+            <div class="license-expiry-meter-panel">
+              <div class="license-expiry-meter" id="licenseExpiryMeter">
+                <div class="license-expiry-meter-core">
+                  <span class="license-expiry-days-value" id="licenseExpiryDaysValue">2</span>
+                  <span class="license-expiry-days-unit" id="licenseExpiryDaysUnit">يوم</span>
+                </div>
+              </div>
+              <div class="license-expiry-meter-caption" id="licenseExpiryRemainingLabel">الأيام المتبقية</div>
+            </div>
+            <div class="license-expiry-details">
+              <div class="license-expiry-detail-card">
+                <div class="license-expiry-detail-icon"><i class="fa-solid fa-crown"></i></div>
+                <div class="license-expiry-detail-copy">
+                  <span class="license-expiry-detail-label" id="licenseExpiryTypeLabel">نوع الاشتراك</span>
+                  <strong class="license-expiry-detail-value" id="licenseExpiryTypeValue">شهري</strong>
+                </div>
+              </div>
+              <div class="license-expiry-detail-card">
+                <div class="license-expiry-detail-icon"><i class="fa-regular fa-calendar-days"></i></div>
+                <div class="license-expiry-detail-copy">
+                  <span class="license-expiry-detail-label" id="licenseExpiryDateLabel">تاريخ الانتهاء</span>
+                  <strong class="license-expiry-detail-value" id="licenseExpiryDateValue">--</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="license-expiry-footer">
+            <button class="btn primary license-expiry-action" id="licenseExpiryOk">حسنًا</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../shared-styles/confirm-modal.js"></script>
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="./db-connection-manager.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="taxReport.title">تقرير الضرائب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+</head>
+<body>
+  <main class="dashboard">
+    <section class="panel active" id="panel-tax-report">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-header-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+          <div class="page-header-content">
+            <h1 data-i18n="taxReport.title">تقرير الضرائب</h1>
+            <p data-i18n="taxReport.subtitle">تقرير ضريبة القيمة المضافة</p>
+          </div>
+        </div>
+        <div class="page-header-actions">
+          <button class="header-action-btn print-btn" id="tax_print_btn" style="display:none">
+            <i class="fa-solid fa-print"></i>
+            <span data-i18n="taxReport.actions.print">طباعة</span>
+          </button>
+          <button class="header-action-btn excel-btn" id="tax_excel_btn" style="display:none">
+            <i class="fa-solid fa-file-excel"></i>
+            <span data-i18n="taxReport.actions.exportExcel">تصدير Excel</span>
+          </button>
+          <button class="header-action-btn refresh-btn" id="tax_refresh_btn" style="display:none">
+            <i class="fa-solid fa-rotate"></i>
+            <span data-i18n="taxReport.actions.refresh">تحديث</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Filters Card -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <!-- من تاريخ -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.dateFrom">من تاريخ</label>
+            <input type="date" id="tax_from_date">
+          </div>
+          
+          <!-- إلى تاريخ -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.dateTo">إلى تاريخ</label>
+            <input type="date" id="tax_to_date">
+          </div>
+          
+          <!-- نوع التقرير -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.reportType">نوع التقرير</label>
+            <select id="tax_report_type">
+              <option value="all" data-i18n="taxReport.reportTypes.all">الكل</option>
+              <option value="sales" data-i18n="taxReport.reportTypes.sales">المبيعات فقط</option>
+              <option value="purchases" data-i18n="taxReport.reportTypes.purchases">المشتريات فقط</option>
+            </select>
+          </div>
+          
+          <!-- نوع الفاتورة -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.invoiceType">نوع الفاتورة</label>
+            <select id="tax_invoice_type">
+              <option value="all" data-i18n="taxReport.invoiceTypes.all">الكل</option>
+              <option value="taskir" data-i18n="taxReport.invoiceTypes.taskir">تسكير</option>
+              <option value="mashghul" data-i18n="taxReport.invoiceTypes.worked">مشغول</option>
+            </select>
+          </div>
+          
+          <!-- نوع المعدن (يظهر فقط عند اختيار تسكير) -->
+          <div class="filter-group" id="metal_type_filter" style="display:none">
+            <label data-i18n="taxReport.filters.metalType">نوع المعدن</label>
+            <select id="tax_metal_type">
+              <option value="all" data-i18n="taxReport.metalTypes.all">الكل</option>
+              <option value="gold" data-i18n="taxReport.metalTypes.gold">ذهب</option>
+              <option value="silver" data-i18n="taxReport.metalTypes.silver">فضة</option>
+            </select>
+          </div>
+          
+          <!-- نوع الدفع -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.paymentType">نوع الدفع</label>
+            <select id="tax_payment_type">
+              <option value="all" data-i18n="taxReport.paymentTypes.all">الكل</option>
+              <option value="cash" data-i18n="taxReport.paymentTypes.cash">نقدي</option>
+              <option value="credit" data-i18n="taxReport.paymentTypes.credit">آجل</option>
+            </select>
+          </div>
+          
+          <!-- عرض الضريبة -->
+          <div class="filter-group">
+            <label data-i18n="taxReport.filters.taxFilter">عرض الضريبة</label>
+            <select id="tax_filter">
+              <option value="all" data-i18n="taxReport.taxFilters.all">الكل</option>
+              <option value="taxable" data-i18n="taxReport.taxFilters.taxable">الخاضعة للضريبة فقط</option>
+              <option value="zero" data-i18n="taxReport.taxFilters.zero">الصفرية فقط</option>
+            </select>
+          </div>
+          
+          <!-- زر العرض -->
+          <div class="filter-group filter-btn">
+            <button class="view-btn premium-view-btn" id="tax_view_btn" type="button">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+              <span data-i18n="taxReport.filters.view">عرض</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-cards" id="tax_summary_section" style="display:none">
+        <!-- المبيعات -->
+        <div class="summary-card sales-card">
+          <div class="summary-card-content-wrapper">
+            <div class="card-icon">
+              <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+            <div class="card-content">
+              <h3 data-i18n="taxReport.summary.sales">المبيعات (المخرجات)</h3>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.taxableBeforeTax">الخاضع للضريبة (قبل الضريبة)</span>
+                  <span class="stat-value" id="sales_before_tax">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.taxAmount">قيمة الضريبة</span>
+                  <span class="stat-value highlight" id="sales_tax">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.afterTax">بعد الضريبة</span>
+                  <span class="stat-value" id="sales_after_tax_total">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.zeroRated">المبيعات الصفرية</span>
+                  <span class="stat-value" id="sales_after_tax">0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المشتريات -->
+        <div class="summary-card purchases-card">
+          <div class="summary-card-content-wrapper">
+            <div class="card-icon">
+              <i class="fa-solid fa-arrow-trend-down"></i>
+            </div>
+            <div class="card-content">
+              <h3 data-i18n="taxReport.summary.purchases">المشتريات (المدخلات)</h3>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.taxableBeforeTax">الخاضع للضريبة (قبل الضريبة)</span>
+                  <span class="stat-value" id="purchases_before_tax">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.taxAmount">قيمة الضريبة</span>
+                  <span class="stat-value highlight" id="purchases_tax">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.afterTax">بعد الضريبة</span>
+                  <span class="stat-value" id="purchases_after_tax_total">0.00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label" data-i18n="taxReport.summary.zeroRated">المشتريات الصفرية</span>
+                  <span class="stat-value" id="purchases_after_tax">0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- صافي الضريبة -->
+        <div class="summary-card net-tax-card">
+          <div class="summary-card-content-wrapper">
+            <div class="card-icon">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <div class="card-content">
+              <h3 data-i18n="taxReport.summary.netTax">صافي الضريبة</h3>
+              <div class="net-tax-amount" id="net_tax_amount">0.00</div>
+              <div class="net-tax-status" id="net_tax_status">
+                <span data-i18n="taxReport.summary.payable">مستحقة</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sales Table -->
+      <div class="table-section" id="sales_table_section" style="display:none">
+        <div class="table-header">
+          <h2 data-i18n="taxReport.salesTable.title">تفاصيل المبيعات</h2>
+        </div>
+        <div class="table-container">
+          <table class="data-table table">
+            <thead>
+              <tr>
+                <th data-i18n="taxReport.salesTable.invoiceNo">رقم الفاتورة</th>
+                <th data-i18n="taxReport.salesTable.date">التاريخ</th>
+                <th data-i18n="taxReport.salesTable.customer">العميل</th>
+                <th data-i18n="taxReport.salesTable.taxNo">الرقم الضريبي</th>
+                <th data-i18n="taxReport.salesTable.weight">الوزن</th>
+                <th data-i18n="taxReport.salesTable.karat">العيار</th>
+                <th data-i18n="taxReport.salesTable.beforeTax">قبل الضريبة</th>
+                <th data-i18n="taxReport.salesTable.taxRate">نسبة %</th>
+                <th data-i18n="taxReport.salesTable.taxValue">قيمة الضريبة</th>
+                <th data-i18n="taxReport.salesTable.total">الإجمالي</th>
+                <th data-i18n="taxReport.salesTable.type">النوع</th>
+                <th data-i18n="taxReport.salesTable.payment">الدفع</th>
+              </tr>
+            </thead>
+            <tbody id="sales_table_body">
+              <tr class="empty-state">
+                <td colspan="12" class="no-data" data-i18n="taxReport.salesTable.noData">لا توجد فواتير مبيعات</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Purchases Table -->
+      <div class="table-section" id="purchases_table_section" style="display:none">
+        <div class="table-header">
+          <h2 data-i18n="taxReport.purchasesTable.title">تفاصيل المشتريات</h2>
+        </div>
+        <div class="table-container">
+          <table class="data-table table">
+            <thead>
+              <tr>
+                <th data-i18n="taxReport.purchasesTable.invoiceNo">رقم الفاتورة</th>
+                <th data-i18n="taxReport.purchasesTable.date">التاريخ</th>
+                <th data-i18n="taxReport.purchasesTable.supplier">المورد</th>
+                <th data-i18n="taxReport.purchasesTable.taxNo">الرقم الضريبي</th>
+                <th data-i18n="taxReport.purchasesTable.weight">الوزن</th>
+                <th data-i18n="taxReport.purchasesTable.karat">العيار</th>
+                <th data-i18n="taxReport.purchasesTable.beforeTax">قبل الضريبة</th>
+                <th data-i18n="taxReport.purchasesTable.taxRate">نسبة %</th>
+                <th data-i18n="taxReport.purchasesTable.taxValue">قيمة الضريبة</th>
+                <th data-i18n="taxReport.purchasesTable.total">الإجمالي</th>
+                <th data-i18n="taxReport.purchasesTable.type">النوع</th>
+                <th data-i18n="taxReport.purchasesTable.payment">الدفع</th>
+              </tr>
+            </thead>
+            <tbody id="purchases_table_body">
+              <tr class="empty-state">
+                <td colspan="12" class="no-data" data-i18n="taxReport.purchasesTable.noData">لا توجد فواتير مشتريات</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="../../shared-styles/confirm-modal.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

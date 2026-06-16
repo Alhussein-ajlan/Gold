@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>المحاسب الذكي BenAjlan - لوحة التحكم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+      :root{ --sidebar-w: 260px; --sidebar-collapsed-w: 90px; }
+      main.dashboard{padding:0}
+      /* Fill below header fully and stop at sidebar on the LEFT */
+      /* Sidebar هنا على الجهة اليسرى، لذا نُبقي مسافة عند inline-start = var(--sidebar-w) */
+      #content-area{
+        position:fixed; top:56px; inset-inline-start:var(--sidebar-w); inset-inline-end:0; inset-block-end:0;
+        margin:0; padding:0; transition: inset-inline-start .25s ease;
+      }
+      #content-area iframe{display:block; width:100%; height:100%; border:0}
+      /* عند تقليص الـ sidebar */
+      .sidebar.collapsed ~ main #content-area,
+      body:has(.sidebar.collapsed) #content-area { inset-inline-start: var(--sidebar-collapsed-w); }
+    </style>
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../assistant/panel.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-mini">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="app-name" id="topbarAppName">المحاسب الذكي (BenAjlan)</span>
+      </div>
+
+      <div class="branch-scope" id="branchScopeContainer" hidden>
+        <div class="branch-scope-chip">
+          <span class="branch-scope-icon" aria-hidden="true"><i class="fa-solid fa-diagram-project"></i></span>
+          <label class="branch-scope-label" for="topbarBranchScope" id="branchScopeLabel">نطاق الفروع</label>
+        </div>
+        <div class="branch-scope-select-wrap">
+          <select id="topbarBranchScope" class="branch-scope-select" aria-label="نطاق الفروع"></select>
+          <i class="fa-solid fa-chevron-down branch-scope-caret" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <!-- مؤشر نوع قاعدة البيانات -->
+      <div class="db-mode-indicator" id="dbModeIndicator">
+        <i class="fa-solid fa-cloud" id="dbModeIcon"></i>
+        <span class="db-mode-text" id="dbModeText">أنت الآن متصل بقاعدة البيانات المحلية</span>
+        <button type="button" class="cloud-users-indicator" id="cloudUsersIndicator" hidden aria-haspopup="dialog" aria-expanded="false" aria-label="المتصلون بالنظام">
+          <i class="fa-solid fa-user-group" id="cloudUsersIcon"></i>
+          <span class="cloud-users-count" id="cloudUsersCount">0</span>
+          <span class="cloud-users-unread" id="cloudUsersUnread" hidden>0</span>
+        </button>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="toggleTheme" title="تبديل الوضع"><i class="fa-solid fa-moon"></i></button>
+        <div class="user">
+          <i class="fa-solid fa-user-circle" style="font-size:32px; color:var(--primary);"></i>
+          <span class="username">Admin</span>
+          <button class="icon-btn" id="logoutBtn" title="تسجيل الخروج" aria-label="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <button type="button" class="sidebar-toggle" id="sidebarToggle" title="تقليص/توسيع القائمة">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <nav class="tabs" role="tablist" aria-label="التبويبات">
+        <!-- 1) لوحة التحكم -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-gauge-high"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title" id="navGroupDashboardTitle">لوحة التحكم</span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-dashboard" id="tab-dashboard">
+              <i class="fa-solid fa-gauge-high"></i> <span id="tabDashboardText">لوحة التحكم</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2) الحسابات الأساسية -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-folder-tree"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title nav-title-with-badge">
+                <span id="navGroupAccountsTitle">دليل الحسابات</span>
+                <span class="notif-badge" id="accountsGroupBadge" hidden>0</span>
+              </span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-accounts" id="tab-accounts">
+              <i class="fa-solid fa-building-columns"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabAccountsText">الحسابات</span>
+                <span class="notif-badge" id="tabAccountsBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-opening" id="tab-opening">
+              <i class="fa-solid fa-scale-balanced"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabOpeningText">الأرصدة الافتتاحية</span>
+                <span class="notif-badge" id="tabOpeningBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-trial-balance" id="tab-trial-balance">
+              <i class="fa-solid fa-scale-balanced"></i> <span id="tabTrialBalanceText">ميزان المراجعة</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-income-statement" id="tab-income-statement">
+              <i class="fa-solid fa-chart-column"></i> <span id="tabIncomeStatementText">قائمة الدخل</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-balance-sheet" id="tab-balance-sheet">
+              <i class="fa-solid fa-scale-balanced"></i> <span id="tabBalanceSheetText">الميزانية العمومية</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-general-ledger" id="tab-general-ledger">
+              <i class="fa-solid fa-book"></i> <span id="tabGeneralLedgerText">دفتر الأستاذ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3) الأطراف (العملاء والموردين) -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title nav-title-with-badge">
+                <span id="navGroupPartiesTitle">الأطراف</span>
+                <span class="notif-badge" id="partiesGroupBadge" hidden>0</span>
+              </span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-customers" id="tab-customers">
+              <i class="fa-solid fa-user-tie"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabCustomersText">العملاء</span>
+                <span class="notif-badge" id="tabCustomersBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-suppliers" id="tab-suppliers">
+              <i class="fa-solid fa-truck-field"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabSuppliersText">الموردين</span>
+                <span class="notif-badge" id="tabSuppliersBadge" hidden>0</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4) العمليات اليومية -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-calculator"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title nav-title-with-badge">
+                <span id="navGroupDailyOpsTitle">العمليات اليومية</span>
+                <span class="notif-badge" id="dailyOpsOrdersBadge" hidden>0</span>
+              </span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-sales-invoice" id="tab-sales-invoice">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabSalesInvoiceText">فاتورة بيع</span>
+                <span class="notif-badge" id="tabSalesInvoiceBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-purchase-invoice" id="tab-purchase-invoice">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabPurchaseInvoiceText">فاتورة شراء</span>
+                <span class="notif-badge" id="tabPurchaseInvoiceBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-orders" id="tab-orders">
+              <i class="fa-solid fa-clipboard-list"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabOrdersText">الأوردرات</span>
+                <span class="notif-badge" id="tabOrdersBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-receipt" id="tab-receipt">
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabReceiptText">سند قبض</span>
+                <span class="notif-badge" id="tabReceiptBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-voucher" id="tab-voucher">
+              <i class="fa-solid fa-money-bill-transfer"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabVoucherText">سند صرف</span>
+                <span class="notif-badge" id="tabVoucherBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-journal" id="tab-journal">
+              <i class="fa-solid fa-book-open-reader"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabJournalText">قيد يومية</span>
+                <span class="notif-badge" id="tabJournalBadge" hidden>0</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5) الحركة -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title" id="navGroupMovementTitle">الحركة</span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-movement" id="tab-movement">
+              <i class="fa-solid fa-list-check"></i> <span id="tabMovementText">الحركة</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-sales-purchase-movement" id="tab-sales-purchase-movement">
+              <i class="fa-solid fa-arrows-rotate"></i> <span id="tabSalesPurchaseMovementText">حركة المبيعات والمشتريات</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 6) التقارير -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title" id="navGroupReportsTitle">التقارير</span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-reports" id="tab-reports">
+              <i class="fa-solid fa-chart-line"></i> <span id="tabReportsText">التقارير</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-quick-statement" id="tab-quick-statement">
+              <i class="fa-solid fa-bolt"></i> <span id="tabQuickStatementText">كشف حساب سريع</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-category-report" id="tab-category-report">
+              <i class="fa-solid fa-layer-group"></i> <span id="tabCategoryReportText">تقرير حسب الأصناف</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-tax-report" id="tab-tax-report">
+              <i class="fa-solid fa-file-invoice-dollar"></i> <span id="tabTaxReportText">تقرير الضرائب</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-tax-declaration" id="tab-tax-declaration">
+              <i class="fa-solid fa-file-contract"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabTaxDeclarationText">الإقرار الضريبي</span>
+                <span class="notif-badge" id="tabTaxDeclarationBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-open-positions" id="tab-open-positions">
+              <i class="fa-solid fa-chart-line"></i> <span id="tabOpenPositionsText">المراكز المفتوحة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 7) الإدارة والإعدادات -->
+        <div class="nav-group">
+          <button type="button" class="nav-group-header">
+            <div class="nav-group-icon"><i class="fa-solid fa-gear"></i></div>
+            <div class="nav-group-text">
+              <span class="nav-group-title" id="navGroupAdminTitle">الإدارة والإعدادات</span>
+            </div>
+            <i class="fa-solid fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-body">
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-gold-items" id="tab-gold-items">
+              <i class="fa-solid fa-gem"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabGoldItemsText">أصناف العيارات</span>
+                <span class="notif-badge" id="tabGoldItemsBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-branches" id="tab-branches">
+              <i class="fa-solid fa-code-branch"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabBranchesText">الفروع</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-users" id="tab-users">
+              <i class="fa-solid fa-users-gear"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabUsersText">المستخدمين</span>
+                <span class="notif-badge" id="tabUsersBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-company-settings" id="tab-company-settings">
+              <i class="fa-solid fa-building"></i>
+              <span class="tab-label-with-badge">
+                <span id="tabCompanySettingsText">إعدادات الشركة</span>
+                <span class="notif-badge" id="tabCompanySettingsBadge" hidden>0</span>
+              </span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-cloud-settings" id="tab-cloud-settings">
+              <i class="fa-solid fa-cloud"></i> <span id="tabCloudSettingsText">إعدادات السحابة</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="panel-whatsapp-reports" id="tab-whatsapp-reports">
+              <i class="fa-brands fa-whatsapp"></i> <span id="tabWhatsappReportsText">إرسال عبر واتساب</span>
+            </button>
+          </div>
+        </div>
+
+      </nav>
+    </aside>
+
+    <main class="dashboard">
+      <div id="content-area"></div>
+    </main>
+
+    <div class="modal user-messages-modal" id="userMessagesModal" aria-hidden="true" aria-label="المراسلات الداخلية">
+      <div class="modal-backdrop" data-user-messages-close></div>
+      <div class="modal-dialog user-messages-dialog" role="dialog" aria-modal="true" aria-labelledby="userMessagesModalTitle">
+        <div class="user-messages-hero">
+          <div class="user-messages-hero-icon">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <div class="user-messages-hero-text">
+            <h3 id="userMessagesModalTitle">المراسلات الداخلية</h3>
+            <p id="userMessagesModalSubtitle">تواصل مباشرة مع المستخدمين، تابع الحالات المتصلة، واستقبل الإشعارات الفورية للرسائل الواردة.</p>
+            <div class="user-messages-hero-meta">
+              <div class="user-messages-stats">
+                <div class="user-messages-stat">
+                  <span class="user-messages-stat-label" id="userMessagesOnlineLabel"><span class="user-messages-stat-icon" aria-hidden="true"><i class="fa-solid fa-signal"></i></span> المتصلون الآن</span>
+                  <strong class="user-messages-stat-value" id="userMessagesOnlineValue">0</strong>
+                </div>
+                <div class="user-messages-stat">
+                  <span class="user-messages-stat-label" id="userMessagesUnreadLabel"><span class="user-messages-stat-icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span> غير المقروءة</span>
+                  <strong class="user-messages-stat-value" id="userMessagesUnreadValue">0</strong>
+                </div>
+                <div class="user-messages-stat">
+                  <span class="user-messages-stat-label" id="userMessagesSelectedLabel"><span class="user-messages-stat-icon" aria-hidden="true"><i class="fa-solid fa-comments"></i></span> المحادثة الحالية</span>
+                  <strong class="user-messages-stat-value" id="userMessagesSelectedValue">-</strong>
+                </div>
+              </div>
+              <div class="user-messages-hero-badges" aria-hidden="true">
+                <span class="user-messages-hero-badge"><i class="fa-solid fa-shield-halved"></i></span>
+                <span class="user-messages-hero-badge"><i class="fa-solid fa-wifi"></i></span>
+                <span class="user-messages-hero-badge"><i class="fa-solid fa-bell"></i></span>
+                <span class="user-messages-hero-badge"><i class="fa-solid fa-sparkles"></i></span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="icon-btn modal-close-btn user-messages-close-btn" id="userMessagesModalClose" aria-label="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="user-messages-toolbar">
+          <div class="user-messages-filters" role="tablist" aria-label="فلاتر المحادثات">
+            <button type="button" class="user-messages-filter active" data-message-filter="all">
+              <i class="fa-solid fa-users" aria-hidden="true"></i>
+              <span id="userMessagesFilterAllText">الكل</span>
+            </button>
+            <button type="button" class="user-messages-filter" data-message-filter="online">
+              <i class="fa-solid fa-wifi" aria-hidden="true"></i>
+              <span id="userMessagesFilterOnlineText">المتصلون</span>
+            </button>
+            <button type="button" class="user-messages-filter" data-message-filter="unread">
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+              <span id="userMessagesFilterUnreadText">غير المقروءة</span>
+            </button>
+          </div>
+          <div class="user-messages-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="userMessagesSearchInput" autocomplete="off" placeholder="ابحث باسم المستخدم أو الفرع">
+          </div>
+        </div>
+
+        <div class="user-messages-layout">
+          <aside class="user-messages-sidebar">
+            <div class="user-messages-sidebar-list" id="userMessagesContacts"></div>
+            <div class="user-messages-empty-list" id="userMessagesEmptyList" hidden></div>
+          </aside>
+
+          <section class="user-messages-thread-shell">
+            <div class="user-messages-thread-placeholder" id="userMessagesThreadPlaceholder">
+              <div class="user-messages-thread-placeholder-icon">
+                <i class="fa-solid fa-paper-plane"></i>
+              </div>
+              <strong id="userMessagesPlaceholderTitle">اختر مستخدمًا لبدء المحادثة</strong>
+              <span id="userMessagesPlaceholderText">ستظهر هنا الرسائل المباشرة مع الحالة المتصلة والتنبيهات الفورية عند وصول أي رسالة جديدة.</span>
+            </div>
+
+            <div class="user-messages-thread" id="userMessagesThread" hidden>
+              <div class="user-messages-thread-head">
+                <div class="user-messages-thread-avatar" id="userMessagesThreadAvatar">؟</div>
+                <div class="user-messages-thread-meta">
+                  <div class="user-messages-thread-name" id="userMessagesThreadName">-</div>
+                  <div class="user-messages-thread-status" id="userMessagesThreadStatus">-</div>
+                </div>
+                <div class="user-messages-thread-branch" id="userMessagesThreadBranch">-</div>
+              </div>
+
+              <div class="user-messages-thread-tools">
+                <div class="user-messages-thread-search" id="userMessagesThreadSearch">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input type="text" id="userMessagesThreadSearchInput" autocomplete="off" placeholder="ابحث داخل المحادثة">
+                  <span class="user-messages-thread-search-count" id="userMessagesThreadSearchCount" hidden>0/0</span>
+                  <button type="button" class="user-messages-thread-search-nav" id="userMessagesThreadSearchPrev" aria-label="النتيجة السابقة">
+                    <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="user-messages-thread-search-nav" id="userMessagesThreadSearchNext" aria-label="النتيجة التالية">
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="user-messages-thread-search-clear" id="userMessagesThreadSearchClear" aria-label="مسح البحث">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="user-messages-thread-list" id="userMessagesThreadList"></div>
+
+              <form class="user-messages-composer" id="userMessagesComposer">
+                <div class="user-messages-composer-shell">
+                  <textarea id="userMessagesInput" rows="2" maxlength="4000" placeholder="اكتب رسالتك هنا ثم اضغط Enter للإرسال و Shift + Enter لسطر جديد"></textarea>
+                  <button type="submit" class="user-messages-send-btn" id="userMessagesSendButton">
+                    <span class="user-messages-send-icon" aria-hidden="true">
+                      <i class="fa-solid fa-paper-plane"></i>
+                    </span>
+                    <span id="userMessagesSendButtonText">إرسال</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../assistant/locales/ar.js"></script>
+    <script src="../../assistant/locales/en.js"></script>
+    <script src="../../assistant/panel.js"></script>
+    <script src="./edit-confirm.js"></script>
+    <script src="./shell.js"></script>
+  </body>
+</html>

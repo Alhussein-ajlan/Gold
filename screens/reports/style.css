@@ -1,0 +1,413 @@
+/* Form field labels - ensure text is visible in both light and dark modes */
+.form-field > span, 
+.form-field > label, 
+label.form-field > span,
+label.form-field > span > span,
+.form-field span[data-i18n] {
+  color: var(--text) !important;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 1;
+}
+
+/* Dark mode specific - ensure labels are clearly visible */
+:root[data-theme="dark"] .form-field > span,
+:root[data-theme="dark"] .form-field > span > span,
+:root[data-theme="dark"] label.form-field > span,
+:root[data-theme="dark"] label.form-field > span > span,
+:root[data-theme="dark"] .form-field span[data-i18n],
+:root:not([data-theme="light"]) .form-field > span,
+:root:not([data-theme="light"]) .form-field > span > span,
+:root:not([data-theme="light"]) label.form-field > span,
+:root:not([data-theme="light"]) label.form-field > span > span,
+:root:not([data-theme="light"]) .form-field span[data-i18n] {
+  color: #e2e8f0 !important;
+  opacity: 1;
+}
+
+/* Light mode - ensure good contrast */
+:root[data-theme="light"] .form-field > span,
+:root[data-theme="light"] .form-field > span > span,
+:root[data-theme="light"] label.form-field > span,
+:root[data-theme="light"] label.form-field > span > span,
+:root[data-theme="light"] .form-field span[data-i18n] {
+  color: #1e293b !important;
+  opacity: 1;
+}
+
+/* Ensure all labels in form panels are visible */
+#stmt_filters_panel .form-field > span,
+#stmt_filters_panel .form-field > span > span,
+#tot_filters_panel .form-field > span,
+#tot_filters_panel .form-field > span > span {
+  color: var(--text) !important;
+  opacity: 1;
+}
+
+/* Input placeholders should also be visible */
+input::placeholder,
+select::placeholder {
+  color: var(--subtle);
+  opacity: 0.6;
+}
+
+/* Form field inputs and selects - ensure text is visible */
+.form-field input,
+.form-field select,
+#stmt_filters_panel input,
+#stmt_filters_panel select,
+#tot_filters_panel input,
+#tot_filters_panel select {
+  color: var(--text) !important;
+  background: var(--bg-muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Dark mode inputs and selects */
+:root[data-theme="dark"] .form-field input,
+:root[data-theme="dark"] .form-field select,
+:root[data-theme="dark"] #stmt_filters_panel input,
+:root[data-theme="dark"] #stmt_filters_panel select,
+:root:not([data-theme="light"]) .form-field input,
+:root:not([data-theme="light"]) .form-field select,
+:root:not([data-theme="light"]) #stmt_filters_panel input,
+:root:not([data-theme="light"]) #stmt_filters_panel select {
+  color: #e2e8f0 !important;
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+:root[data-theme="dark"] .form-field select option,
+:root:not([data-theme="light"]) .form-field select option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Light mode inputs and selects */
+:root[data-theme="light"] .form-field input,
+:root[data-theme="light"] .form-field select,
+:root[data-theme="light"] #stmt_filters_panel input,
+:root[data-theme="light"] #stmt_filters_panel select {
+  color: #1e293b !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+:root[data-theme="light"] .form-field select option {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+/* Currency Selector Styling - Same as gold basis selector */
+.currency-selector {
+  background: rgba(30, 41, 59, 0.4) !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+  color: var(--text) !important;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.currency-selector:hover {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border-color: rgba(59, 130, 246, 0.6) !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.currency-selector:focus {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgb(59, 130, 246) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Currency selector option styling */
+.currency-selector option {
+  background: rgba(30, 41, 59, 0.95);
+  color: var(--text);
+  padding: 8px;
+}
+
+.currency-selector option:hover,
+.currency-selector option:checked {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Add icon styling for currency field label */
+label:has(#p_stmt_currency) {
+  position: relative;
+}
+
+label:has(#p_stmt_currency) span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+label:has(#p_stmt_currency) span::before {
+  content: '💱';
+  font-size: 14px;
+  display: inline-block;
+  filter: grayscale(0);
+}
+
+/* Light mode adjustments */
+:root[data-theme="light"] .currency-selector {
+  background: rgba(241, 245, 249, 0.8) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: #1e293b !important;
+}
+
+:root[data-theme="light"] .currency-selector:hover {
+  background: rgba(226, 232, 240, 0.9) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+:root[data-theme="light"] .currency-selector:focus {
+  background: rgba(219, 234, 254, 0.8) !important;
+  border-color: rgb(59, 130, 246) !important;
+}
+
+:root[data-theme="light"] .currency-selector option {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+/* Make currency selector match exactly with gold basis selector */
+.currency-selector,
+#p_stmt_currency {
+  background: rgba(30, 41, 59, 0.4) !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+  color: var(--text) !important;
+  border-radius: 6px;
+  padding: 6px 8px;
+  height: 32px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Dark mode - ensure consistency */
+:root:not([data-theme="light"]) .currency-selector option,
+:root:not([data-theme="light"]) #p_stmt_currency option {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 8px 12px;
+}
+
+:root:not([data-theme="light"]) .currency-selector option:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+:root:not([data-theme="light"]) .currency-selector option:checked,
+:root:not([data-theme="light"]) #p_stmt_currency option:checked {
+  background: rgba(59, 130, 246, 0.5);
+  color: white;
+  font-weight: 600;
+}
+
+/* Ensure dropdown arrow is visible */
+.currency-selector,
+#p_stmt_currency {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%233b82f6" d="M6 9L1 4h10z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: left 8px center;
+  padding-right: 28px;
+  padding-left: 8px;
+}
+
+/* زر مركز العميل/المورد - تصميم احترافي */
+#centerBtn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 16px;
+  height: 44px;
+  min-height: 44px;
+  min-width: 150px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+}
+
+#centerBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#centerBtn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+#centerBtn:hover::before {
+  opacity: 1;
+}
+
+#centerBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+#centerBtn i {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+#centerBtn span {
+  position: relative;
+  z-index: 1;
+}
+
+#centerBtn:hover i {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* تأثير ripple عند الضغط */
+#centerBtn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+#centerBtn:active::after {
+  width: 300px;
+  height: 300px;
+  transition: 0s;
+}
+
+/* تأثير التعطيل */
+#centerBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+#centerBtn:disabled:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  transform: none !important;
+}
+
+/* إخفاء الزر بسلاسة عند النوع حساب */
+#centerBtnWrap {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: scale(1);
+  display: flex;
+  align-items: center;
+}
+
+#centerBtnWrap[style*="display: none"] {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* موازاة الزر مع الأدوات الأخرى */
+#stmt_filters_panel {
+  align-items: end;
+}
+
+/* تصميم بطاقات modal المركز */
+.center-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.center-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* تأثيرات حركية للأرقام */
+#centerGoldAmount,
+#centerCashAmount,
+#centerStatus {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* تحسين مظهر الأيقونات في البطاقات */
+.center-card i {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* تصميم responsive للبطاقات */
+@media (max-width: 1200px) {
+  #centerModal .modal-dialog {
+    max-width: 98% !important;
+    width: 98vw !important;
+  }
+  
+  /* جعل البطاقات عمودية على الشاشات الصغيرة */
+  #centerModal .modal-body > div:last-child > div {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* جعل هيدر الشركة عمودي */
+  #centerModal .modal-body > div:first-child {
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+  }
+  
+  #centerModal .modal-body > div:first-child > div {
+    text-align: center !important;
+  }
+}
+
+/* التأكد من أن modal المركز يظهر فوق كل شيء */
+#centerModal {
+  z-index: 9999 !important;
+}
+
+#centerModal[aria-hidden="false"] {
+  display: flex !important;
+}
+
+#centerModal .modal-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}

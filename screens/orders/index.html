@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>الأوردرات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active" id="panel-orders" role="tabpanel" aria-labelledby="tab-orders">
+        <div class="orders-grid">
+          <div class="card form-card db-card xau-card">
+            <div class="xau-header">
+              <div class="xau-title">
+                <div class="ico"><i class="fa-solid fa-gem"></i></div>
+                <div>
+                  <h3 id="xauTitleText">سعر أونصة الذهب</h3>
+                  <div class="sub" id="xauSubText">XAU/USD (Spot)</div>
+                </div>
+              </div>
+              <div class="xau-actions">
+                <span class="xau-badge" id="xauMarketBadge"><i class="fa-solid fa-circle"></i> —</span>
+                <button class="xau-refresh xau-reconnect" id="btnMt5ReconnectXau" type="button" hidden><i class="fa-solid fa-plug-circle-bolt"></i><span id="btnMt5ReconnectXauText">إعادة اتصال MT5</span></button>
+                <button class="xau-refresh" id="btnRefreshXau" type="button"><i class="fa-solid fa-arrows-rotate"></i><span id="btnRefreshXauText">تحديث</span></button>
+              </div>
+            </div>
+
+            <div class="xau-price-row">
+              <div class="xau-price" id="xauPrice">—</div>
+              <div class="xau-change" id="xauChange">—</div>
+            </div>
+
+            <canvas class="xau-chart" id="xauChart"></canvas>
+
+            <div class="xau-grid">
+              <div class="xau-item xau-item-update anim-card" style="--anim-delay:0s">
+                <div class="i"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div>
+                  <div class="lbl" id="xauLastUpdateLabel">آخر تحديث</div>
+                  <div class="val" id="xauLastUpdate">—</div>
+                  <div class="xau-source" id="xauMeta">—</div>
+                </div>
+              </div>
+              <div class="xau-item xau-item-countdown anim-card" style="--anim-delay:.05s">
+                <div class="i"><i class="fa-solid fa-hourglass-start"></i></div>
+                <div>
+                  <div class="lbl" id="xauNextLabel">—</div>
+                  <div class="val xau-countdown" id="xauCountdown">—</div>
+                </div>
+              </div>
+              <div class="xau-item xau-item-event anim-card" style="--anim-delay:.1s">
+                <div class="i"><i class="fa-solid fa-calendar-day"></i></div>
+                <div>
+                  <div class="lbl" id="xauEventTimeLabel">موعد الحدث</div>
+                  <div class="val" id="xauNextTime">—</div>
+                </div>
+              </div>
+
+              <div class="stat-card stat-total anim-card" style="--anim-delay:.1s">
+                <div class="stat-header">
+                  <div class="stat-ico"><i class="fa-solid fa-layer-group"></i></div>
+                  <h3 data-i18n="orders.stats.total">إجمالي الأوردرات</h3>
+                </div>
+                <div class="stat-body">
+                  <div class="stat-number primary" id="totalOrders">0</div>
+                </div>
+              </div>
+
+              <div class="stat-card stat-pending anim-card" style="--anim-delay:.15s">
+                <div class="stat-header">
+                  <div class="stat-ico"><i class="fa-solid fa-hourglass-half"></i></div>
+                  <h3 data-i18n="orders.stats.pending">الأوردرات المعلقة</h3>
+                </div>
+                <div class="stat-body">
+                  <div class="stat-number warning" id="pendingOrders">0</div>
+                </div>
+              </div>
+
+              <div class="stat-card stat-completed anim-card" style="--anim-delay:.2s">
+                <div class="stat-header">
+                  <div class="stat-ico"><i class="fa-solid fa-circle-check"></i></div>
+                  <h3 data-i18n="orders.stats.completed">الأوردرات المكتملة</h3>
+                </div>
+                <div class="stat-body">
+                  <div class="stat-number success" id="completedOrders">0</div>
+                </div>
+              </div>
+
+              <div class="stat-card stat-expired anim-card" style="--anim-delay:.25s">
+                <div class="stat-header">
+                  <div class="stat-ico"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                  <h3 data-i18n="orders.stats.expired">الأوردرات المنتهية</h3>
+                </div>
+                <div class="stat-body">
+                  <div class="stat-number danger" id="expiredOrders">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card fullwide" id="orders-grid">
+            <div class="data-grid-toolbar">
+              <h3 data-i18n="orders.listTitle">قائمة الأوردرات</h3>
+              <div class="toolbar-actions">
+                <div class="search-box expanded">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="searchOrdersInput" data-i18n-placeholder="search.orders" placeholder="بحث عن أوردر...">
+                </div>
+                <div class="toolbar-buttons">
+                  <button class="btn primary" id="btnAddOrder" data-i18n-title="orders.add" type="button">
+                    <i class="fa-solid fa-plus"></i>
+                    <span data-i18n="orders.add">إضافة أوردر</span>
+                  </button>
+                  <button class="btn icon-only accent refresh" id="btnRefreshOrders" data-i18n-title="actions.refresh" type="button">
+                    <i class="fa-solid fa-rotate"></i>
+                  </button>
+                  <button class="btn icon-only accent excel" id="btnExportOrdersExcel" data-i18n-title="actions.exportExcel" type="button">
+                    <i class="fa-solid fa-file-excel"></i>
+                  </button>
+                  <button class="btn icon-only accent pdf" id="btnExportOrdersPdf" data-i18n-title="actions.exportPdf" type="button">
+                    <i class="fa-solid fa-file-pdf"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table" id="ordersTable">
+                <thead>
+                  <tr>
+                    <th data-i18n="orders.table.orderNo">رقم الأوردر</th>
+                    <th data-i18n="orders.table.entityName">إسم العميل / المورد</th>
+                    <th data-i18n="orders.table.createdDate">تاريخ الإنشاء</th>
+                    <th data-i18n="orders.table.dueDate">تاريخ الانتهاء</th>
+                    <th data-i18n="orders.table.type">نوع الأوردر</th>
+                    <th data-i18n="orders.table.status">الحالة</th>
+                    <th data-i18n="orders.table.weight">الوزن</th>
+                    <th data-i18n="orders.table.ounce">الأونصة</th>
+                    <th data-i18n="orders.table.proximity">القرب</th>
+                    <th data-i18n="orders.table.executionDate">تاريخ التنفيذ</th>
+                    <th data-i18n="orders.table.executionTime">الوقت</th>
+                    <th data-i18n="orders.table.actions">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <tr class="empty-row">
+                    <td colspan="12" style="text-align: center; padding: 60px; color: var(--subtle);">
+                      <i class="fa-solid fa-inbox" style="font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.3;"></i>
+                      <span data-i18n="orders.table.empty">لا توجد أوردرات لعرضها</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="modal" id="lookupCustomerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop"></div>
+      <div class="modal-dialog" role="document" style="max-width: 600px;">
+        <div class="modal-header">
+          <h3 data-i18n="lookup.customer.title">اختر عميل</h3>
+          <button class="icon-btn" id="lookupCustomerClose" aria-label="إغلاق" data-i18n-title="actions.close">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span data-i18n="lookup.customer.searchLabel">بحث عن عميل</span>
+            <input type="search" id="lc_search" data-i18n-placeholder="lookup.customer.placeholder" placeholder="اكتب رقم العميل أو اسم العميل للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="lc_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th style="width:140px" data-i18n="lookup.customer.id">رقم العميل</th>
+                  <th data-i18n="lookup.customer.name">اسم العميل</th>
+                </tr>
+              </thead>
+              <tbody id="lc_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn secondary" id="lookupCustomerCancel" type="button">
+            <i class="fa-regular fa-circle-xmark"></i> <span data-i18n="lookup.cancel">إلغاء</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="lookupSupplierModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop"></div>
+      <div class="modal-dialog" role="document" style="max-width: 600px;">
+        <div class="modal-header">
+          <h3 data-i18n="lookup.supplier.title">اختر مورد</h3>
+          <button class="icon-btn" id="lookupSupplierClose" aria-label="إغلاق" data-i18n-title="actions.close">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="form-field" style="margin-bottom:10px">
+            <span data-i18n="lookup.supplier.searchLabel">بحث عن مورد</span>
+            <input type="search" id="ls_search" data-i18n-placeholder="lookup.supplier.placeholder" placeholder="اكتب رقم المورد أو اسم المورد للبحث">
+          </label>
+          <div class="table-responsive" style="max-height:45vh; overflow:auto">
+            <table class="table" id="ls_table" style="min-width:480px">
+              <thead>
+                <tr>
+                  <th style="width:140px" data-i18n="lookup.supplier.id">رقم المورد</th>
+                  <th data-i18n="lookup.supplier.name">اسم المورد</th>
+                </tr>
+              </thead>
+              <tbody id="ls_tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn secondary" id="lookupSupplierCancel" type="button">
+            <i class="fa-regular fa-circle-xmark"></i> <span data-i18n="lookup.cancel">إلغاء</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="addOrderModal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2>
+            <i class="fa-solid fa-plus-circle"></i>
+            <span data-i18n="orderModal.title">إضافة أوردر جديد</span>
+          </h2>
+          <button class="modal-close" onclick="closeAddOrderModal()" data-i18n-title="actions.close" type="button">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+
+        <form id="addOrderForm" class="modal-body">
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>
+                <i class="fa-solid fa-exchange-alt"></i>
+                <span data-i18n="orderModal.operationTypeLabel">نوع الاوردر</span> <span style="color: red;">*</span>
+              </label>
+              <div class="operation-type-selector">
+                <div class="operation-card sell" data-type="SELL">
+                  <div class="operation-check"><i class="fa-solid fa-check"></i></div>
+                  <div class="operation-icon">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                  </div>
+                  <div class="operation-label">
+                    <span class="op-code" data-i18n="operation.sellCode">SELL LIMIT</span>
+                    <small class="op-sub" data-i18n="operation.sellLabel">بيع محدد</small>
+                  </div>
+                </div>
+                <div class="operation-card buy" data-type="BUY">
+                  <div class="operation-check"><i class="fa-solid fa-check"></i></div>
+                  <div class="operation-icon">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                  </div>
+                  <div class="operation-label">
+                    <span class="op-code" data-i18n="operation.buyCode">BUY LIMIT</span>
+                    <small class="op-sub" data-i18n="operation.buyLabel">شراء محدد</small>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="operation_type" name="operation_type" required>
+            </div>
+          </div>
+
+          <div class="form-row form-row-compact">
+            <div class="form-group">
+              <label for="customer_id">
+                <i class="fa-solid fa-user"></i>
+                <span data-i18n="orderModal.customerId">رقم العميل</span>
+              </label>
+              <input type="number" class="no-spin" id="customer_id" name="customer_id" data-i18n-placeholder="orderModal.customerPlaceholder" placeholder="F9 للبحث" data-i18n-title="orderModal.customerTitle" title="اضغط F9 للبحث عن عميل">
+            </div>
+
+            <div class="form-group">
+              <label for="supplier_id">
+                <i class="fa-solid fa-truck"></i>
+                <span data-i18n="orderModal.supplierId">رقم المورد</span>
+              </label>
+              <input type="number" class="no-spin" id="supplier_id" name="supplier_id" data-i18n-placeholder="orderModal.supplierPlaceholder" placeholder="F9 للبحث" data-i18n-title="orderModal.supplierTitle" title="اضغط F9 للبحث عن مورد">
+            </div>
+
+            <div class="form-group">
+              <label for="customer_name">
+                <i class="fa-solid fa-signature"></i>
+                <span data-i18n="orderModal.nameLabel">الاسم</span> <span style="color: red;">*</span>
+              </label>
+              <input type="text" id="customer_name" name="customer_name" data-i18n-placeholder="orderModal.namePlaceholder" placeholder="اسم العميل / المورد" readonly required>
+            </div>
+          </div>
+
+          <div class="form-row form-row-compact">
+            <div class="form-group">
+              <label for="weight">
+                <i class="fa-solid fa-weight-scale"></i>
+                <span data-i18n="orderModal.weightLabel">الوزن (جرام)</span> <span style="color: red;">*</span>
+              </label>
+              <input type="number" step="0.01" id="weight" name="weight" data-i18n-placeholder="orderModal.weightPlaceholder" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group">
+              <label for="ounce">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span data-i18n="orderModal.ounceLabel">الأونصة</span> <span style="color: red;">*</span>
+              </label>
+              <input type="number" step="0.001" id="ounce" name="ounce" data-i18n-placeholder="orderModal.ouncePlaceholder" placeholder="0.000" required>
+            </div>
+
+            <div class="form-group">
+              <label for="addition">
+                <i class="fa-solid fa-plus"></i>
+                <span data-i18n="orderModal.additionLabel">الإضافة</span>
+              </label>
+              <input type="number" step="0.001" id="addition" name="addition" data-i18n-placeholder="orderModal.additionPlaceholder" placeholder="0.000">
+            </div>
+
+            <div class="form-group">
+              <label for="created_date">
+                <i class="fa-solid fa-calendar"></i>
+                <span data-i18n="orderModal.createdDate">تاريخ الإنشاء</span> <span style="color: red;">*</span>
+              </label>
+              <input type="date" id="created_date" name="created_date" required>
+            </div>
+
+            <div class="form-group">
+              <label for="completion_date">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span data-i18n="orderModal.completionDate">تاريخ الانتهاء</span>
+              </label>
+              <input type="date" id="completion_date" name="completion_date">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group full-width">
+              <div class="mt5-exec-header">
+                <div class="mt5-exec-title">
+                  <i class="fa-solid fa-plug-circle-bolt"></i>
+                  <span data-i18n="orderModal.executeOnMt5Label">تنفيذ على MT5</span>
+                </div>
+                <label class="toggle-switch" aria-label="Execute on MT5">
+                  <input type="checkbox" id="execute_on_mt5" name="execute_on_mt5">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="mt5-exec-desc" data-i18n="orderModal.executeOnMt5Desc">إذا كان مغلقاً سيتم تنفيذ الأوردر في النظام المحلي فقط</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="notes">
+                <i class="fa-solid fa-note-sticky"></i>
+                <span data-i18n="orderModal.notesLabel">ملاحظات</span>
+              </label>
+              <textarea id="notes" name="notes" rows="2" data-i18n-placeholder="orderModal.notesPlaceholder" placeholder="أدخل أي ملاحظات إضافية..."></textarea>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" onclick="closeAddOrderModal()">
+            <i class="fa-solid fa-times"></i>
+            <span data-i18n="actions.cancel">إلغاء</span>
+          </button>
+          <button type="submit" form="addOrderForm" class="btn primary" onclick="submitAddOrder(event)">
+            <i class="fa-solid fa-save"></i>
+            <span data-i18n="orderModal.save">حفظ الأوردر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="confirmModal" style="z-index: 10000;">
+      <div class="modal-container" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2 id="confirmModalTitle">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <span data-i18n="confirm.title">تأكيد العملية</span>
+          </h2>
+          <button class="modal-close" onclick="closeConfirmModal()" data-i18n-title="actions.close" type="button">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+
+        <div class="modal-body" style="padding: 30px 20px;">
+          <p id="confirmModalMessage" style="font-size: 16px; text-align: center; margin: 0;" data-i18n="confirm.message">
+            هل أنت متأكد من هذه العملية؟
+          </p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" onclick="closeConfirmModal(false)">
+            <i class="fa-solid fa-times"></i>
+            <span data-i18n="confirm.cancel">إلغاء الأمر</span>
+          </button>
+          <button type="button" class="btn primary" id="confirmModalBtn" onclick="closeConfirmModal(true)">
+            <i class="fa-solid fa-check"></i>
+            <span data-i18n="confirm.ok">موافق</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

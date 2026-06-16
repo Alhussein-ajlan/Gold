@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="pageTitle">المستخدمون</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <section id="panel-users" class="panel active" role="tabpanel" aria-labelledby="tab-users">
+          <div class="toolbar">
+            <div class="actions">
+              <button class="btn primary" id="btnNewUser" style="width:auto"><i class="fa-solid fa-sparkles"></i> <span data-i18n="newUser">مستخدم جديد</span></button>
+              <button class="btn" id="btnInitPermissions" style="width:auto; background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color:white; margin-inline-start:8px; border:1px solid rgba(240,147,251,0.5); box-shadow:0 8px 20px rgba(240,147,251,0.3);"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="initPermissions">تهيئة الصلاحيات</span></button>
+            </div>
+          </div>
+          <div class="grid cards-3">
+            <div class="card form-card professional-stat-card" id="totalUsersCard" data-color="#3b82f6">
+              <div class="professional-card-header" style="border-top-color:#3b82f6">
+                <h3 data-i18n="totalUsers">إجمالي المستخدمين</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="totalUsersValue">1</div>
+              <div class="stat-sub" id="totalUsersMonth"><i class="fa-solid fa-calendar-days" style="color:#3b82f6"></i> 0 <span data-i18n="usersAddedThisMonth">مستخدمين تم إضافتهم هذا الشهر</span></div>
+              <div class="progress" aria-hidden="true"><div class="progress-bar" id="monthBar" style="width:0%"></div></div>
+            </div>
+            <div class="card form-card professional-stat-card" id="activeUsersCard" data-color="#10b981">
+              <div class="professional-card-header" style="border-top-color:#10b981">
+                <h3 data-i18n="activeUsers">المستخدمون النشطون</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
+                  <i class="fa-solid fa-user-check"></i>
+                </div>
+              </div>
+              <div class="row" style="gap:12px; align-items:center; margin-top:6px">
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-circle-check" style="color:#10b981;font-size:14px"></i><strong data-i18n="active">نشطون:</strong> <span id="activeUsersValue">1</span></div>
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-circle-xmark" style="color:#ef4444;font-size:14px"></i><strong data-i18n="inactive">غير نشطون:</strong> <span id="inactiveUsersValue">0</span></div>
+              </div>
+            </div>
+            <div class="card form-card professional-stat-card" data-color="#8b5cf6">
+              <div class="professional-card-header" style="border-top-color:#8b5cf6">
+                <h3 data-i18n="administrators">المديرون</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">
+                  <i class="fa-solid fa-user-shield"></i>
+                </div>
+              </div>
+              <div class="row" style="gap:12px; align-items:center; margin-top:6px">
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-crown" style="color:#8b5cf6;font-size:14px"></i><strong data-i18n="admins">مديرون:</strong> <span id="adminUsersValue">1</span></div>
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-user" style="color:#3b82f6;font-size:14px"></i><strong data-i18n="users">مستخدمون:</strong> <span id="regularUsersValue">0</span></div>
+              </div>
+            </div>
+            <div class="card table-card grid-span-3 fullwide" id="users-grid">
+              <div class="table-head">
+                <h3 data-i18n="usersList">قائمة المستخدمين</h3>
+                <div class="head-search">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input type="search" id="usersSearch" data-i18n="searchPlaceholder" placeholder="بحث عن مستخدم..." aria-label="بحث عن مستخدم">
+                </div>
+                <div class="row">
+                  <button class="icon-btn" id="btnRefreshUsers" data-i18n-title="refresh" title="تحديث"><i class="fa-solid fa-rotate-right"></i></button>
+                  <button class="icon-btn" id="btnExportExcel" data-i18n-title="exportExcel" title="تصدير Excel"><i class="fa-regular fa-file-excel"></i></button>
+                  <button class="icon-btn" id="btnExportPdf" data-i18n-title="exportPdf" title="PDF"><i class="fa-regular fa-file-pdf"></i></button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="id">المعرف</th>
+                      <th data-i18n="username">اسم المستخدم</th>
+                      <th data-i18n="fullName">الاسم الكامل</th>
+                      <th data-i18n="role">الدور</th>
+                      <th data-i18n="branchesLabel">الفروع</th>
+                      <th data-i18n="activeStatus">نشط</th>
+                      <th data-i18n="createdDate">تاريخ الإنشاء</th>
+                      <th data-i18n="lastLogin">آخر دخول</th>
+                      <th data-i18n="actions">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </section>
+    </main>
+
+    <!-- New User Modal -->
+    <div class="modal" id="newUserModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document">
+        <div class="modal-header">
+          <h3 id="modalTitle" data-i18n="addUser">إضافة مستخدم</h3>
+          <button class="icon-btn" id="modalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="newUserForm">
+            <input type="hidden" id="nu_id">
+            <label class="form-field">
+              <span><span data-i18n="usernameLabel">اسم المستخدم</span> <span style="color:red">*</span></span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-user icon" aria-hidden="true"></i>
+                <input type="text" id="nu_username" required data-i18n="usernamePlaceholder" placeholder="مثال: user1">
+              </div>
+            </label>
+            <label class="form-field">
+              <span><span data-i18n="fullNameLabel">الاسم الكامل</span> <span style="color:red">*</span></span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-id-card icon" aria-hidden="true"></i>
+                <input type="text" id="nu_fullname" required data-i18n="fullNamePlaceholder" placeholder="الاسم الكامل">
+              </div>
+            </label>
+            <label class="form-field">
+              <span><span data-i18n="passwordLabel">كلمة المرور</span> <span id="pwdRequiredMark" style="color:red">*</span></span>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock icon" aria-hidden="true"></i>
+                <input type="password" id="nu_password" data-i18n="passwordPlaceholder" placeholder="كلمة المرور">
+                <button type="button" class="icon-btn" id="togglePassword" style="position:absolute;left:10px"><i class="fa-regular fa-eye"></i></button>
+              </div>
+              <small id="pwdHint" style="color:#666;font-size:11px" data-i18n="passwordHint">اترك فارغاً للإبقاء على كلمة المرور الحالية</small>
+            </label>
+            <label class="form-field">
+              <span data-i18n="passwordReminderLabel">تذكير كلمة المرور</span>
+              <div class="input-wrap">
+                <i class="fa-regular fa-lightbulb icon" aria-hidden="true"></i>
+                <input type="text" id="nu_hint" data-i18n="passwordReminderPlaceholder" placeholder="مثال: اسم مدينتي + تاريخ ميلادي">
+              </div>
+            </label>
+            <label class="form-field">
+              <span><span data-i18n="roleLabel">الدور</span> <span style="color:red">*</span></span>
+              <div class="input-wrap">
+                <i class="fa-solid fa-user-shield icon" aria-hidden="true"></i>
+                <select id="nu_role" required>
+                  <option value="user" data-i18n="user">مستخدم</option>
+                  <option value="admin" data-i18n="admin">مدير</option>
+                </select>
+              </div>
+            </label>
+            <div class="form-field" id="nuBranchesField">
+              <span><span data-i18n="branchesAssignmentsLabel">الفروع المسموح بها</span> <span style="color:red">*</span></span>
+              <div class="branch-access-list" id="nu_branchesContainer"></div>
+              <small id="nuBranchesHint" data-i18n="branchesAssignmentsHint">حدد الفروع التي يمكن للمستخدم العمل بها واختر الفرع الافتراضي</small>
+              <p class="error" id="nu_branches_error"></p>
+            </div>
+            <div class="form-field" style="margin-top:6px; display:flex; align-items:center; gap:10px">
+              <span data-i18n="activeLabel">نشط</span>
+              <label class="switch">
+                <input type="checkbox" id="nu_active" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </form>
+          <p class="error" id="nu_error"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="modalCancel"><i class="fa-regular fa-circle-xmark"></i> <span data-i18n="cancel">إلغاء</span></button>
+          <button class="btn primary" id="modalSave"><i class="fa-regular fa-floppy-disk"></i> <span data-i18n="save">حفظ</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal" id="confirmDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span data-i18n="confirmDelete">تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+          </div>
+          <p id="confirmDelMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6" data-i18n="confirmDeleteMsg">هل أنت متأكد من أنك تريد حذف هذا المستخدم؟</p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-check"></i> <span data-i18n="yesDelete">نعم، احذف</span>
+          </button>
+          <button class="btn secondary" id="confirmDelNo" style="font-size:14px; padding:10px 24px">
+            <i class="fa-regular fa-circle-xmark"></i> <span data-i18n="cancelAction">إلغاء الأمر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions Modal -->
+    <div class="modal" id="permissionsModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width: 95vw; width: 1200px">
+        <div class="modal-header">
+          <h3 id="permModalTitle" data-i18n="managePermissions">إدارة صلاحيات المستخدم</h3>
+          <button class="icon-btn" id="permModalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="max-height: 65vh; overflow-y: auto">
+          <input type="hidden" id="perm_user_id">
+          <div id="permissionsContainer">
+            <p style="text-align:center;color:var(--subtle)" data-i18n="loading">جاري التحميل...</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="permModalCancel"><i class="fa-solid fa-circle-xmark"></i><span data-i18n="cancel">إلغاء</span></button>
+          <button class="btn primary" id="permModalSave"><i class="fa-solid fa-user-shield"></i><span data-i18n="savePermissions">حفظ الصلاحيات</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initialize Permissions Modal -->
+    <div class="modal" id="initPermissionsModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width: 800px;">
+        <div class="modal-header">
+          <h3>🚀 <span data-i18n="initPermissionsTitle">تهيئة نظام الصلاحيات الشامل</span></h3>
+          <button class="icon-btn" id="initPermModalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto">
+          <p style="text-align:center;color:var(--subtle);margin-bottom:20px;" data-i18n="initPermissionsDesc">سيتم إضافة جميع الصلاحيات للنظام تلقائياً</p>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <button class="btn primary" id="initPermBtn">
+              🔄 <span data-i18n="startInit">ابدأ التهيئة</span>
+            </button>
+            <button class="btn" id="removeDuplicatesBtn" style="background:linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);color:white;">
+              🧹 <span data-i18n="removeDuplicates">إزالة التكرار</span>
+            </button>
+          </div>
+
+          <div id="initStats" style="display:none;margin-bottom:20px;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;">
+              <div style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);color:white;padding:20px;border-radius:10px;text-align:center;">
+                <div style="font-size:32px;font-weight:bold;margin-bottom:5px;" id="totalCount">0</div>
+                <div style="font-size:12px;opacity:0.9;" data-i18n="totalPermissions">إجمالي الصلاحيات</div>
+              </div>
+              <div style="background:linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);color:white;padding:20px;border-radius:10px;text-align:center;">
+                <div style="font-size:32px;font-weight:bold;margin-bottom:5px;" id="addedCount">0</div>
+                <div style="font-size:12px;opacity:0.9;" data-i18n="added">تمت الإضافة</div>
+              </div>
+              <div style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:20px;border-radius:10px;text-align:center;">
+                <div style="font-size:32px;font-weight:bold;margin-bottom:5px;" id="categoriesCount">0</div>
+                <div style="font-size:12px;opacity:0.9;" data-i18n="categories">الفئات</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="initLog" style="background:var(--bg-muted);border-radius:10px;padding:15px;max-height:300px;overflow-y:auto;font-family:'Courier New',monospace;font-size:12px;"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="initPermModalCancel"><i class="fa-regular fa-circle-xmark"></i> <span data-i18n="close">إغلاق</span></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

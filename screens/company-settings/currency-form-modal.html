@@ -1,0 +1,151 @@
+<!-- Currency Add/Edit Modal -->
+<div id="currencyFormModal" class="modal-overlay currency-form-modal" aria-hidden="true">
+  <div class="modal-dialog currency-form-dialog" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <i class="fa-solid fa-coins"></i> 
+        <span id="currencyFormTitle" data-i18n="addCurrencyTitle">إضافة عملة جديدة</span>
+      </h3>
+      <button class="modal-close" id="btnCloseCurrencyForm" data-i18n-title="close" title="إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="currencyForm" class="currency-form">
+        
+        <!-- Currency Name -->
+        <div class="form-group">
+          <label for="currencyNameInput">
+            <i class="fa-solid fa-text"></i> <span data-i18n="currencyName">اسم العملة</span>
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="currencyNameInput" 
+            data-i18n-placeholder="currencyNamePlaceholder"
+            placeholder="مثال: ريال سعودي" 
+            required
+          >
+        </div>
+
+        <!-- Currency Code -->
+        <div class="form-group">
+          <label for="currencyCodeInput">
+            <i class="fa-solid fa-code"></i> <span data-i18n="currencyCode">رمز العملة (Code)</span>
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="currencyCodeInput" 
+            data-i18n-placeholder="currencyCodePlaceholder"
+            placeholder="مثال: SAR" 
+            maxlength="3"
+            style="text-transform: uppercase;"
+            required
+          >
+          <small data-i18n="currencyCodeHint">3 أحرف بالإنجليزية (مثل: SAR, USD, EUR)</small>
+        </div>
+
+        <!-- Currency Symbol -->
+        <div class="form-group">
+          <label for="currencySymbolInput">
+            <i class="fa-solid fa-dollar-sign"></i> <span data-i18n="currencySymbol">علامة العملة (Symbol)</span>
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="currencySymbolInput" 
+            data-i18n-placeholder="currencySymbolPlaceholder"
+            placeholder="مثال: ر.س أو $" 
+            required
+          >
+        </div>
+
+        <!-- Exchange Rate -->
+        <div class="form-group">
+          <label for="exchangeRateInput">
+            <i class="fa-solid fa-chart-line"></i> <span data-i18n="exchangeRate">سعر الصرف مقابل العملة الافتراضية</span>
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="exchangeRateInput" 
+            data-i18n-placeholder="exchangeRatePlaceholder"
+            placeholder="مثال: 1.00" 
+            step="0.0001"
+            min="0.0001"
+            required
+          >
+          <small data-i18n="exchangeRateHint">أدخل سعر وحدة واحدة من هذه العملة مقابل العملة الافتراضية</small>
+        </div>
+
+        <!-- Currency Type -->
+        <div class="form-group">
+          <label for="currencyTypeSelect">
+            <i class="fa-solid fa-layer-group"></i> <span data-i18n="currencyType">نوع العملة</span>
+            <span class="required">*</span>
+          </label>
+          <select id="currencyTypeSelect" required>
+            <option value="" data-i18n="selectType">اختر النوع</option>
+            <option value="arab" data-i18n="arabCurrency">عملة عربية</option>
+            <option value="world" data-i18n="worldCurrency">عملة عالمية</option>
+          </select>
+        </div>
+
+        <!-- Currency Flag -->
+        <div class="form-group">
+          <label for="currencyFlagInput">
+            <i class="fa-solid fa-flag"></i> <span data-i18n="countryFlag">علم الدولة (Emoji)</span>
+          </label>
+          <input 
+            type="text" 
+            id="currencyFlagInput" 
+            data-i18n-placeholder="countryFlagPlaceholder"
+            placeholder="مثال: 🇸🇦" 
+            maxlength="4"
+          >
+          <small data-i18n="countryFlagHint">اختياري - يمكنك نسخ emoji العلم من لوحة المفاتيح</small>
+        </div>
+
+        <!-- Currency Icon -->
+        <div class="form-group">
+          <label for="currencyIconSelect">
+            <i class="fa-solid fa-icons"></i> <span data-i18n="fontAwesomeIcon">أيقونة FontAwesome</span>
+          </label>
+          <select id="currencyIconSelect">
+            <option value="fa-dollar-sign">💲 Dollar Sign</option>
+            <option value="fa-euro-sign">💶 Euro Sign</option>
+            <option value="fa-pound-sign">💷 Pound Sign</option>
+            <option value="fa-yen-sign">💴 Yen Sign</option>
+            <option value="fa-rupee-sign">₹ Rupee Sign</option>
+            <option value="fa-lira-sign">₺ Lira Sign</option>
+            <option value="fa-ruble-sign">₽ Ruble Sign</option>
+            <option value="fa-won-sign">₩ Won Sign</option>
+            <option value="fa-franc-sign">Fr Franc Sign</option>
+            <option value="fa-sterling-sign">£ Sterling Sign</option>
+            <option value="fa-coins">💰 Coins</option>
+          </select>
+        </div>
+
+        <!-- Set as Default -->
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="setAsDefaultCheckbox">
+            <span data-i18n="setAsDefault">تعيين كعملة افتراضية</span>
+          </label>
+        </div>
+
+      </form>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn secondary" id="btnCancelCurrencyForm">
+        <i class="fa-solid fa-xmark"></i> <span data-i18n="cancel">إلغاء</span>
+      </button>
+      <button class="btn primary" id="btnSaveCurrency">
+        <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="saveCurrency">حفظ العملة</span>
+      </button>
+    </div>
+  </div>
+</div>

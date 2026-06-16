@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="print-orientation" content="auto">
+    <title>طباعة تحليل الإقرارات الضريبية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../shared-styles/fonts.css">
+    <link rel="stylesheet" href="analytics-print.css">
+    <style>
+        @page {
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Print Button -->
+    <button id="printBtn" class="floating-print-btn" onclick="window.print()">
+        <i class="fa-solid fa-print"></i>
+        <span>طباعة</span>
+    </button>
+
+    <div class="print-container">
+        <!-- Header -->
+        <div class="print-header">
+            <div class="company-info">
+                <h1 id="companyName">اسم الشركة</h1>
+                <p class="tax-number">الرقم الضريبي: <span id="companyTax">-</span></p>
+            </div>
+            <div class="report-info">
+                <h2>تحليل الإقرارات الضريبية</h2>
+                <p>السنة: <span id="reportYear">2026</span></p>
+                <p>نوع الفترة: <span id="periodType">شهري</span></p>
+                <p>تاريخ الطباعة: <span id="printDate">-</span></p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section" id="chartsSection">
+            <h3 class="section-title">
+                <i class="fa-solid fa-chart-line"></i>
+                الرسوم البيانية
+            </h3>
+            <div class="charts-grid">
+                <!-- Net Tax Chart - Full Width -->
+                <div class="chart-item chart-full-width" id="netTaxChartContainer" style="display: none;">
+                    <h4>صافي الضريبة المستحقة</h4>
+                    <img id="netTaxChartImg" alt="صافي الضريبة">
+                </div>
+                
+                <!-- Sales/Purchases and Tax Distribution - Row Below -->
+                <div class="charts-row">
+                    <div class="chart-item" id="salesPurchasesChartContainer" style="display: none;">
+                        <h4>المبيعات والمشتريات</h4>
+                        <img id="salesPurchasesChartImg" alt="المبيعات والمشتريات">
+                    </div>
+                    <div class="chart-item" id="taxDistributionChartContainer" style="display: none;">
+                        <h4>توزيع الضرائب</h4>
+                        <img id="taxDistributionChartImg" alt="توزيع الضرائب">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section" id="tableSection">
+            <!-- Table will be inserted here -->
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonSection" style="display: none;">
+            <h3 class="section-title">
+                <i class="fa-solid fa-chart-column"></i>
+                مقارنة السنوات
+            </h3>
+            <div id="comparisonContent">
+                <!-- Comparison content will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="print-footer">
+            <p>تم الطباعة بواسطة نظام بن عجلان للذهب والمجوهرات</p>
+        </div>
+    </div>
+
+    <script>
+        // Receive data from parent window
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            
+            if (data && data.year) {
+                // Update header info
+                document.getElementById('companyName').textContent = data.companyName || 'اسم الشركة';
+                document.getElementById('companyTax').textContent = data.companyTax || '-';
+                document.getElementById('reportYear').textContent = data.year;
+                document.getElementById('periodType').textContent = data.periodType || 'شهري';
+                document.getElementById('printDate').textContent = data.printDate || new Date().toLocaleDateString('ar-SA');
+                
+                // Insert charts
+                if (data.chartImages) {
+                    if (data.chartImages.netTax) {
+                        document.getElementById('netTaxChartImg').src = data.chartImages.netTax;
+                        document.getElementById('netTaxChartContainer').style.display = 'block';
+                    }
+                    if (data.chartImages.salesPurchases) {
+                        document.getElementById('salesPurchasesChartImg').src = data.chartImages.salesPurchases;
+                        document.getElementById('salesPurchasesChartContainer').style.display = 'block';
+                    }
+                    if (data.chartImages.taxDistribution) {
+                        document.getElementById('taxDistributionChartImg').src = data.chartImages.taxDistribution;
+                        document.getElementById('taxDistributionChartContainer').style.display = 'block';
+                    }
+                }
+                
+                // Insert table
+                const tableSection = document.getElementById('tableSection');
+                if (data.tableHTML) {
+                    tableSection.innerHTML = data.tableHTML;
+                    
+                    // Fix table styling after insertion
+                    const table = tableSection.querySelector('.analytics-table');
+                    if (table) {
+                        // Remove inline styles that might interfere
+                        table.style.cssText = '';
+                        
+                        // Fix all cells
+                        const cells = table.querySelectorAll('td, th');
+                        cells.forEach(cell => {
+                            // Keep only essential inline styles
+                            const textAlign = cell.style.textAlign;
+                            const fontWeight = cell.style.fontWeight;
+                            const color = cell.style.color;
+                            cell.style.cssText = '';
+                            if (textAlign) cell.style.textAlign = textAlign;
+                            if (fontWeight) cell.style.fontWeight = fontWeight;
+                            if (color) cell.style.color = color;
+                        });
+                    }
+                }
+                
+                // Insert comparison if available
+                if (data.compareWithPrevious && data.comparisonHTML) {
+                    const comparisonSection = document.getElementById('comparisonSection');
+                    const comparisonContent = document.getElementById('comparisonContent');
+                    comparisonContent.innerHTML = data.comparisonHTML;
+                    comparisonSection.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

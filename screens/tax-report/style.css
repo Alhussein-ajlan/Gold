@@ -1,0 +1,865 @@
+/* Tax Report Styles */
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.dashboard {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.panel {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Page Header - Using theme primary color */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-600) 100%);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.25);
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.page-header-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.2);
+  border-radius: 14px;
+  font-size: 28px;
+}
+
+.page-header-content h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.page-header-content p {
+  margin: 4px 0 0 0;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.header-action-btn {
+  padding: 12px 24px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  margin-left: -18px;
+  height: 48px;
+}
+
+.header-action-btn:first-child {
+  clip-path: polygon(100% 0%, 15% 0%, 0% 50%, 15% 100%, 100% 100%);
+  padding-right: 32px;
+  padding-left: 20px;
+  margin-left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.header-action-btn:last-child {
+  clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%, 85% 50%);
+  padding-left: 36px;
+  padding-right: 24px;
+  margin-left: -18px;
+  border-radius: 8px 0 0 8px;
+}
+
+.page-header-actions .header-action-btn:not([style*="display: none"]):last-of-type {
+  margin-left: -18px !important;
+}
+
+.header-action-btn:not(:first-child):not(:last-child) {
+  clip-path: polygon(100% 0%, 15% 0%, 0% 50%, 15% 100%, 100% 100%, 85% 50%);
+  padding-right: 32px;
+  padding-left: 32px;
+}
+
+.header-action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.header-action-btn i {
+  font-size: 14px;
+}
+
+.header-action-btn.print-btn:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.header-action-btn.excel-btn:hover {
+  background: rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.header-action-btn.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Filters Card */
+.filters-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.filters-row {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* Custom scrollbar for filters */
+.filters-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.filters-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filters-row::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, 
+    color-mix(in oklab, var(--primary) 40%, transparent), 
+    color-mix(in oklab, var(--primary) 25%, transparent)
+  );
+  border-radius: 10px;
+}
+
+.filters-row::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--primary), color-mix(in oklab, var(--primary) 75%, #000));
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--subtle);
+  white-space: nowrap;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: all 0.2s;
+  min-width: 140px;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.filter-group.filter-btn {
+  min-width: auto;
+}
+
+.view-btn {
+  padding: 8px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-600) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  height: 38px;
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.25);
+}
+
+.view-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.35);
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--card-accent-start), var(--card-accent-end));
+  transition: height 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.summary-card:hover::before {
+  height: 6px;
+}
+
+.summary-card-content-wrapper {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+}
+
+/* Sales Card Colors */
+.sales-card {
+  --card-accent-start: #10b981;
+  --card-accent-end: #059669;
+}
+
+/* Purchases Card Colors */
+.purchases-card {
+  --card-accent-start: var(--primary);
+  --card-accent-end: var(--primary-600);
+}
+
+/* Net Tax Card Colors */
+.net-tax-card {
+  --card-accent-start: #8b5cf6;
+  --card-accent-end: #7c3aed;
+}
+
+.net-tax-card.payable {
+  --card-accent-start: #ef4444;
+  --card-accent-end: #dc2626;
+}
+
+.net-tax-card.refundable {
+  --card-accent-start: #10b981;
+  --card-accent-end: #059669;
+}
+
+.summary-card .card-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 28px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--card-accent-start), var(--card-accent-end));
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.summary-card:hover .card-icon {
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.summary-card .card-content {
+  flex: 1;
+}
+
+.summary-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-card h3::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: linear-gradient(180deg, var(--card-accent-start), var(--card-accent-end));
+  border-radius: 2px;
+}
+
+.card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-muted);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.summary-card:hover .stat-item {
+  background: color-mix(in oklab, var(--bg-muted) 70%, var(--card-accent-start));
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--subtle);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'Cairo', monospace;
+}
+
+.stat-value.highlight {
+  color: var(--card-accent-start);
+  font-size: 19px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.net-tax-amount {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 12px 0;
+  color: var(--text);
+  font-family: 'Cairo', monospace;
+  text-align: center;
+  padding: 16px;
+  background: var(--bg-muted);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.net-tax-amount::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--card-accent-start), var(--card-accent-end));
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.net-tax-amount::after {
+  content: attr(data-currency);
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+.net-tax-card.payable .net-tax-amount {
+  color: #ef4444;
+}
+
+.net-tax-card.refundable .net-tax-amount {
+  color: #10b981;
+}
+
+.net-tax-status {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.net-tax-card.payable .net-tax-status {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.net-tax-card.refundable .net-tax-status {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Table Section - Using modern-datagrid styles */
+.table-section {
+  margin-bottom: 24px;
+}
+
+.table-header {
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  background: var(--card);
+  border-radius: 16px 16px 0 0;
+  border-bottom: 2px solid var(--border);
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Use modern-datagrid container */
+.table-container {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 2px solid var(--border);
+  border-radius: 0 0 16px 16px;
+  background: var(--card);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+/* Custom scrollbar */
+.table-container::-webkit-scrollbar { 
+  width: 12px; 
+  height: 12px; 
+}
+.table-container::-webkit-scrollbar-track { 
+  background: transparent; 
+}
+.table-container::-webkit-scrollbar-thumb { 
+  background: linear-gradient(180deg, 
+    color-mix(in oklab, var(--primary) 55%, transparent), 
+    color-mix(in oklab, var(--primary) 35%, transparent)
+  ); 
+  border-radius: 10px; 
+  border: 3px solid var(--card);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+}
+.table-container::-webkit-scrollbar-thumb:hover { 
+  background: linear-gradient(180deg, var(--primary), color-mix(in oklab, var(--primary) 75%, #000)); 
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  transition: all .2s ease;
+}
+
+/* Modern header styling */
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(180deg, 
+    color-mix(in oklab, var(--primary) 12%, var(--card)), 
+    color-mix(in oklab, var(--primary) 8%, var(--card))
+  );
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid color-mix(in oklab, var(--primary) 45%, transparent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,.4);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Zebra striping with hover effect */
+.data-table tbody tr {
+  background: var(--card);
+  transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 50%, transparent);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: color-mix(in oklab, var(--bg-muted) 40%, var(--card));
+}
+
+.data-table tbody tr:hover {
+  background: color-mix(in oklab, var(--primary) 8%, var(--card));
+  transform: scale(1.002);
+  box-shadow: 0 4px 12px rgba(0,0,0,.1), 
+              inset 0 0 0 1px color-mix(in oklab, var(--primary) 25%, transparent);
+  cursor: pointer;
+}
+
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.data-table td {
+  text-align: right;
+  color: var(--text);
+}
+
+.data-table td.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--subtle);
+  font-style: italic;
+}
+
+.data-table tbody tr.empty-state:hover {
+  background: var(--card);
+  transform: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Number formatting */
+.data-table .tax-value {
+  color: var(--primary);
+  font-weight: 600;
+  text-align: right;
+  direction: ltr;
+  font-family: 'Cairo', 'Courier New', monospace;
+}
+
+.data-table .total-value {
+  font-weight: 700;
+  text-align: right;
+  direction: ltr;
+  font-family: 'Cairo', 'Courier New', monospace;
+}
+
+.data-table .number {
+  text-align: right;
+  direction: ltr;
+  font-family: 'Cairo', 'Courier New', monospace;
+  font-weight: 500;
+}
+
+/* Highlight numbers on hover */
+.data-table tbody tr:hover td.tax-value,
+.data-table tbody tr:hover td.total-value,
+.data-table tbody tr:hover td.number {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .page-header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filters-row {
+    flex-wrap: wrap;
+  }
+  
+  .filter-group {
+    min-width: calc(50% - 6px);
+  }
+  
+  .filter-group.filter-btn {
+    min-width: 100%;
+  }
+  
+  .view-btn {
+    width: 100%;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .page-header-actions {
+    flex-wrap: wrap;
+  }
+  
+  .header-action-btn span {
+    display: none;
+  }
+  
+  .header-action-btn {
+    padding: 10px 12px;
+  }
+  
+  .filters-row {
+    flex-wrap: wrap;
+  }
+  
+  .filter-group {
+    min-width: calc(33.333% - 8px);
+  }
+  
+  .filter-group.filter-btn {
+    min-width: calc(33.333% - 8px);
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .table-container {
+    box-shadow: 0 4px 16px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  
+  .data-table thead th {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  
+  .filters-card,
+  .summary-card {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  
+  .summary-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  
+  .page-header {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  
+  .stat-item {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .summary-card:hover .stat-item {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .net-tax-amount {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+:root[data-theme="dark"] .table-container {
+  box-shadow: 0 4px 16px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+:root[data-theme="dark"] .data-table thead th {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+:root[data-theme="dark"] .filters-card,
+:root[data-theme="dark"] .summary-card {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+:root[data-theme="dark"] .summary-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+:root[data-theme="dark"] .page-header {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+:root[data-theme="dark"] .filter-group input,
+:root[data-theme="dark"] .filter-group select {
+  background: var(--input-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .filter-group select option {
+  background: var(--card);
+  color: var(--text);
+  padding: 8px;
+}
+
+:root[data-theme="dark"] .refresh-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="dark"] .refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="dark"] .stat-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="dark"] .summary-card:hover .stat-item {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .net-tax-amount {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Invoice Link Styling */
+.invoice-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.invoice-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.invoice-cell .invoice-link {
+  padding: 2px 6px;
+}
+
+.invoice-branch-badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 180px;
+  min-width: 0;
+  flex-shrink: 1;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(var(--primary-rgb), 0.12);
+  border: 1px solid rgba(var(--primary-rgb), 0.24);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.invoice-link:hover {
+  color: var(--primary-600);
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  text-decoration: underline;
+  transform: translateX(-2px);
+}
+
+.invoice-link:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+:root[data-theme="dark"] .invoice-link:hover {
+  background: color-mix(in oklab, var(--primary) 15%, transparent);
+}
+
+:root[data-theme="dark"] .invoice-branch-badge {
+  background: rgba(var(--primary-rgb), 0.22);
+  border-color: rgba(var(--primary-rgb), 0.4);
+  color: #e8f7ff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}

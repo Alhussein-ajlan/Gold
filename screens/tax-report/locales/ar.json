@@ -1,0 +1,98 @@
+{
+  "taxReport": {
+    "title": "تقرير الضرائب",
+    "subtitle": "تقرير ضريبة القيمة المضافة",
+    "filters": {
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ",
+      "reportType": "نوع التقرير",
+      "invoiceType": "نوع الفاتورة",
+      "metalType": "نوع المعدن",
+      "paymentType": "نوع الدفع",
+      "taxFilter": "عرض الضريبة",
+      "view": "عرض"
+    },
+    "reportTypes": {
+      "all": "الكل",
+      "sales": "المبيعات فقط",
+      "purchases": "المشتريات فقط"
+    },
+    "invoiceTypes": {
+      "all": "الكل",
+      "taskir": "تسكير",
+      "worked": "مشغول"
+    },
+    "metalTypes": {
+      "all": "الكل",
+      "gold": "ذهب",
+      "silver": "فضة"
+    },
+    "paymentTypes": {
+      "all": "الكل",
+      "cash": "نقدي",
+      "credit": "آجل"
+    },
+    "taxFilters": {
+      "all": "الكل",
+      "taxable": "الخاضعة للضريبة فقط",
+      "zero": "الصفرية فقط"
+    },
+    "summary": {
+      "title": "ملخص الضرائب",
+      "sales": "المبيعات (المخرجات)",
+      "purchases": "المشتريات (المدخلات)",
+      "netTax": "صافي الضريبة",
+      "beforeTax": "قبل الضريبة",
+      "taxableBeforeTax": "الخاضع للضريبة (قبل الضريبة)",
+      "taxAmount": "قيمة الضريبة",
+      "afterTax": "بعد الضريبة",
+      "zeroRated": "المبيعات الصفرية",
+      "payable": "مستحقة",
+      "refundable": "مستردة",
+      "riyal": "ريال"
+    },
+    "salesTable": {
+      "title": "تفاصيل المبيعات",
+      "invoiceNo": "رقم الفاتورة",
+      "date": "التاريخ",
+      "customer": "العميل",
+      "taxNo": "الرقم الضريبي",
+      "weight": "الوزن",
+      "karat": "العيار",
+      "beforeTax": "قبل الضريبة",
+      "taxRate": "نسبة %",
+      "taxValue": "قيمة الضريبة",
+      "total": "الإجمالي",
+      "type": "النوع",
+      "payment": "الدفع",
+      "noData": "لا توجد فواتير مبيعات في الفترة المحددة"
+    },
+    "purchasesTable": {
+      "title": "تفاصيل المشتريات",
+      "invoiceNo": "رقم الفاتورة",
+      "date": "التاريخ",
+      "supplier": "المورد",
+      "taxNo": "الرقم الضريبي",
+      "weight": "الوزن",
+      "karat": "العيار",
+      "beforeTax": "قبل الضريبة",
+      "taxRate": "نسبة %",
+      "taxValue": "قيمة الضريبة",
+      "total": "الإجمالي",
+      "type": "النوع",
+      "payment": "الدفع",
+      "noData": "لا توجد فواتير مشتريات في الفترة المحددة"
+    },
+    "actions": {
+      "print": "طباعة",
+      "exportExcel": "تصدير Excel",
+      "refresh": "تحديث"
+    },
+    "messages": {
+      "selectDates": "الرجاء اختيار الفترة الزمنية",
+      "loading": "جاري التحميل...",
+      "error": "حدث خطأ أثناء تحميل البيانات",
+      "noData": "لا توجد بيانات في الفترة المحددة"
+    }
+  }
+}

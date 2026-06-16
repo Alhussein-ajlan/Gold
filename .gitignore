@@ -1,0 +1,17 @@
+node_modules/
+dist/
+release/
+installer-build/release/
+build/mt5_bridge_build/
+data/
+database/*.db
+database/*.db-shm
+database/*.db-wal
+*.log
+.DS_Store
+Thumbs.db
+*.db-shm
+*.db-wal
+database/backup-databases/*.db
+database/backup-databases/*.db-shm
+database/backup-databases/*.db-wal

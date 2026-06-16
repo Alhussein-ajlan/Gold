@@ -1,0 +1,514 @@
+/* ===== Auto Journal Modal Styles - Modern Professional Design ===== */
+
+/* CSS Variables for Light Mode - Uses Theme Variables */
+.auto-journal-modal {
+  --ajm-bg: #ffffff;
+  --ajm-bg-secondary: #f8fafc;
+  --ajm-bg-tertiary: #f1f5f9;
+  --ajm-text: #1e293b;
+  --ajm-text-secondary: #64748b;
+  --ajm-text-muted: #94a3b8;
+  --ajm-border: #e2e8f0;
+  --ajm-border-light: #f1f5f9;
+  --ajm-shadow: rgba(0, 0, 0, 0.1);
+  --ajm-shadow-lg: rgba(0, 0, 0, 0.15);
+  --ajm-primary: var(--primary, #0d9488);
+  --ajm-primary-dark: var(--primary-600, #0f766e);
+  --ajm-accent: #7c3aed;
+  --ajm-debit: #ef4444;
+  --ajm-credit: #22c55e;
+  --ajm-gold: #d97706;
+  --ajm-gold-bg: #fef3c7;
+  --ajm-cash-bg: #dbeafe;
+  --ajm-cash: #2563eb;
+  --ajm-row-hover: rgba(13, 148, 136, 0.08);
+  --ajm-row-alt: rgba(241, 245, 249, 0.5);
+}
+
+[data-theme="dark"] .auto-journal-modal .modal-content {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .modal-body {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-info {
+  background: #0f172a !important;
+  border-color: #475569 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-info-item {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-info-item label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-info-item span {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table {
+  border-color: #475569 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table tbody {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table tbody tr:nth-child(even) {
+  background: rgba(51, 65, 85, 0.5) !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table tbody tr:hover {
+  background: rgba(13, 148, 136, 0.2) !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table td {
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table tfoot {
+  background: #334155 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table tfoot td {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table .debit {
+  color: #f87171 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .journal-table .credit {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .currency-badge.cash {
+  background: rgba(37, 99, 235, 0.25) !important;
+  color: #60a5fa !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .currency-badge.gold {
+  background: rgba(217, 119, 6, 0.25) !important;
+  color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .auto-journal-modal .no-journal {
+  color: #94a3b8 !important;
+}
+
+/* Removed @media (prefers-color-scheme: dark) - using [data-theme="dark"] instead */
+
+/* Modal Container */
+.auto-journal-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.auto-journal-modal[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Backdrop with blur */
+.auto-journal-modal .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Modal Content */
+.auto-journal-modal .modal-content {
+  position: relative;
+  background: var(--ajm-bg);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 60px -15px var(--ajm-shadow-lg),
+    0 0 0 1px var(--ajm-border),
+    0 0 80px -20px rgba(13, 148, 136, 0.3);
+  width: 92%;
+  max-width: 950px;
+  max-height: 88vh;
+  overflow: hidden;
+  transform: scale(0.92) translateY(30px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.auto-journal-modal[aria-hidden="false"] .modal-content {
+  transform: scale(1) translateY(0);
+}
+
+/* Header */
+.auto-journal-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  background: linear-gradient(135deg, var(--ajm-primary) 0%, var(--ajm-primary-dark) 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.auto-journal-modal .modal-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.auto-journal-modal .modal-header::after {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: 10%;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.auto-journal-modal .modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.auto-journal-modal .modal-header h3 i {
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.2);
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.auto-journal-modal .modal-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.auto-journal-modal .modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255,255,255,0.5);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Body */
+.auto-journal-modal .modal-body {
+  padding: 28px;
+  max-height: calc(88vh - 160px);
+  overflow-y: auto;
+  background: var(--ajm-bg);
+}
+
+.auto-journal-modal .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.auto-journal-modal .modal-body::-webkit-scrollbar-track {
+  background: var(--ajm-bg-tertiary);
+  border-radius: 4px;
+}
+
+.auto-journal-modal .modal-body::-webkit-scrollbar-thumb {
+  background: var(--ajm-primary);
+  border-radius: 4px;
+}
+
+/* Journal Info Cards */
+.auto-journal-modal .journal-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+  padding: 20px;
+  background: var(--ajm-bg-secondary);
+  border-radius: 16px;
+  border: 1px solid var(--ajm-border);
+  box-shadow: 0 4px 12px -4px var(--ajm-shadow);
+}
+
+.auto-journal-modal .journal-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--ajm-bg);
+  border-radius: 12px;
+  border: 1px solid var(--ajm-border-light);
+  transition: all 0.2s ease;
+}
+
+.auto-journal-modal .journal-info-item:hover {
+  border-color: var(--ajm-primary);
+  box-shadow: 0 4px 12px -4px rgba(13, 148, 136, 0.2);
+}
+
+.auto-journal-modal .journal-info-item label {
+  font-size: 0.65rem;
+  color: var(--ajm-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auto-journal-modal .journal-info-item span {
+  font-size: 0.85rem;
+  color: var(--ajm-text);
+  font-weight: 600;
+}
+
+/* Journal Table */
+.auto-journal-modal .journal-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px -8px var(--ajm-shadow);
+  border: 1px solid var(--ajm-border);
+}
+
+.auto-journal-modal .journal-table thead {
+  background: linear-gradient(135deg, var(--ajm-primary) 0%, var(--ajm-primary-dark) 100%);
+  color: white;
+}
+
+.auto-journal-modal .journal-table th {
+  padding: 10px 12px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: none;
+}
+
+.auto-journal-modal .journal-table th:first-child {
+  border-radius: 0 16px 0 0;
+}
+
+.auto-journal-modal .journal-table th:last-child {
+  border-radius: 16px 0 0 0;
+}
+
+.auto-journal-modal .journal-table tbody {
+  background: var(--ajm-bg);
+}
+
+.auto-journal-modal .journal-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.auto-journal-modal .journal-table tbody tr:nth-child(even) {
+  background: var(--ajm-row-alt);
+}
+
+.auto-journal-modal .journal-table tbody tr:hover {
+  background: var(--ajm-row-hover);
+}
+
+.auto-journal-modal .journal-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ajm-border-light);
+  font-size: 0.8rem;
+  color: var(--ajm-text);
+  vertical-align: middle;
+}
+
+.auto-journal-modal .journal-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Debit/Credit Styling */
+.auto-journal-modal .journal-table .debit {
+  color: var(--ajm-debit);
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.auto-journal-modal .journal-table .credit {
+  color: var(--ajm-credit);
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Footer Row */
+.auto-journal-modal .journal-table tfoot {
+  background: var(--ajm-bg-tertiary);
+}
+
+.auto-journal-modal .journal-table tfoot td {
+  padding: 10px 12px;
+  border-top: 2px solid var(--ajm-primary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ajm-text);
+}
+
+/* No Journal State */
+.auto-journal-modal .no-journal {
+  text-align: center;
+  padding: 60px 32px;
+  color: var(--ajm-text-secondary);
+}
+
+.auto-journal-modal .no-journal i {
+  font-size: 5rem;
+  color: var(--ajm-text-muted);
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.auto-journal-modal .no-journal p {
+  font-size: 1.15rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Button style for "صورة الحركة" */
+.btn-journal-view {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 10px 20px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.5) !important;
+}
+
+.btn-journal-view:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px -4px rgba(124, 58, 237, 0.5) !important;
+}
+
+.btn-journal-view:active:not(:disabled) {
+  transform: translateY(0) !important;
+}
+
+.btn-journal-view:disabled {
+  background: var(--ajm-text-muted) !important;
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+  box-shadow: none !important;
+}
+
+/* Currency type badges */
+.currency-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  min-width: 40px;
+}
+
+.currency-badge.cash {
+  background: var(--ajm-cash-bg);
+  color: var(--ajm-cash);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.currency-badge.gold {
+  background: var(--ajm-gold-bg);
+  color: var(--ajm-gold);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.currency-badge.silver {
+  background: var(--ajm-bg-tertiary);
+  color: var(--ajm-text-secondary);
+  border: 1px solid var(--ajm-border);
+}
+
+/* Row number styling */
+.auto-journal-modal .journal-table td:first-child {
+  font-weight: 700;
+  color: var(--ajm-text-muted);
+  text-align: center;
+  width: 50px;
+}
+
+/* Karat badge */
+.karat-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 35px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auto-journal-modal .modal-content {
+    width: 96%;
+    max-height: 92vh;
+    border-radius: 16px;
+  }
+  
+  .auto-journal-modal .modal-header {
+    padding: 18px 20px;
+  }
+  
+  .auto-journal-modal .modal-body {
+    padding: 20px;
+  }
+  
+  .auto-journal-modal .journal-info {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .auto-journal-modal .journal-table th,
+  .auto-journal-modal .journal-table td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+}

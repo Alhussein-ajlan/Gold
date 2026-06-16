@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>قائمة الدخل</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active" id="panel-income-statement" role="tabpanel" aria-labelledby="tab-income-statement">
+        <div class="is-topbar">
+          <div class="is-title">
+            <i class="fa-solid fa-chart-column"></i>
+            <h2>قائمة الدخل</h2>
+          </div>
+          <div class="is-actions">
+            <button class="is-btn" id="btnIsRefresh" type="button" title="تحديث">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>تحديث</span>
+            </button>
+            <button class="is-btn is-btn-icon is-excel" id="btnIsExportExcel" type="button" title="تصدير Excel" disabled>
+              <i class="fa-solid fa-file-excel"></i>
+            </button>
+            <button class="is-btn is-btn-icon is-pdf" id="btnIsExportPdf" type="button" title="تصدير PDF" disabled>
+              <i class="fa-solid fa-file-pdf"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="isFiltersCard">
+          <div class="is-filter-grid">
+            <div class="is-filter-group">
+              <div class="is-filter-title">الفترة الأساسية</div>
+              <label class="form-field">
+                <span>من تاريخ</span>
+                <input type="date" id="isFrom1">
+              </label>
+              <label class="form-field">
+                <span>إلى تاريخ</span>
+                <input type="date" id="isTo1">
+              </label>
+            </div>
+            <div class="is-filter-group">
+              <div class="is-filter-title">فترة المقارنة (اختياري)</div>
+              <label class="form-field">
+                <span>من تاريخ</span>
+                <input type="date" id="isFrom2">
+              </label>
+              <label class="form-field">
+                <span>إلى تاريخ</span>
+                <input type="date" id="isTo2">
+              </label>
+            </div>
+            <div class="is-filter-actions">
+              <button class="is-btn is-primary premium-view-btn" id="btnIsView" type="button">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>عرض</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card table-card fullwide" id="isGrid">
+          <div class="table-head">
+            <h3>نتائج قائمة الدخل</h3>
+            <div class="head-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" id="isSearch" aria-label="بحث">
+            </div>
+            <div class="row">
+              <button class="icon-btn" id="btnIsPrint" title="طباعة" disabled><i class="fa-solid fa-print"></i></button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="isTable" data-format-numbers>
+              <thead>
+                <tr>
+                  <th>البند</th>
+                  <th>الفترة الأساسية</th>
+                  <th>فترة المقارنة</th>
+                  <th>الفرق</th>
+                  <th>نسبة التغير</th>
+                </tr>
+              </thead>
+              <tbody id="isTableBody">
+                <tr>
+                  <td colspan="5" style="text-align:center; padding: 40px; color: var(--subtle);">لا توجد بيانات</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

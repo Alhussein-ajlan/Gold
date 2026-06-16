@@ -1,0 +1,205 @@
+{
+  "movement": {
+    "languageChanged": "تم تغيير اللغة إلى {lang}",
+    "title": "الحركة",
+    "filters": {
+      "typeLabel": "نوع الحركة",
+      "typeOptions": {
+        "all": "الجميع",
+        "sales": "فواتير المبيعات",
+        "purchases": "فواتير المشتريات",
+        "receipts": "سندات القبض",
+        "vouchers": "سندات الصرف",
+        "journals": "القيود اليومية"
+      },
+      "goldKaratLabel": "عيار الذهب",
+      "karatLabel": "عيار الذهب",
+      "goldKaratOptions": {
+        "24": "24 صافي",
+        "22": "22",
+        "21": "21",
+        "18": "18"
+      },
+      "karatOptions": {
+        "24": "24 صافي",
+        "22": "22",
+        "21": "21",
+        "18": "18"
+      },
+      "silverKaratLabel": "عيار الفضة",
+      "silverKaratOptions": {
+        "999": "999 صافي",
+        "925": "925",
+        "900": "900",
+        "800": "800"
+      },
+      "dateFromLabel": "من تاريخ",
+      "dateToLabel": "إلى تاريخ"
+    },
+    "buttons": {
+      "view": "عرض",
+      "compact": "ضغط المستوى {level}",
+      "print": "طباعة",
+      "printTitle": "طباعة الحركة",
+      "close": "إغلاق",
+      "closeTitle": "إغلاق"
+    },
+    "karatNotice": {
+      "title": "ملاحظة:",
+      "text": "جميع أوزان الذهب معروضة بعيار {karat}",
+      "goldText": "جميع أوزان الذهب معروضة بعيار",
+      "silverText": "جميع أوزان الفضة معروضة بعيار",
+      "separator": "و"
+    },
+    "table": {
+      "headers": {
+        "date": "التاريخ",
+        "docNo": "رقم المستند",
+        "operationType": "نوع العملية",
+        "party": "الطرف",
+        "description": "البيان",
+        "karat": "العيار",
+        "cashDebit": "مدين ريال",
+        "cashCredit": "دائن ريال",
+        "goldDebit": "مدين ذهب",
+        "goldCredit": "دائن ذهب",
+        "silverDebit": "مدين فضة",
+        "silverCredit": "دائن فضة"
+      }
+    },
+    "states": {
+      "initialHint": "اختر نوع الحركة والمدة ثم اضغط على زر \"عرض\"",
+      "loading": "جاري تحميل البيانات...",
+      "emptyTitle": "لا توجد بيانات",
+      "emptyHint": "لم يتم العثور على حركات في المدة المحددة"
+    },
+    "summary": {
+      "cashDebit": "مدين ريال",
+      "cashCredit": "دائن ريال",
+      "goldDebit": "مدين ذهب",
+      "goldCredit": "دائن ذهب",
+      "silverDebit": "مدين فضة",
+      "silverCredit": "دائن فضة"
+    },
+    "drawer": {
+      "detailsTitle": "تفاصيل الحركة",
+      "totalDebit": "إجمالي المدين",
+      "totalCredit": "إجمالي الدائن",
+      "totalCash": "إجمالي النقد",
+      "totalGold": "إجمالي الذهب",
+      "totalSilver": "إجمالي الفضة"
+    },
+    "chips": {
+      "type": "النوع: {value}",
+      "karat": "العيار: {value}",
+      "dateRange": "{from} - {to}"
+    },
+    "badges": {
+      "sales": "بيع",
+      "salesEn": "SELL",
+      "purchases": "شراء",
+      "purchasesEn": "BUY",
+      "receipts": "سند قبض",
+      "vouchers": "سند صرف",
+      "journals": "قيد يومية"
+    },
+    "details": {
+      "showDetails": "عرض التفاصيل",
+      "row": "صف",
+      "rows": "صفوف",
+      "headers": {
+        "customer": "العميل/المورد",
+        "item": "الصنف",
+        "description": "البيان",
+        "karat": "العيار",
+        "cash": "الريال",
+        "gold": "الذهب",
+        "silver": "الفضة",
+        "account": "الحساب",
+        "currencyType": "نوع العملة",
+        "debit": "مدين",
+        "credit": "دائن",
+        "party": "الطرف"
+      }
+    },
+    "groups": {
+      "sales": "فواتير المبيعات",
+      "purchases": "فواتير المشتريات",
+      "receipts": "سندات القبض",
+      "vouchers": "سندات الصرف",
+      "journals": "القيود اليومية"
+    },
+    "totals": {
+      "sales": "إجمالي المبيعات",
+      "purchases": "إجمالي المشتريات",
+      "receipts": "إجمالي القبض",
+      "vouchers": "إجمالي الصرف",
+      "journals": "إجمالي القيود",
+      "group": "إجمالي {type}",
+      "grand": "الإجمالي الكلي"
+    },
+    "print": {
+      "title": "تقرير الحركة - {type}",
+      "allMovements": "جميع الحركات",
+      "company": {
+        "name": "اسم الشركة:",
+        "taxNo": "الرقم الضريبي:",
+        "address": "العنوان:"
+      },
+      "filters": {
+        "dateFrom": "من تاريخ",
+        "dateTo": "إلى تاريخ",
+        "goldKarat": "عيار الذهب",
+        "silverKarat": "عيار الفضة",
+        "branchScope": "نطاق الفرع"
+      },
+      "branchLabels": {
+        "allBranches": "كل الفروع"
+      },
+      "table": {
+        "index": "#",
+        "date": "التاريخ",
+        "docNo": "رقم المستند",
+        "operationType": "نوع العملية",
+        "party": "الطرف",
+        "description": "البيان",
+        "karat": "العيار",
+        "cashDebit": "مدين ريال",
+        "cashCredit": "دائن ريال",
+        "goldDebit": "مدين ذهب",
+        "goldCredit": "دائن ذهب",
+        "silverDebit": "مدين فضة",
+        "silverCredit": "دائن فضة"
+      },
+      "totals": {
+        "title": "الإجماليات",
+        "description": "البيان",
+        "totalCashDebit": "إجمالي مدين ريال",
+        "totalCashCredit": "إجمالي دائن ريال",
+        "totalGoldDebit": "إجمالي مدين ذهب",
+        "totalGoldCredit": "إجمالي دائن ذهب",
+        "totalSilverDebit": "إجمالي مدين فضة",
+        "totalSilverCredit": "إجمالي دائن فضة",
+        "grandTotal": "الإجمالي العام"
+      },
+      "printButton": "طباعة",
+      "noData": "لا توجد بيانات"
+    },
+    "errors": {
+      "missingDates": "الرجاء تحديد المدة الزمنية",
+      "loadingError": "حدث خطأ أثناء تحميل البيانات",
+      "noPrintData": "الرجاء عرض البيانات أولاً قبل الطباعة",
+      "noDataToPrint": "لا توجد بيانات للطباعة",
+      "popupBlocked": "الرجاء السماح بفتح النوافذ المنبثقة",
+      "printError": "حدث خطأ أثناء إنشاء معاينة الطباعة"
+    },
+    "permissions": {
+      "view": "عرض الحركة",
+      "print": "طباعة الحركة"
+    },
+    "entityLabels": {
+      "customer": "عميل #{id}",
+      "supplier": "مورد #{id}"
+    }
+  }
+}

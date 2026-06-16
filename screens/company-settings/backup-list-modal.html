@@ -1,0 +1,67 @@
+<!-- Backup List Modal -->
+<div id="backupListModal" class="modal-overlay backup-modal" aria-hidden="true">
+  <div class="modal-dialog backup-list-dialog" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-list"></i> <span data-i18n="backupListTitle">النسخ الاحتياطية المحفوظة</span></h3>
+      <button class="modal-close" id="btnCloseBackupList" data-i18n-title="close" title="إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Search and Filter -->
+      <div class="backup-controls">
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="backupSearch" data-i18n-placeholder="searchBackup" placeholder="ابحث عن نسخة احتياطية..." />
+        </div>
+        <div class="backup-stats">
+          <span class="stat-badge">
+            <i class="fa-solid fa-database"></i>
+            <span data-i18n="total">إجمالي:</span> <strong id="totalBackups">0</strong>
+          </span>
+          <span class="stat-badge">
+            <i class="fa-solid fa-hard-drive"></i>
+            <span data-i18n="size">الحجم:</span> <strong id="totalSize">0 MB</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Backup Table -->
+      <div class="backup-table-wrapper">
+        <table class="backup-table">
+          <thead>
+            <tr>
+              <th class="col-icon"></th>
+              <th class="col-name" data-i18n="backupName">اسم النسخة</th>
+              <th class="col-date" data-i18n="date">التاريخ</th>
+              <th class="col-time" data-i18n="time">الوقت</th>
+              <th class="col-size" data-i18n="size">الحجم</th>
+              <th class="col-actions" data-i18n="actions">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="backupTableBody">
+            <!-- Rows will be inserted here -->
+            <tr class="no-data">
+              <td colspan="6">
+                <div class="no-data-message">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p data-i18n="noBackups">لا توجد نسخ احتياطية متوفرة</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn secondary" id="btnRefreshBackupList">
+        <i class="fa-solid fa-rotate"></i> <span data-i18n="refresh">تحديث</span>
+      </button>
+      <button class="btn primary" id="btnCloseBackupListFooter">
+        <i class="fa-solid fa-check"></i> <span data-i18n="ok">موافق</span>
+      </button>
+    </div>
+  </div>
+</div>

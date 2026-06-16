@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>الميزانية العمومية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active" id="panel-balance-sheet" role="tabpanel" aria-labelledby="tab-balance-sheet">
+        
+        <!-- Filters Card (TOP) -->
+        <div class="bs-filters-card" id="bsFiltersCard">
+          <div class="bs-filters-header">
+            <div class="bs-filters-title">
+              <i class="fa-solid fa-filter"></i>
+              <span id="filtersTitle">خيارات العرض</span>
+            </div>
+            <div class="bs-filters-actions">
+              <button class="bs-btn bs-btn-icon" id="btnBsRefresh" type="button" title="تحديث">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+              <button class="bs-btn bs-btn-icon bs-excel" id="btnBsExportExcel" type="button" title="تصدير Excel" disabled>
+                <i class="fa-solid fa-file-excel"></i>
+              </button>
+              <button class="bs-btn bs-btn-icon bs-pdf" id="btnBsExportPdf" type="button" title="تصدير PDF" disabled>
+                <i class="fa-solid fa-file-pdf"></i>
+              </button>
+            </div>
+          </div>
+          <div class="bs-filters-body">
+            <div class="bs-filter-item">
+              <label class="bs-filter-label" id="labelAsOfDate">حتى تاريخ</label>
+              <input type="date" class="bs-filter-input" id="bsAsOfDate">
+            </div>
+            
+            <div class="bs-filter-item">
+              <label class="bs-filter-label" id="labelCompareDate">تاريخ المقارنة</label>
+              <input type="date" class="bs-filter-input" id="bsCompareDate">
+            </div>
+            
+            <div class="bs-filter-item">
+              <label class="bs-filter-label" id="labelOpening">الافتتاحية</label>
+              <select class="bs-filter-select" id="bsIncludeOpening">
+                <option value="yes" id="optOpeningYes">نعم</option>
+                <option value="no" id="optOpeningNo">لا</option>
+              </select>
+            </div>
+            
+            <div class="bs-filter-item">
+              <label class="bs-filter-label" id="labelEmptyAccounts">الحسابات الفارغة</label>
+              <select class="bs-filter-select" id="bsShowEmpty">
+                <option value="hide" id="optEmptyHide">إخفاء</option>
+                <option value="show" id="optEmptyShow">عرض</option>
+              </select>
+            </div>
+            
+            <div class="bs-filter-item">
+              <label class="bs-filter-label" id="labelDetailLevel">مستوى التفصيل</label>
+              <select class="bs-filter-select" id="bsDetailLevel">
+                <option value="detailed" id="optDetailDetailed">تفصيلي</option>
+                <option value="summary" id="optDetailSummary">ملخص</option>
+                <option value="groups" id="optDetailGroups">المجموعات فقط</option>
+              </select>
+            </div>
+            
+            <div class="bs-filter-item bs-filter-action">
+              <button class="bs-btn bs-primary bs-btn-view premium-view-btn" id="btnBsView" type="button">
+                <i class="fa-solid fa-building-columns"></i>
+                <span id="btnViewText">عرض</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Cards (5 cards in one row) -->
+        <div class="bs-summary-cards bs-hidden-until-view" id="summaryCardsSection">
+          <div class="bs-summary-card bs-card-assets">
+            <div class="bs-card-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="bs-card-info">
+              <span class="bs-card-label" id="cardAssetsLabel">إجمالي الأصول</span>
+              <span class="bs-card-value" id="cardAssetsValue">0.00</span>
+            </div>
+          </div>
+          <div class="bs-summary-card bs-card-liabilities">
+            <div class="bs-card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="bs-card-info">
+              <span class="bs-card-label" id="cardLiabilitiesLabel">إجمالي الخصوم</span>
+              <span class="bs-card-value" id="cardLiabilitiesValue">0.00</span>
+            </div>
+          </div>
+          <div class="bs-summary-card bs-card-equity">
+            <div class="bs-card-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="bs-card-info">
+              <span class="bs-card-label" id="cardEquityLabel">حقوق الملكية</span>
+              <span class="bs-card-value" id="cardEquityValue">0.00</span>
+            </div>
+          </div>
+          <div class="bs-summary-card bs-card-profit">
+            <div class="bs-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="bs-card-info">
+              <span class="bs-card-label" id="cardProfitLabel">صافي الربح</span>
+              <span class="bs-card-value" id="cardProfitValue">0.00</span>
+            </div>
+          </div>
+          <div class="bs-summary-card bs-card-balance" id="balanceCard">
+            <div class="bs-card-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div class="bs-card-info">
+              <span class="bs-card-label" id="balanceCardTitle">حالة التوازن</span>
+              <div class="bs-balance-mini">
+                <span class="bs-balance-badge" id="balanceBadge">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span id="balanceBadgeText">متوازنة</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance Status & Analysis Cards -->
+        <div class="bs-analysis-row bs-hidden-until-view" id="analysisCardsSection">
+          <!-- بطاقة حالة التوازن -->
+          <div class="bs-balance-status-card" id="balanceStatusCard">
+            <div class="bs-status-header">
+              <i class="fa-solid fa-circle-check"></i>
+              <span id="statusHeaderText">حالة التوازن</span>
+            </div>
+            <div class="bs-status-title" id="statusTitle">الميزانية متزنة</div>
+            <div class="bs-status-desc" id="statusDesc">إجمالي الأصول يساوي مجموع الخصوم وحقوق الملكية بشكل دقيق.</div>
+            <div class="bs-status-comparison">
+              <div class="bs-status-item">
+                <span class="bs-status-label" id="statusAssetsLabel">الأصول</span>
+                <span class="bs-status-value" id="statusAssetsValue">0.00</span>
+              </div>
+              <div class="bs-status-equals">=</div>
+              <div class="bs-status-item">
+                <span class="bs-status-label" id="statusLiabLabel">الخصوم + الملكية</span>
+                <span class="bs-status-value" id="statusLiabValue">0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة تحليل المكونات المالية -->
+          <div class="bs-components-card" id="componentsCard">
+            <div class="bs-components-header">
+              <i class="fa-solid fa-chart-pie"></i>
+              <span id="componentsTitle">تحليل المكونات المالية</span>
+            </div>
+            
+            <!-- شريط الأصول -->
+            <div class="bs-component-section">
+              <div class="bs-component-header">
+                <span class="bs-component-name" id="assetsBarLabel">إجمالي الأصول</span>
+                <span class="bs-component-percent" id="assetsBarPercent">100%</span>
+              </div>
+              <div class="bs-component-bar">
+                <div class="bs-bar-segment bs-bar-current" id="currentAssetsBar" style="width: 60%"></div>
+                <div class="bs-bar-segment bs-bar-fixed" id="fixedAssetsBar" style="width: 40%"></div>
+              </div>
+              <div class="bs-bar-legend">
+                <span class="bs-legend-item"><span class="bs-legend-dot bs-dot-current"></span> <span id="currentAssetsLegend">متداولة</span></span>
+                <span class="bs-legend-item"><span class="bs-legend-dot bs-dot-fixed"></span> <span id="fixedAssetsLegend">غير متداولة</span></span>
+              </div>
+            </div>
+
+            <!-- شريط الخصوم وحقوق الملكية -->
+            <div class="bs-component-section">
+              <div class="bs-component-header">
+                <span class="bs-component-name" id="liabBarLabel">الخصوم وحقوق الملكية</span>
+                <span class="bs-component-percent" id="liabBarPercent">100%</span>
+              </div>
+              <div class="bs-component-bar">
+                <div class="bs-bar-segment bs-bar-liab" id="liabilitiesBar" style="width: 40%"></div>
+                <div class="bs-bar-segment bs-bar-equity" id="equityBar" style="width: 60%"></div>
+              </div>
+              <div class="bs-bar-legend">
+                <span class="bs-legend-item"><span class="bs-legend-dot bs-dot-liab"></span> <span id="liabLegend">الخصوم</span></span>
+                <span class="bs-legend-item"><span class="bs-legend-dot bs-dot-equity"></span> <span id="equityLegend">الملكية</span></span>
+              </div>
+            </div>
+
+            <!-- ملاحظة تحليلية -->
+            <div class="bs-analysis-note" id="analysisNote">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span id="analysisNoteText">"تحسّن نسبة حقوق الملكية بمقدار 2.4% مقارنة بالربع السابق، مما يشير إلى زيادة في الاستقرار المالي طويل الأمد."</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="bs-content bs-hidden-until-view" id="bsContent">
+          <!-- الجانب الأيمن: الأصول -->
+          <div class="bs-side bs-assets">
+            <div class="bs-side-header">
+              <h3 id="assetsTitle">الأصول</h3>
+              <span class="bs-side-total" id="totalAssets">0.00</span>
+            </div>
+            <div class="bs-table-wrapper">
+              <table class="bs-table">
+                <thead>
+                  <tr>
+                    <th id="colCode">الرمز</th>
+                    <th id="colName">اسم الحساب</th>
+                    <th id="colBalance">الرصيد</th>
+                  </tr>
+                </thead>
+                <tbody id="assetsBody">
+                </tbody>
+              </table>
+              <div class="bs-empty-state" id="assetsEmpty">
+                <i class="fa-solid fa-building-columns"></i>
+                <span id="assetsEmptyText">لا توجد بيانات</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- الجانب الأيسر: الخصوم وحقوق الملكية -->
+          <div class="bs-side bs-liabilities">
+            <div class="bs-side-header">
+              <h3 id="liabilitiesTitle">الخصوم وحقوق الملكية</h3>
+              <span class="bs-side-total" id="totalLiabilities">0.00</span>
+            </div>
+            <div class="bs-table-wrapper">
+              <table class="bs-table">
+                <thead>
+                  <tr>
+                    <th id="colCode2">الرمز</th>
+                    <th id="colName2">اسم الحساب</th>
+                    <th id="colBalance2">الرصيد</th>
+                  </tr>
+                </thead>
+                <tbody id="liabilitiesBody">
+                </tbody>
+              </table>
+              <div class="bs-empty-state" id="liabilitiesEmpty">
+                <i class="fa-solid fa-landmark"></i>
+                <span id="liabilitiesEmptyText">لا توجد بيانات</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

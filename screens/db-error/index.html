@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>خطأ في قاعدة البيانات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #e2e8f0;
+    }
+    
+    .error-container {
+      background: linear-gradient(145deg, #1e293b, #334155);
+      border-radius: 24px;
+      box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    /* Header */
+    .error-header {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      padding: 28px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .error-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.3; }
+    }
+    
+    .error-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      position: relative;
+      animation: iconBounce 2s ease-in-out infinite;
+    }
+    
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .error-icon i {
+      font-size: 40px;
+      color: #fff;
+    }
+    
+    .error-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .error-header p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      position: relative;
+    }
+    
+    /* Body */
+    .error-body {
+      padding: 28px 32px;
+    }
+    
+    /* Error Details */
+    .error-details {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-row .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      min-width: 60px;
+    }
+    
+    .detail-row .value {
+      font-size: 12px;
+      color: #fca5a5;
+      word-break: break-all;
+      font-family: 'Consolas', 'Monaco', monospace;
+      direction: ltr;
+      text-align: left;
+    }
+    
+    /* Options Grid */
+    .options-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .options-title i {
+      color: #3b82f6;
+    }
+    
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .option-btn {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+    
+    .option-btn:hover {
+      background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .option-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    .option-btn .icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    
+    .option-btn.create .icon-wrapper {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+    }
+    
+    .option-btn.restore .icon-wrapper {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+    }
+    
+    .option-btn.browse .icon-wrapper {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+    }
+    
+    .option-btn.retry .icon-wrapper {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: #fff;
+    }
+    
+    .option-btn .option-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    
+    .option-btn .option-desc {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    
+    /* Status Message */
+    .status-message {
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .status-message.show { display: flex; }
+    
+    .status-message.loading {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+    }
+    
+    .status-message.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+    
+    .status-message.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+    
+    .status-message i {
+      font-size: 18px;
+    }
+    
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Footer */
+    .error-footer {
+      padding: 20px 32px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: center;
+    }
+    
+    .close-btn {
+      background: linear-gradient(135deg, #475569, #334155);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+    
+    .close-btn:hover {
+      background: linear-gradient(135deg, #64748b, #475569);
+      transform: translateY(-2px);
+    }
+    
+    /* Backup List */
+    .backup-list {
+      display: none;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    
+    .backup-list.show { display: block; }
+    
+    .backup-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 6px;
+    }
+    
+    .backup-item:last-child { margin-bottom: 0; }
+    
+    .backup-item:hover {
+      background: rgba(245, 158, 11, 0.15);
+    }
+    
+    .backup-item .backup-name {
+      font-size: 12px;
+      color: #e2e8f0;
+      font-family: 'Consolas', monospace;
+    }
+    
+    .backup-item .backup-date {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .backup-item .restore-icon {
+      color: #f59e0b;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <!-- Header -->
+    <div class="error-header">
+      <div class="error-icon">
+        <i class="fa-solid fa-database"></i>
+      </div>
+      <h1>خطأ في الاتصال بقاعدة البيانات</h1>
+      <p>فشل النظام في الوصول إلى قاعدة البيانات</p>
+    </div>
+    
+    <!-- Body -->
+    <div class="error-body">
+      <!-- Error Details -->
+      <div class="error-details">
+        <div class="detail-row">
+          <span class="label">المسار:</span>
+          <span class="value" id="dbPath">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">الخطأ:</span>
+          <span class="value" id="dbError">unable to open database file</span>
+        </div>
+      </div>
+      
+      <!-- Status Message -->
+      <div class="status-message" id="statusMessage">
+        <div class="spinner"></div>
+        <span id="statusText">جاري المعالجة...</span>
+      </div>
+      
+      <!-- Options -->
+      <div class="options-title">
+        <i class="fa-solid fa-wrench"></i>
+        خيارات الإصلاح
+      </div>
+      
+      <div class="options-grid">
+        <button class="option-btn create" id="btnCreate">
+          <div class="icon-wrapper"><i class="fa-solid fa-plus"></i></div>
+          <span class="option-title">إنشاء قاعدة بيانات جديدة</span>
+          <span class="option-desc">بدء نظام جديد فارغ</span>
+        </button>
+        
+        <button class="option-btn restore" id="btnRestore">
+          <div class="icon-wrapper"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <span class="option-title">استعادة نسخة احتياطية</span>
+          <span class="option-desc">استرجاع من النسخ المحفوظة</span>
+        </button>
+        
+        <button class="option-btn browse" id="btnBrowse">
+          <div class="icon-wrapper"><i class="fa-solid fa-folder-open"></i></div>
+          <span class="option-title">تصفح واختيار ملف</span>
+          <span class="option-desc">اختيار قاعدة بيانات موجودة</span>
+        </button>
+        
+        <button class="option-btn retry" id="btnRetry">
+          <div class="icon-wrapper"><i class="fa-solid fa-rotate"></i></div>
+          <span class="option-title">إعادة المحاولة</span>
+          <span class="option-desc">محاولة الاتصال مرة أخرى</span>
+        </button>
+      </div>
+      
+      <!-- Backup List (hidden by default) -->
+      <div class="backup-list" id="backupList"></div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="error-footer">
+      <button class="close-btn" id="btnClose">
+        <i class="fa-solid fa-xmark"></i>
+        إغلاق البرنامج
+      </button>
+    </div>
+  </div>
+  
+  <script>
+    // Get error info from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const dbPathEl = document.getElementById('dbPath');
+    const dbErrorEl = document.getElementById('dbError');
+    const statusMessage = document.getElementById('statusMessage');
+    const statusText = document.getElementById('statusText');
+    const backupListEl = document.getElementById('backupList');
+    
+    // Set error details
+    if (urlParams.get('path')) {
+      dbPathEl.textContent = decodeURIComponent(urlParams.get('path'));
+    }
+    if (urlParams.get('error')) {
+      dbErrorEl.textContent = decodeURIComponent(urlParams.get('error'));
+    }
+    
+    // Helper: Show status
+    function showStatus(type, message) {
+      statusMessage.className = 'status-message show ' + type;
+      if (type === 'loading') {
+        statusMessage.innerHTML = '<div class="spinner"></div><span>' + message + '</span>';
+      } else {
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        statusMessage.innerHTML = '<i class="fa-solid ' + icon + '"></i><span>' + message + '</span>';
+      }
+    }
+    
+    function hideStatus() {
+      statusMessage.className = 'status-message';
+    }
+    
+    // Create new database
+    document.getElementById('btnCreate').addEventListener('click', async () => {
+      showStatus('loading', 'جاري إنشاء قاعدة بيانات جديدة...');
+      try {
+        const result = await window.dbRecovery.createNew();
+        if (result.success) {
+          showStatus('success', 'تم إنشاء قاعدة البيانات بنجاح! جاري إعادة التشغيل...');
+          setTimeout(() => {
+            window.api.invoke('app:restart');
+          }, 1500);
+        } else {
+          showStatus('error', 'فشل الإنشاء: ' + (result.error || 'خطأ غير معروف'));
+        }
+      } catch (err) {
+        showStatus('error', 'خطأ: ' + err.message);
+      }
+    });
+    
+    // Restore from backup
+    document.getElementById('btnRestore').addEventListener('click', async () => {
+      showStatus('loading', 'جاري البحث عن النسخ الاحتياطية...');
+      try {
+        const result = await window.dbRecovery.listBackups();
+        hideStatus();
+        
+        if (result.success && result.backups && result.backups.length > 0) {
+          backupListEl.innerHTML = '';
+          result.backups.forEach(backup => {
+            const item = document.createElement('div');
+            item.className = 'backup-item';
+            item.innerHTML = `
+              <div>
+                <div class="backup-name">${backup.name}</div>
+                <div class="backup-date">${backup.date}</div>
+              </div>
+              <i class="fa-solid fa-rotate-left restore-icon"></i>
+            `;
+            item.addEventListener('click', () => restoreBackup(backup.path));
+            backupListEl.appendChild(item);
+          });
+          backupListEl.classList.add('show');
+        } else {
+          showStatus('error', 'لا توجد نسخ احتياطية متاحة');
+        }
+      } catch (err) {
+        showStatus('error', 'خطأ: ' + err.message);
+      }
+    });
+    
+    async function restoreBackup(backupPath) {
+      showStatus('loading', 'جاري استعادة النسخة الاحتياطية...');
+      try {
+        const result = await window.dbRecovery.restoreBackup(backupPath);
+        if (result.success) {
+          showStatus('success', 'تم استعادة النسخة بنجاح! جاري إعادة التشغيل...');
+          setTimeout(() => {
+            window.api.invoke('app:restart');
+          }, 1500);
+        } else {
+          showStatus('error', 'فشل الاستعادة: ' + (result.error || 'خطأ غير معروف'));
+        }
+      } catch (err) {
+        showStatus('error', 'خطأ: ' + err.message);
+      }
+    }
+    
+    // Browse for database
+    document.getElementById('btnBrowse').addEventListener('click', async () => {
+      try {
+        const result = await window.dbRecovery.browse();
+        if (result.success && result.path) {
+          showStatus('loading', 'جاري الاتصال بقاعدة البيانات...');
+          const connectResult = await window.dbRecovery.connect(result.path);
+          if (connectResult.success) {
+            showStatus('success', 'تم الاتصال بنجاح! جاري إعادة التشغيل...');
+            setTimeout(() => {
+              window.api.invoke('app:restart');
+            }, 1500);
+          } else {
+            showStatus('error', 'فشل الاتصال: ' + (connectResult.error || 'خطأ غير معروف'));
+          }
+        }
+      } catch (err) {
+        showStatus('error', 'خطأ: ' + err.message);
+      }
+    });
+    
+    // Retry connection
+    document.getElementById('btnRetry').addEventListener('click', async () => {
+      showStatus('loading', 'جاري إعادة محاولة الاتصال...');
+      try {
+        const result = await window.dbRecovery.retry();
+        if (result.success) {
+          showStatus('success', 'تم الاتصال بنجاح! جاري إعادة التشغيل...');
+          setTimeout(() => {
+            window.api.invoke('app:restart');
+          }, 1500);
+        } else {
+          showStatus('error', 'فشل الاتصال: ' + (result.error || 'لا يمكن الوصول لقاعدة البيانات'));
+        }
+      } catch (err) {
+        showStatus('error', 'خطأ: ' + err.message);
+      }
+    });
+    
+    // Close application
+    document.getElementById('btnClose').addEventListener('click', () => {
+      window.api.invoke('app:quit');
+    });
+  </script>
+</body>
+</html>

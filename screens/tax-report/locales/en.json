@@ -1,0 +1,98 @@
+{
+  "taxReport": {
+    "title": "Tax Report",
+    "subtitle": "VAT Report",
+    "filters": {
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "reportType": "Report Type",
+      "invoiceType": "Invoice Type",
+      "metalType": "Metal Type",
+      "paymentType": "Payment Type",
+      "taxFilter": "Tax Filter",
+      "view": "View"
+    },
+    "reportTypes": {
+      "all": "All",
+      "sales": "Sales Only",
+      "purchases": "Purchases Only"
+    },
+    "invoiceTypes": {
+      "all": "All",
+      "taskir": "Taskir",
+      "worked": "Worked"
+    },
+    "metalTypes": {
+      "all": "All",
+      "gold": "Gold",
+      "silver": "Silver"
+    },
+    "paymentTypes": {
+      "all": "All",
+      "cash": "Cash",
+      "credit": "Credit"
+    },
+    "taxFilters": {
+      "all": "All",
+      "taxable": "Taxable Only",
+      "zero": "Zero Tax Only"
+    },
+    "summary": {
+      "title": "Tax Summary",
+      "sales": "Sales (Output)",
+      "purchases": "Purchases (Input)",
+      "netTax": "Net Tax",
+      "beforeTax": "Before Tax",
+      "taxableBeforeTax": "Taxable (Before Tax)",
+      "taxAmount": "Tax Amount",
+      "afterTax": "After Tax",
+      "zeroRated": "Zero-Rated Sales",
+      "payable": "Payable",
+      "refundable": "Refundable",
+      "riyal": "SAR"
+    },
+    "salesTable": {
+      "title": "Sales Details",
+      "invoiceNo": "Invoice No.",
+      "date": "Date",
+      "customer": "Customer",
+      "taxNo": "Tax No.",
+      "weight": "Weight",
+      "karat": "Karat",
+      "beforeTax": "Before Tax",
+      "taxRate": "Rate %",
+      "taxValue": "Tax Value",
+      "total": "Total",
+      "type": "Type",
+      "payment": "Payment",
+      "noData": "No sales invoices in the selected period"
+    },
+    "purchasesTable": {
+      "title": "Purchases Details",
+      "invoiceNo": "Invoice No.",
+      "date": "Date",
+      "supplier": "Supplier",
+      "taxNo": "Tax No.",
+      "weight": "Weight",
+      "karat": "Karat",
+      "beforeTax": "Before Tax",
+      "taxRate": "Rate %",
+      "taxValue": "Tax Value",
+      "total": "Total",
+      "type": "Type",
+      "payment": "Payment",
+      "noData": "No purchase invoices in the selected period"
+    },
+    "actions": {
+      "print": "Print",
+      "exportExcel": "Export Excel",
+      "refresh": "Refresh"
+    },
+    "messages": {
+      "selectDates": "Please select date range",
+      "loading": "Loading...",
+      "error": "Error loading data",
+      "noData": "No data in the selected period"
+    }
+  }
+}

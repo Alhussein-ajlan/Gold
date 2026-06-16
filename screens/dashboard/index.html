@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>لوحة التحكم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <style>
+      :root{
+        --dashboard-font: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .dashboard .grid.cards-3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:14px;height:auto;width:100%;}
+      body{font-family:var(--dashboard-font);}
+      .dashboard .card.form-card{width:100%;max-width:none;font-family:var(--dashboard-font);letter-spacing:.1px;}
+      .dashboard .card.form-card h1,
+      .dashboard .card.form-card h2,
+      .dashboard .card.form-card h3,
+      .dashboard .card.form-card p,
+      .dashboard .card.form-card span,
+      .dashboard .card.form-card button,
+      .dashboard .card.form-card .stat-number,
+      .dashboard .card.form-card .stat-label{
+        font-family:var(--dashboard-font);
+      }
+      .xau-card{width:100%}
+      .xau-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+      .xau-title{display:flex;align-items:center;gap:10px}
+      .xau-title .ico{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:rgba(255,209,102,.14);border:1px solid rgba(255,209,102,.22);color:#ffd166}
+      .xau-title .ico.silver{background:rgba(203,213,225,.10);border:1px solid rgba(203,213,225,.20);color:#cbd5e1}
+      html[data-theme='light'] .xau-title .ico.silver{background:rgba(100,116,139,.10);border:1px solid rgba(100,116,139,.22);color:#64748b}
+      .xau-title h3{margin:0;font-size:15px;font-weight:800;line-height:1.2}
+      .xau-title .sub{margin-top:2px;color:var(--subtle);font-size:12px}
+      .xau-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+      .xau-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--text);background:rgba(255,255,255,.04)}
+      .xau-badge.open{border-color:rgba(46,204,113,.25);background:rgba(46,204,113,.10);color:var(--success)}
+      .xau-badge.closed{border-color:rgba(255,107,107,.35);background:rgba(255,107,107,.12);color:var(--error)}
+      .xau-refresh{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,169,157,.18);background:linear-gradient(135deg, rgba(0,169,157,.18), rgba(0,199,182,.10));color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 10px 22px rgba(0,169,157,.12)}
+      .xau-refresh:hover{transform:translateY(-1px);box-shadow:0 14px 26px rgba(0,169,157,.18)}
+      .xau-refresh:active{transform:translateY(0)}
+      .xau-refresh[disabled]{opacity:.6;cursor:not-allowed;box-shadow:none}
+      .xau-refresh i{color:var(--primary)}
+      .xau-reconnect{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.04);box-shadow:none}
+      .xau-reconnect:hover{box-shadow:0 14px 26px rgba(148,163,184,.14)}
+      html[data-theme='light'] .xau-reconnect{background:rgba(15,23,42,.04)}
+      .xau-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:6px}
+      .xau-price{font-size:32px;font-weight:900;letter-spacing:.2px}
+      .xau-change{font-size:13px;color:var(--subtle);text-align:left}
+      .xau-chart{width:100%;height:84px;display:block;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.02);margin-top:10px}
+      .xau-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+      .xau-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
+      .xau-item .i{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:rgba(0,169,157,.14);border:1px solid rgba(0,169,157,.22);color:var(--primary)}
+      .xau-item .lbl{font-size:11px;color:var(--subtle);margin-bottom:2px}
+      .xau-item .val{font-size:12px;font-weight:800}
+      .xau-countdown{font-variant-numeric:tabular-nums}
+      @media (max-width:720px){
+        .dashboard .grid.cards-3{grid-template-columns:1fr}
+        .xau-card{width:100%}
+        .xau-grid{grid-template-columns:1fr}
+        .xau-price-row{flex-direction:column;align-items:flex-start}
+        .xau-change{text-align:right}
+      }
+
+      .card.form-card.xau-card{position:relative;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:radial-gradient(120% 140% at 0% 0%, rgba(0,169,157,.20), rgba(255,255,255,.05) 45%, rgba(255,255,255,.02) 100%);box-shadow:0 20px 56px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;padding:18px;transition:transform .18s ease, box-shadow .18s ease}
+      .card.form-card.xau-card::before{content:'';position:absolute;inset:-2px;background:radial-gradient(70% 55% at 25% 0%, rgba(255,255,255,.12), rgba(255,255,255,0) 70%);pointer-events:none}
+      .card.form-card.xau-card:hover{transform:translateY(-2px);box-shadow:0 28px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.08)}
+      .card.form-card.xau-card > *{position:relative}
+      .xau-price{font-size:34px;letter-spacing:.3px;text-shadow:0 10px 34px rgba(0,0,0,.35)}
+      .xau-chart{height:96px;border:1px solid rgba(148,163,184,.18);background:linear-gradient(180deg, rgba(2,6,23,.30), rgba(2,6,23,.08))}
+      .xau-item{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));border-color:rgba(148,163,184,.16)}
+      .xau-item .i{background:linear-gradient(135deg, rgba(0,169,157,.18), rgba(0,199,182,.10));border-color:rgba(0,169,157,.22)}
+      html[data-theme='light'] .card.form-card.xau-card{border-color:rgba(0,0,0,.08);background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(245,247,250,.92));box-shadow:0 16px 40px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.55)}
+      html[data-theme='light'] .xau-chart{background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.60))}
+
+      .mt5-orders-wrapper{margin-top:22px;width:100%;}
+      .mt5-orders-card{position:relative;border-radius:22px;padding:22px;border:1px solid rgba(148,163,184,.18);background:linear-gradient(135deg, rgba(15,23,42,.65), rgba(15,23,42,.45));box-shadow:0 25px 60px rgba(2,6,23,.55), inset 0 1px 0 rgba(255,255,255,.05);overflow:hidden}
+      .mt5-orders-card::after{content:'';position:absolute;inset:0;background:radial-gradient(80% 90% at 0% 0%, rgba(96,165,250,.25), rgba(37,99,235,0));opacity:.9;pointer-events:none}
+      .mt5-orders-card > *{position:relative}
+      .mt5-orders-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+      .mt5-orders-title{display:flex;align-items:center;gap:14px}
+      .mt5-chip{min-width:46px;height:46px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(59,130,246,.15), rgba(56,189,248,.08));border:1px solid rgba(59,130,246,.35);font-weight:800;color:#93c5fd;font-size:14px}
+      .mt5-orders-title h3{margin:0;font-size:18px;font-weight:900;font-family:var(--dashboard-font)}
+      .mt5-orders-title p{margin:4px 0 0;color:var(--subtle);font-size:13px;font-family:var(--dashboard-font)}
+      .mt5-orders-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+      .status-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid rgba(148,163,184,.25);background:rgba(255,255,255,.04);color:#cbd5f5}
+      .status-chip.idle{border-color:rgba(34,197,94,.4);color:#86efac;background:rgba(22,163,74,.15)}
+      .status-chip.loading{border-color:rgba(59,130,246,.4);color:#93c5fd;background:rgba(59,130,246,.12)}
+      .status-chip.error{border-color:rgba(248,113,113,.45);color:#fecaca;background:rgba(248,113,113,.12)}
+      .status-chip.disabled{border-color:rgba(148,163,184,.35);color:rgba(148,163,184,.95);background:rgba(148,163,184,.15)}
+      .mt5-updated{font-size:12px;color:var(--subtle)}
+      .mt5-refresh{border:none;background:transparent;color:#e0f2ff;padding:0;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:.2s}
+      .mt5-refresh:disabled{opacity:.6;cursor:not-allowed}
+      .mt5-refresh-toggle-label{font-size:12px;color:var(--subtle);white-space:nowrap}
+      .mt5-toggle-switch{position:relative;width:46px;height:24px;border-radius:999px;background:rgba(15,23,42,.7);border:1px solid rgba(148,163,184,.6);display:inline-flex;align-items:center;padding:2px;transition:.2s;box-shadow:0 6px 16px rgba(15,23,42,.55);overflow:hidden;direction:ltr}
+      .mt5-toggle-knob{width:20px;height:20px;border-radius:999px;background:#f9fafb;box-shadow:0 2px 6px rgba(15,23,42,.55);transform:translateX(0);transition:.22s ease-in-out}
+      .mt5-refresh.on .mt5-toggle-switch{background:#22c55e;border-color:#16a34a}
+      .mt5-refresh.on .mt5-toggle-knob{transform:translateX(20px)}
+      .mt5-orders-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}
+      .mt5-stat{position:relative;overflow:hidden;border-radius:20px;padding:16px;border:1px solid rgba(148,163,184,.45);background:linear-gradient(180deg, rgba(15,23,42,.75), rgba(15,23,42,.55));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+      .mt5-stat::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;pointer-events:none}
+      .mt5-stat.pending::before{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+      .mt5-stat.completed::before{background:linear-gradient(90deg,#22c55e,#4ade80)}
+      .mt5-stat .label{font-size:13px;color:var(--subtle);margin-bottom:6px;font-family:var(--dashboard-font)}
+      .mt5-stat .value{font-size:30px;font-weight:900;letter-spacing:.4px;font-family:var(--dashboard-font)}
+      .mt5-stat-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+      .mt5-stat-header .label{margin-bottom:0}
+      .mt5-stat-header .value{font-size:24px}
+      .mt5-pending-summary{display:flex;flex:1;justify-content:center;gap:10px;font-size:11px}
+      .mt5-summary-buy{color:#2563eb;font-weight:700}
+      .mt5-summary-sell{color:#dc2626;font-weight:700}
+      .mt5-completed-summary{display:flex;flex:1;justify-content:center;gap:10px;font-size:11px}
+      .mt5-summary-pl{font-weight:700}
+      .mt5-summary-pl.profit{color:#2563eb}
+      .mt5-summary-pl.loss{color:#dc2626}
+      .mt5-stat .hint{font-size:12px;color:rgba(226,232,240,.7);font-family:var(--dashboard-font)}
+      .mt5-pending-empty{margin-top:8px;font-size:12px;color:rgba(226,232,240,.9);text-align:center}
+      html[data-theme='light'] .mt5-stat .hint{color:#64748b}
+      html[data-theme='light'] .mt5-pending-empty{color:#64748b}
+      .mt5-stat.pending .hint{margin:0 -16px -16px;padding:0}
+      .mt5-pending-grid{margin-top:0;border-radius:0 0 20px 20px;border:1px solid rgba(191,219,254,.5);background:rgba(15,23,42,.85);overflow:hidden;display:none;box-shadow:0 10px 25px rgba(15,23,42,.55)}
+      .mt5-pending-header,.mt5-pending-row{display:flex;align-items:center;gap:6px;padding:6px 10px;font-size:11px}
+      .mt5-pending-header{background:linear-gradient(135deg,rgba(59,130,246,.35),rgba(37,99,235,.25));color:#e0f2fe;font-weight:700;border-bottom:1px solid rgba(15,23,42,.8)}
+      .mt5-pending-row{font-size:12px;color:#e5e7eb;border-bottom:1px dashed rgba(148,163,184,.35)}
+      .mt5-pending-row:last-child{border-bottom:none}
+      .mt5-pending-body{max-height:120px;overflow-y:auto}
+      .mt5-pending-row .col,.mt5-pending-header .col{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .mt5-pending-row .col-id,.mt5-pending-header .col-id{flex:0 0 80px}
+      .mt5-pending-row .col-symbol,.mt5-pending-header .col-symbol{flex:0 0 80px;text-align:center}
+      .mt5-pending-row .col-type,.mt5-pending-header .col-type{flex:0 0 80px;text-align:center}
+      .mt5-pending-row .col-weight,.mt5-pending-header .col-weight{flex:0 0 80px;text-align:center}
+      .mt5-pending-row .col-price,.mt5-pending-header .col-price{flex:0 0 110px;text-align:center;overflow:visible;text-overflow:clip;direction:ltr}
+      .mt5-pending-row .col-prox,.mt5-pending-header .col-prox{flex:0 0 140px;text-align:center;overflow:visible}
+      .mt5-pending-row.mt5-buy-limit .col:not(.col-prox){color:#2563eb;font-weight:700}
+      .mt5-pending-row.mt5-sell-limit .col:not(.col-prox){color:#dc2626;font-weight:700}
+      .mt5-pending-row.mt5-empty-row,.mt5-completed-row.mt5-empty-row{justify-content:center}
+      .mt5-pending-row.mt5-empty-row .col,.mt5-completed-row.mt5-empty-row .col{flex:1;text-align:center;color:rgba(148,163,184,.9)}
+      .mt5-prox-indicator{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;height:26px;border-radius:999px;border:1px solid rgba(148,163,184,.4);background:rgba(15,23,42,.65);color:#e5e7eb;font-size:11px;box-shadow:0 4px 10px rgba(15,23,42,.5);white-space:nowrap}
+      .mt5-prox-indicator i{font-size:13px}
+      .mt5-prox-text{font-weight:600}
+      .mt5-prox-immediate{border-color:rgba(34,197,94,.7);background:rgba(22,163,74,.4);color:#bbf7d0}
+      .mt5-prox-very-close{border-color:rgba(59,130,246,.7);background:rgba(37,99,235,.4);color:#dbeafe}
+      .mt5-prox-close{border-color:rgba(234,179,8,.7);background:rgba(234,179,8,.35);color:#fef9c3}
+      .mt5-prox-medium{border-color:rgba(245,158,11,.7);background:rgba(245,158,11,.35);color:#fffbeb}
+      .mt5-prox-far{border-color:rgba(148,163,184,.7);background:rgba(30,64,175,.45);color:#e5e7eb}
+      .mt5-prox-unknown{border-color:rgba(148,163,184,.6);background:rgba(15,23,42,.55);color:#e5e7eb}
+      html[data-theme='light'] .mt5-pending-grid{background:#ffffff;border-color:rgba(59,130,246,.35);box-shadow:0 18px 40px rgba(15,23,42,.14)}
+      html[data-theme='light'] .mt5-pending-header{background:linear-gradient(135deg,rgba(59,130,246,.10),rgba(37,99,235,.06));color:#1e293b}
+      html[data-theme='light'] .mt5-pending-row{color:#1f2937;border-bottom-color:rgba(148,163,184,.32);background:#ffffff}
+      html[data-theme='light'] .mt5-prox-indicator{background:rgba(255,255,255,.98);box-shadow:0 4px 10px rgba(148,163,184,.25)}
+      html[data-theme='light'] .mt5-completed-grid{background:#ffffff;border-color:rgba(34,197,94,.35);box-shadow:0 18px 40px rgba(15,23,42,.14)}
+      html[data-theme='light'] .mt5-completed-header{background:linear-gradient(135deg,rgba(34,197,94,.10),rgba(16,185,129,.06));color:#064e3b}
+      html[data-theme='light'] .mt5-completed-row{color:#111827;border-bottom-color:rgba(148,163,184,.32);background:#ffffff}
+      html[data-theme='light'] .mt5-completed-row.mt5-completed-buy .col:not(.col-pl){color:#1d4ed8}
+      html[data-theme='light'] .mt5-completed-row.mt5-completed-sell .col:not(.col-pl){color:#b91c1c}
+      html[data-theme='light'] .mt5-pl-positive{color:#1d4ed8}
+      html[data-theme='light'] .mt5-pl-negative{color:#b91c1c}
+      html[data-theme='light'] .mt5-stat{border-width:1.5px;border-color:rgba(148,163,184,.60);background:linear-gradient(135deg,rgba(248,250,252,1),rgba(226,232,240,0.98));box-shadow:0 20px 45px rgba(15,23,42,.20)}
+      html[data-theme='light'] .mt5-stat.pending{border-color:rgba(59,130,246,.70);background:linear-gradient(135deg,rgba(239,246,255,1),rgba(191,219,254,0.98))}
+      html[data-theme='light'] .mt5-stat.completed{border-color:rgba(34,197,94,.70);background:linear-gradient(135deg,rgba(240,253,250,1),rgba(187,247,208,0.98))}
+      html[data-theme='light'] .mt5-chip{background:linear-gradient(135deg,rgba(239,246,255,1),rgba(219,234,254,1));border-color:rgba(59,130,246,.35);color:#1d4ed8}
+      html[data-theme='light'] .mt5-prox-immediate{border-color:rgba(34,197,94,.6);background:rgba(34,197,94,.10);color:#166534}
+      html[data-theme='light'] .mt5-prox-very-close{border-color:rgba(59,130,246,.6);background:rgba(59,130,246,.10);color:#1d4ed8}
+      html[data-theme='light'] .mt5-prox-close{border-color:rgba(234,179,8,.65);background:rgba(250,204,21,.14);color:#92400e}
+      html[data-theme='light'] .mt5-prox-medium{border-color:rgba(245,158,11,.7);background:rgba(251,191,36,.16);color:#92400e}
+      html[data-theme='light'] .mt5-prox-far{border-color:rgba(148,163,184,.7);background:rgba(148,163,184,.16);color:#0f172a}
+      html[data-theme='light'] .mt5-prox-unknown{border-color:rgba(148,163,184,.6);background:rgba(241,245,249,.9);color:#0f172a}
+      .mt5-stat.pending{border-color:rgba(59,130,246,.35);background:linear-gradient(160deg, rgba(59,130,246,.18), rgba(37,99,235,.08))}
+      .mt5-stat.completed{border-color:rgba(34,197,94,.35);background:linear-gradient(160deg, rgba(34,197,94,.16), rgba(16,185,129,.08))}
+      .mt5-stat.completed .hint{margin:0 -16px -16px;padding:0}
+      .mt5-completed-grid{margin-top:0;border-radius:0 0 20px 20px;border:1px solid rgba(187,247,208,.55);background:rgba(15,23,42,.85);overflow:hidden;display:none;box-shadow:0 10px 25px rgba(15,23,42,.55)}
+      .mt5-completed-header,.mt5-completed-row{display:flex;align-items:center;gap:6px;padding:6px 10px;font-size:11px}
+      .mt5-completed-header{background:linear-gradient(135deg,rgba(34,197,94,.4),rgba(22,163,74,.3));color:#dcfce7;font-weight:700;border-bottom:1px solid rgba(15,23,42,.8)}
+      .mt5-completed-row{font-size:12px;color:#e5e7eb;border-bottom:1px dashed rgba(148,163,184,.35)}
+      .mt5-completed-row:last-child{border-bottom:none}
+      .mt5-completed-body{max-height:120px;overflow-y:auto}
+      .mt5-completed-row .col,.mt5-completed-header .col{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .mt5-completed-row .col-id,.mt5-completed-header .col-id{flex:0 0 80px}
+      .mt5-completed-row .col-symbol,.mt5-completed-header .col-symbol{flex:0 0 80px;text-align:center}
+      .mt5-completed-row .col-type,.mt5-completed-header .col-type{flex:0 0 80px;text-align:center}
+      .mt5-completed-row .col-weight,.mt5-completed-header .col-weight{flex:0 0 80px;text-align:center}
+      .mt5-completed-row .col-price,.mt5-completed-header .col-price{flex:0 0 120px;text-align:center;overflow:visible;text-overflow:clip;direction:ltr}
+      .mt5-completed-row .col-pl,.mt5-completed-header .col-pl{flex:0 0 110px;text-align:center;direction:ltr}
+      .mt5-completed-row.mt5-completed-buy .col:not(.col-pl){color:#2563eb;font-weight:700}
+      .mt5-completed-row.mt5-completed-sell .col:not(.col-pl){color:#dc2626;font-weight:700}
+      .mt5-pl-positive{color:#2563eb;font-weight:700}
+      .mt5-pl-negative{color:#dc2626;font-weight:700}
+      .mt5-stat.failed{border-color:rgba(248,113,113,.35);background:linear-gradient(160deg, rgba(248,113,113,.18), rgba(239,68,68,.08))}
+      .mt5-orders-activity{margin-top:26px}
+      .activity-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+      .activity-header h4{margin:0;font-size:15px;font-weight:800}
+      .activity-header span{font-size:12px;color:var(--subtle)}
+      .timeline-list{display:flex;flex-direction:column;gap:12px}
+      .timeline-item{display:flex;gap:12px;padding:12px 14px;border-radius:16px;border:1px solid rgba(148,163,184,.18);background:rgba(15,23,42,.55);align-items:flex-start;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+      .timeline-item .timeline-icon{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:rgba(59,130,246,.18);color:#bfdbfe}
+      .timeline-item.completed .timeline-icon{background:rgba(34,197,94,.18);color:#bbf7d0}
+      .timeline-item.failed .timeline-icon{background:rgba(248,113,113,.18);color:#fecaca}
+      .timeline-content{flex:1;display:flex;flex-direction:column;gap:4px}
+      .timeline-row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+      .timeline-row .order-label{font-weight:800;font-size:14px}
+      .timeline-row .order-id{font-size:13px;color:var(--subtle)}
+      .timeline-meta{font-size:12px;color:var(--subtle);display:flex;gap:8px;flex-wrap:wrap}
+      .timeline-empty{padding:30px 0;text-align:center;color:var(--subtle);font-size:13px;border:1px dashed rgba(148,163,184,.35);border-radius:16px;background:rgba(255,255,255,.02)}
+      html[data-theme='light'] .mt5-orders-card{border-color:rgba(15,23,42,.08);background:linear-gradient(135deg, rgba(255,255,255,.96), rgba(241,245,249,.96));box-shadow:0 20px 50px rgba(15,23,42,.15)}
+      html[data-theme='light'] .mt5-orders-card::after{background:radial-gradient(80% 90% at 0% 0%, rgba(59,130,246,.18), rgba(59,130,246,0));}
+      html[data-theme='light'] .mt5-orders-card .timeline-item{background:rgba(255,255,255,.65)}
+      html[data-theme='light'] .status-chip{color:#334155}
+      html[data-theme='light'] .timeline-empty{background:rgba(241,245,249,.8);color:#475569;border-color:rgba(148,163,184,.4)}
+      @media (max-width:900px){
+        .mt5-orders-stats{grid-template-columns:1fr}
+        .mt5-orders-header{flex-direction:column;align-items:flex-start}
+        .activity-header{flex-direction:column;align-items:flex-start}
+      }
+    </style>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../company-settings/style.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active">
+        <div class="grid cards-3">
+          <div class="card form-card db-card xau-card">
+            <div class="xau-header">
+              <div class="xau-title">
+                <div class="ico"><i class="fa-solid fa-gem"></i></div>
+                <div>
+                  <h3 id="xauTitleText">سعر أونصة الذهب</h3>
+                  <div class="sub" id="xauSubText">XAU/USD (Spot)</div>
+                </div>
+              </div>
+              <div class="xau-actions">
+                <span class="xau-badge" id="xauMarketBadge"><i class="fa-solid fa-circle"></i> —</span>
+                <button class="xau-refresh xau-reconnect" id="btnMt5ReconnectXau" hidden><i class="fa-solid fa-plug-circle-bolt"></i><span id="btnMt5ReconnectXauText">إعادة اتصال MT5</span></button>
+                <button class="xau-refresh" id="btnRefreshXau"><i class="fa-solid fa-arrows-rotate"></i><span id="btnRefreshXauText">تحديث</span></button>
+              </div>
+            </div>
+
+            <div class="xau-price-row">
+              <div class="xau-price" id="xauPrice">—</div>
+              <div class="xau-change" id="xauChange">—</div>
+            </div>
+
+            <canvas class="xau-chart" id="xauChart"></canvas>
+
+            <div class="xau-grid">
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-clock"></i></div>
+                <div>
+                  <div class="lbl" id="xauLastUpdateLabel">آخر تحديث</div>
+                  <div class="val" id="xauLastUpdate">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-solid fa-door-open"></i></div>
+                <div>
+                  <div class="lbl" id="xauNextLabel">—</div>
+                  <div class="val xau-countdown" id="xauCountdown">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-calendar"></i></div>
+                <div>
+                  <div class="lbl" id="xauEventTimeLabel">موعد الحدث</div>
+                  <div class="val" id="xauNextTime">—</div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-sub" id="xauMeta" style="margin-top:10px">—</div>
+          </div>
+
+          <div class="card form-card db-card xau-card">
+            <div class="xau-header">
+              <div class="xau-title">
+                <div class="ico silver"><i class="fa-solid fa-coins"></i></div>
+                <div>
+                  <h3 id="xagTitleText">سعر أونصة الفضة</h3>
+                  <div class="sub" id="xagSubText">XAG/USD (Spot)</div>
+                </div>
+              </div>
+              <div class="xau-actions">
+                <span class="xau-badge" id="xagMarketBadge"><i class="fa-solid fa-circle"></i> —</span>
+                <button class="xau-refresh xau-reconnect" id="btnMt5ReconnectXag" hidden><i class="fa-solid fa-plug-circle-bolt"></i><span id="btnMt5ReconnectXagText">إعادة اتصال MT5</span></button>
+                <button class="xau-refresh" id="btnRefreshXag"><i class="fa-solid fa-arrows-rotate"></i><span id="btnRefreshXagText">تحديث</span></button>
+              </div>
+            </div>
+
+            <div class="xau-price-row">
+              <div class="xau-price" id="xagPrice">—</div>
+              <div class="xau-change" id="xagChange">—</div>
+            </div>
+
+            <canvas class="xau-chart" id="xagChart"></canvas>
+
+            <div class="xau-grid">
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-clock"></i></div>
+                <div>
+                  <div class="lbl" id="xagLastUpdateLabel">آخر تحديث</div>
+                  <div class="val" id="xagLastUpdate">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-solid fa-door-open"></i></div>
+                <div>
+                  <div class="lbl" id="xagNextLabel">—</div>
+                  <div class="val xau-countdown" id="xagCountdown">—</div>
+                </div>
+              </div>
+              <div class="xau-item">
+                <div class="i"><i class="fa-regular fa-calendar"></i></div>
+                <div>
+                  <div class="lbl" id="xagEventTimeLabel">موعد الحدث</div>
+                  <div class="val" id="xagNextTime">—</div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-sub" id="xagMeta" style="margin-top:10px">—</div>
+          </div>
+        </div>
+
+        <div class="mt5-orders-wrapper">
+          <div class="card form-card mt5-orders-card" id="mt5OrdersCard">
+            <div class="mt5-orders-header">
+              <div class="mt5-orders-title">
+                <div class="mt5-chip">MT5</div>
+                <div>
+                  <h3 id="mt5OrdersTitle">أوردرات MT5</h3>
+                  <p id="mt5OrdersSubtitle">متابعة الأوامر المنفذة والمعلقة من المنصة</p>
+                </div>
+              </div>
+              <div class="mt5-orders-meta">
+                <span class="status-chip idle" id="mt5OrdersStatusChip">
+                  <i class="fa-solid fa-circle"></i>
+                  <span id="mt5OrdersStatusText">—</span>
+                </span>
+                <span class="mt5-updated" id="mt5OrdersUpdated">—</span>
+                <button class="mt5-refresh on" id="btnRefreshMt5Orders">
+                  <span class="mt5-toggle-switch">
+                    <span class="mt5-toggle-knob"></span>
+                  </span>
+                  <span class="mt5-refresh-toggle-label" id="mt5OrdersRefreshText">المزامنة اللحظية</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="mt5-orders-stats">
+              <div class="mt5-stat pending">
+                <div class="mt5-stat-header">
+                  <div class="label" id="mt5PendingLabel">أوامر معلقة</div>
+                  <div class="mt5-pending-summary">
+                    <span id="mt5PendingBuySummary" class="mt5-summary-buy"></span>
+                    <span id="mt5PendingSellSummary" class="mt5-summary-sell"></span>
+                  </div>
+                  <div class="value" id="mt5PendingCount">0</div>
+                </div>
+                <div class="hint" id="mt5PendingHint">
+                  <div class="mt5-pending-empty" id="mt5PendingEmpty">لا توجد أوامر معلقة</div>
+                  <div class="mt5-pending-grid" id="mt5PendingGrid">
+                    <div class="mt5-pending-header">
+                      <span class="col col-id" id="mt5PendingColRef">م/مرجعي</span>
+                      <span class="col col-symbol" id="mt5PendingColSymbol">الرمز</span>
+                      <span class="col col-type" id="mt5PendingColType">النوع</span>
+                      <span class="col col-weight" id="mt5PendingColWeight">الوزن</span>
+                      <span class="col col-price" id="mt5PendingColPrice">السعر</span>
+                      <span class="col col-prox" id="mt5PendingColProx">القرب</span>
+                    </div>
+                    <div class="mt5-pending-body" id="mt5PendingGridBody"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt5-stat completed">
+                <div class="mt5-stat-header">
+                  <div class="label" id="mt5CompletedLabel">العمليات المنفذة حالياً</div>
+                  <div class="mt5-completed-summary">
+                    <span id="mt5CompletedBuySummary" class="mt5-summary-buy"></span>
+                    <span id="mt5CompletedSellSummary" class="mt5-summary-sell"></span>
+                    <span id="mt5CompletedPlSummary" class="mt5-summary-pl"></span>
+                  </div>
+                  <div class="value" id="mt5CompletedCount">0</div>
+                </div>
+                <div class="hint" id="mt5CompletedHint">
+                  <div class="mt5-completed-empty" id="mt5CompletedEmpty">لا توجد عمليات منفذة حالياً</div>
+                  <div class="mt5-completed-grid" id="mt5CompletedGrid">
+                    <div class="mt5-completed-header">
+                      <span class="col col-id" id="mt5CompletedColRef">م/مرجعي</span>
+                      <span class="col col-symbol" id="mt5CompletedColSymbol">الرمز</span>
+                      <span class="col col-type" id="mt5CompletedColType">النوع</span>
+                      <span class="col col-weight" id="mt5CompletedColWeight">الوزن</span>
+                      <span class="col col-price" id="mt5CompletedColPrice">السعر</span>
+                      <span class="col col-pl" id="mt5CompletedColPl">الربح / الخسارة</span>
+                    </div>
+                    <div class="mt5-completed-body" id="mt5CompletedGridBody"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt5-orders-activity">
+              <div class="activity-header">
+                <h4 id="mt5ActivityTitle">آخر الأنشطة</h4>
+                <span id="mt5ActivityHint">أحدث 3 أوامر MT5</span>
+              </div>
+              <div id="mt5OrdersTimeline" class="timeline-list"></div>
+              <div id="mt5OrdersEmpty" class="timeline-empty">لا توجد أوامر MT5 حالياً</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

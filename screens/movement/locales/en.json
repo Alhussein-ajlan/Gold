@@ -1,0 +1,205 @@
+{
+  "movement": {
+    "languageChanged": "Language changed to {lang}",
+    "title": "Movement",
+    "filters": {
+      "typeLabel": "Movement Type",
+      "typeOptions": {
+        "all": "All",
+        "sales": "Sales Invoices",
+        "purchases": "Purchase Invoices",
+        "receipts": "Receipt Vouchers",
+        "vouchers": "Payment Vouchers",
+        "journals": "Journal Entries"
+      },
+      "goldKaratLabel": "Gold Karat",
+      "karatLabel": "Gold Karat",
+      "goldKaratOptions": {
+        "24": "24 Pure",
+        "22": "22",
+        "21": "21",
+        "18": "18"
+      },
+      "karatOptions": {
+        "24": "24 Pure",
+        "22": "22",
+        "21": "21",
+        "18": "18"
+      },
+      "silverKaratLabel": "Silver Karat",
+      "silverKaratOptions": {
+        "999": "999 Pure",
+        "925": "925",
+        "900": "900",
+        "800": "800"
+      },
+      "dateFromLabel": "From Date",
+      "dateToLabel": "To Date"
+    },
+    "buttons": {
+      "view": "View",
+      "compact": "Compact Level {level}",
+      "print": "Print",
+      "printTitle": "Print Movement",
+      "close": "Close",
+      "closeTitle": "Close"
+    },
+    "karatNotice": {
+      "title": "Note:",
+      "text": "All gold weights are shown in {karat} karat",
+      "goldText": "All gold weights are shown in karat",
+      "silverText": "All silver weights are shown in purity",
+      "separator": "and"
+    },
+    "table": {
+      "headers": {
+        "date": "Date",
+        "docNo": "Document No.",
+        "operationType": "Operation Type",
+        "party": "Party",
+        "description": "Description",
+        "karat": "Karat",
+        "cashDebit": "Cash Debit",
+        "cashCredit": "Cash Credit",
+        "goldDebit": "Gold Debit",
+        "goldCredit": "Gold Credit",
+        "silverDebit": "Silver Debit",
+        "silverCredit": "Silver Credit"
+      }
+    },
+    "states": {
+      "initialHint": "Select movement type and date range, then click \"View\"",
+      "loading": "Loading data...",
+      "emptyTitle": "No Data Found",
+      "emptyHint": "No movements found in the selected period"
+    },
+    "summary": {
+      "cashDebit": "Cash Debit",
+      "cashCredit": "Cash Credit",
+      "goldDebit": "Gold Debit",
+      "goldCredit": "Gold Credit",
+      "silverDebit": "Silver Debit",
+      "silverCredit": "Silver Credit"
+    },
+    "drawer": {
+      "detailsTitle": "Movement Details",
+      "totalDebit": "Total Debit",
+      "totalCredit": "Total Credit",
+      "totalCash": "Total Cash",
+      "totalGold": "Total Gold",
+      "totalSilver": "Total Silver"
+    },
+    "chips": {
+      "type": "Type: {value}",
+      "karat": "Karat: {value}",
+      "dateRange": "{from} - {to}"
+    },
+    "badges": {
+      "sales": "Sell",
+      "salesEn": "SELL",
+      "purchases": "Buy",
+      "purchasesEn": "BUY",
+      "receipts": "Receipt",
+      "vouchers": "Payment",
+      "journals": "Journal"
+    },
+    "details": {
+      "showDetails": "Show Details",
+      "row": "row",
+      "rows": "rows",
+      "headers": {
+        "customer": "Customer/Supplier",
+        "item": "Item",
+        "description": "Description",
+        "karat": "Karat",
+        "cash": "Cash",
+        "gold": "Gold",
+        "silver": "Silver",
+        "account": "Account",
+        "currencyType": "Currency Type",
+        "debit": "Debit",
+        "credit": "Credit",
+        "party": "Party"
+      }
+    },
+    "groups": {
+      "sales": "Sales Invoices",
+      "purchases": "Purchase Invoices",
+      "receipts": "Receipt Vouchers",
+      "vouchers": "Payment Vouchers",
+      "journals": "Journal Entries"
+    },
+    "totals": {
+      "sales": "Sales Total",
+      "purchases": "Purchases Total",
+      "receipts": "Receipts Total",
+      "vouchers": "Payments Total",
+      "journals": "Journals Total",
+      "group": "{type} Total",
+      "grand": "Grand Total"
+    },
+    "print": {
+      "title": "Movement Report - {type}",
+      "allMovements": "All Movements",
+      "company": {
+        "name": "Company Name:",
+        "taxNo": "Tax Number:",
+        "address": "Address:"
+      },
+      "filters": {
+        "dateFrom": "From Date",
+        "dateTo": "To Date",
+        "goldKarat": "Gold Karat",
+        "silverKarat": "Silver Karat",
+        "branchScope": "Branch Scope"
+      },
+      "branchLabels": {
+        "allBranches": "All Branches"
+      },
+      "table": {
+        "index": "#",
+        "date": "Date",
+        "docNo": "Doc. No.",
+        "operationType": "Operation Type",
+        "party": "Party",
+        "description": "Description",
+        "karat": "Karat",
+        "cashDebit": "Cash Debit",
+        "cashCredit": "Cash Credit",
+        "goldDebit": "Gold Debit",
+        "goldCredit": "Gold Credit",
+        "silverDebit": "Silver Debit",
+        "silverCredit": "Silver Credit"
+      },
+      "totals": {
+        "title": "Totals",
+        "description": "Description",
+        "totalCashDebit": "Total Cash Debit",
+        "totalCashCredit": "Total Cash Credit",
+        "totalGoldDebit": "Total Gold Debit",
+        "totalGoldCredit": "Total Gold Credit",
+        "totalSilverDebit": "Total Silver Debit",
+        "totalSilverCredit": "Total Silver Credit",
+        "grandTotal": "Grand Total"
+      },
+      "printButton": "Print",
+      "noData": "No Data"
+    },
+    "errors": {
+      "missingDates": "Please specify the date range",
+      "loadingError": "Error loading data",
+      "noPrintData": "Please view data before printing",
+      "noDataToPrint": "No data to print",
+      "popupBlocked": "Please allow popup windows",
+      "printError": "Error creating print preview"
+    },
+    "permissions": {
+      "view": "View Movement",
+      "print": "Print Movement"
+    },
+    "entityLabels": {
+      "customer": "Customer #{id}",
+      "supplier": "Supplier #{id}"
+    }
+  }
+}

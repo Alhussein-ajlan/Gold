@@ -1,0 +1,42 @@
+{
+  "categoryReport": {
+    "title": "Category Report",
+    "subtitle": "Items inventory by karat",
+    "filters": {
+      "section": "Section",
+      "karat": "Karat",
+      "allKarats": "All Karats",
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "view": "View",
+      "print": "Print"
+    },
+    "sections": {
+      "all": "All",
+      "mashghulat": "Crafted",
+      "kasr": "Scrap",
+      "silver": "Silver"
+    },
+    "summary": {
+      "totalItems": "Total Items",
+      "totalIn": "Total In",
+      "totalOut": "Total Out",
+      "netBalance": "Net Balance",
+      "gram": "g"
+    },
+    "table": {
+      "title": "Inventory Details",
+      "itemNo": "Item No",
+      "itemName": "Item Name",
+      "karat": "Karat",
+      "totalIn": "Total In",
+      "totalOut": "Total Out",
+      "net": "Net",
+      "total": "Total",
+      "itemsCount": "{count} items"
+    },
+    "emptyState": "No data to display",
+    "loading": "Loading...",
+    "noItemName": "No name"
+  }
+}

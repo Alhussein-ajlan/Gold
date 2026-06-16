@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>دفتر الأستاذ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../customers/style.css">
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+    <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+    <script src="../../shared-styles/common-utils.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section class="panel active" id="panel-general-ledger" role="tabpanel" aria-labelledby="tab-general-ledger">
+        <div class="gl-topbar">
+          <div class="gl-title">
+            <i class="fa-solid fa-book"></i>
+            <h2>دفتر الأستاذ</h2>
+          </div>
+          <div class="gl-actions">
+            <button class="gl-btn" id="btnGlRefresh" type="button" title="تحديث">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>تحديث</span>
+            </button>
+            <button class="gl-btn gl-btn-icon gl-excel" id="btnGlExportExcel" type="button" title="تصدير Excel" disabled>
+              <i class="fa-solid fa-file-excel"></i>
+            </button>
+            <button class="gl-btn gl-btn-icon gl-pdf" id="btnGlExportPdf" type="button" title="تصدير PDF" disabled>
+              <i class="fa-solid fa-file-pdf"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="glFiltersCard">
+          <div class="gl-filter-grid">
+            <div class="form-field account-search-field">
+              <span>الحساب</span>
+              <div class="account-search-wrapper">
+                <input type="text" id="glAccountSearch" placeholder="ابحث عن حساب..." autocomplete="off">
+                <input type="hidden" id="glAccount">
+                <div class="account-dropdown" id="glAccountDropdown"></div>
+              </div>
+            </div>
+            <label class="form-field">
+              <span>من تاريخ</span>
+              <input type="date" id="glFrom">
+            </label>
+            <label class="form-field">
+              <span>إلى تاريخ</span>
+              <input type="date" id="glTo">
+            </label>
+            <label class="form-field">
+              <span>الافتتاحية</span>
+              <select id="glIncludeOpening">
+                <option value="1" selected>نعم</option>
+                <option value="0">لا</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span>عيار الذهب</span>
+              <select id="glGoldKarat">
+                <option value="21" selected>21</option>
+                <option value="24">24</option>
+                <option value="22">22</option>
+                <option value="18">18</option>
+                <option value="14">14</option>
+                <option value="9">9</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span>عيار الفضة</span>
+              <select id="glSilverKarat">
+                <option value="999" selected>999</option>
+                <option value="925">925</option>
+                <option value="900">900</option>
+                <option value="800">800</option>
+              </select>
+            </label>
+            <div class="gl-filter-actions">
+              <button class="gl-btn gl-primary premium-view-btn" id="btnGlView" type="button">
+                <i class="fa-solid fa-book-open"></i>
+                <span>عرض</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card table-card fullwide" id="glGrid">
+          <div class="table-head">
+            <h3>حركات الحساب</h3>
+            <div class="head-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="search" id="glSearch" aria-label="بحث">
+            </div>
+            <div class="row">
+              <button class="icon-btn" id="btnGlPrint" title="طباعة" disabled><i class="fa-solid fa-print"></i></button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="glTable" data-format-numbers>
+              <thead>
+                <tr>
+                  <th rowspan="2">التاريخ</th>
+                  <th rowspan="2">نوع السند</th>
+                  <th rowspan="2">رقم السند</th>
+                  <th rowspan="2">البيان</th>
+                  <th colspan="3">نقد (ريال)</th>
+                  <th colspan="3">ذهب (جرام)</th>
+                  <th colspan="3">فضة (جرام)</th>
+                </tr>
+                <tr>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                  <th>الرصيد</th>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                  <th>الرصيد</th>
+                  <th>مدين</th>
+                  <th>دائن</th>
+                  <th>الرصيد</th>
+                </tr>
+              </thead>
+              <tfoot id="glTableFoot">
+                <tr class="totals-row">
+                  <td colspan="4"><strong>الإجمالي</strong></td>
+                  <td id="totalCashDebit">0</td>
+                  <td id="totalCashCredit">0</td>
+                  <td id="totalCashBalance">0</td>
+                  <td id="totalGoldDebit">0</td>
+                  <td id="totalGoldCredit">0</td>
+                  <td id="totalGoldBalance">0</td>
+                  <td id="totalSilverDebit">0</td>
+                  <td id="totalSilverCredit">0</td>
+                  <td id="totalSilverBalance">0</td>
+                </tr>
+              </tfoot>
+              <tbody id="glTableBody">
+                <tr>
+                  <td colspan="13" style="text-align:center; padding: 40px; color: var(--subtle);">لا توجد بيانات</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

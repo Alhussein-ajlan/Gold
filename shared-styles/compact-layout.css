@@ -1,0 +1,299 @@
+/* ===== Compact Layout - تصغير الارتفاعات لعرض بيانات أكثر ===== */
+
+/* تصغير ارتفاع الحقول والأزرار */
+input[type="text"], 
+input[type="password"], 
+input[type="date"], 
+input[type="time"],
+input[type="number"], 
+select, 
+button, 
+.btn {
+  min-height: 34px !important;
+  height: 34px;
+  padding: 6px 12px !important;
+}
+
+/* تصغير حقول البحث */
+.toolbar .search input,
+.head-search input {
+  min-height: 34px !important;
+  padding: 6px 12px !important;
+  padding-inline-end: 32px !important;
+}
+
+/* تصغير حقول النماذج */
+.form-field input, 
+.form-field select {
+  padding: 6px 12px !important;
+  min-height: 34px !important;
+}
+
+.form-field .input-wrap input {
+  padding: 6px 12px !important;
+  padding-inline-end: 36px !important;
+  min-height: 34px !important;
+}
+
+/* تصغير حقول التاريخ والوقت */
+input[type="date"],
+input[type="time"] {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 8px !important;
+}
+
+/* تصغير صفوف الجداول */
+.table thead th {
+  padding: 8px !important;
+  font-size: 13px;
+}
+
+.table tbody td {
+  padding: 8px !important;
+  font-size: 14px;
+}
+
+/* تصغير الأزرار الأيقونية */
+.icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 4px !important;
+}
+
+/* تصغير أزرار التنقل */
+.toolbar .pager .btn.icon,
+.pager .btn.icon {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+}
+
+.toolbar .pager .btn.icon i,
+.pager .btn.icon i {
+  font-size: 16px !important;
+}
+
+.toolbar .pager .counter,
+.pager .counter {
+  min-width: 80px !important;
+  height: 32px !important;
+  padding: 0 10px !important;
+  font-size: 13px;
+}
+
+.toolbar .pager .nav-id,
+.pager .nav-id,
+#nav_id,
+#ob_nav_id,
+#hv_nav_id {
+  width: 100px !important;
+  height: 32px !important;
+  padding: 0 8px !important;
+  font-size: 14px;
+}
+
+/* تصغير حقول جداول القيود والسندات */
+#journalLinesTable input[type="number"],
+#journalLinesTable input[type="text"],
+#journalLinesTable select,
+#hv_linesTable input[type="number"],
+#hv_linesTable input[type="text"],
+#hv_linesTable select,
+#r_linesTable input[type="number"],
+#r_linesTable input[type="text"],
+#r_linesTable select,
+#obTable input[type="number"],
+#obTable input[type="text"],
+#obTable select {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 6px 8px !important;
+}
+
+/* تصغير أزرار الحذف في الصفوف */
+#journalLinesTable .icon-btn,
+#hv_linesTable .icon-btn,
+#r_linesTable .icon-btn,
+#obTable .icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* تصغير أزرار الأكشن في الجداول */
+.table td .row .icon-btn {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 4px !important;
+}
+
+/* تصغير الأزرار العادية */
+.btn {
+  padding: 6px 14px !important;
+  font-size: 14px;
+}
+
+.btn i {
+  font-size: 14px;
+}
+
+/* تصغير أزرار التولبار */
+.toolbar .actions .btn {
+  padding: 6px 12px !important;
+  min-height: 34px !important;
+}
+
+/* تصغير footer الجداول */
+#journalLinesTable tfoot td,
+#hv_linesTable tfoot td,
+#r_linesTable tfoot td {
+  padding: 6px 8px !important;
+  font-size: 11px !important;
+}
+
+#journalLinesTable tfoot td div,
+#hv_linesTable tfoot td div,
+#r_linesTable tfoot td div {
+  font-size: 11px !important;
+  margin: 1px 0 !important;
+}
+
+/* تصغير الـ Switch */
+.switch {
+  width: 38px !important;
+  height: 20px !important;
+}
+
+.switch .slider::before {
+  height: 14px !important;
+  width: 14px !important;
+}
+
+/* تصغير Badge */
+.badge {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+}
+
+/* تصغير Modal Header */
+.modal-header {
+  padding-bottom: 6px !important;
+}
+
+.modal-header h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.modal-body {
+  padding-top: 6px !important;
+}
+
+.modal-footer {
+  padding-top: 6px !important;
+}
+
+/* تصغير Topbar */
+.topbar {
+  min-height: 48px !important;
+  padding: 8px 14px !important;
+}
+
+.brand-mini .app-name {
+  font-size: 15px !important;
+}
+
+.avatar {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* تصغير Sidebar Tabs */
+.sidebar .tab {
+  padding: 10px 12px !important;
+  font-size: 15px !important;
+}
+
+.sidebar .tab i {
+  font-size: 15px !important;
+}
+
+/* تصغير Dashboard padding */
+.dashboard {
+  padding: 12px !important;
+  padding-top: 16px !important;
+}
+
+/* تصغير Toolbar */
+.toolbar {
+  margin-bottom: 10px !important;
+  margin-top: 6px !important;
+}
+
+/* تصغير Grid gaps */
+.grid {
+  gap: 10px !important;
+}
+
+/* تصغير Form Grid */
+.form-grid {
+  gap: 10px !important;
+  margin-top: 6px !important;
+}
+
+/* تصغير Cards */
+.card.form-card {
+  padding: 12px !important;
+}
+
+.card.stat {
+  padding: 12px !important;
+}
+
+.stat-head {
+  font-size: 12px !important;
+}
+
+.stat-value {
+  font-size: 20px !important;
+  margin-top: 4px !important;
+}
+
+.stat-sub {
+  margin-top: 3px !important;
+  font-size: 11px !important;
+}
+
+/* تصغير Table Card Header */
+.table-head {
+  padding: 10px 12px !important;
+}
+
+.table-head h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* زيادة ارتفاع منطقة الجداول لعرض صفوف أكثر */
+#customers-grid .table-responsive,
+#suppliers-grid .table-responsive,
+#accounts-grid .table-responsive {
+  max-height: calc(100vh - 340px) !important;
+  min-height: 400px !important;
+}
+
+.hv-lines-responsive,
+.r-lines-responsive,
+.ob-lines-responsive {
+  max-height: 58vh !important;
+}
+
+/* تصغير User Tracking Info */
+#j_user_tracking_info,
+#ob_user_tracking_info,
+#hv_user_tracking_info,
+#r_user_tracking_info {
+  margin-top: 8px !important;
+  padding: 6px !important;
+  font-size: 11px !important;
+}

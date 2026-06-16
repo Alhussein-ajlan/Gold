@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">حركة المبيعات والمشتريات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <script src="../../shared-styles/common-utils.js"></script>
+  <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+  <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main id="panel-sales-purchase-movement">
+    <!-- Header Tabs -->
+
+    <!-- Tab Content: المبيعات والمشتريات -->
+    <section class="tab-content active" id="content-sales-purchases" role="tabpanel">
+      <!-- Metal Type Filter -->
+      <div class="metal-filter-container">
+        <div class="metal-filter-group">
+          <span class="metal-filter-label"><i class="fa-solid fa-gem"></i> <span data-i18n="filters.metalLabel">نوع المعدن:</span></span>
+          <div class="metal-filter-buttons">
+            <button class="metal-filter-btn active" data-metal="gold" id="btnMetalGold">
+              <i class="fa-solid fa-coins"></i>
+              <span data-i18n="filters.gold">🥇 الذهب</span>
+            </button>
+            <button class="metal-filter-btn" data-metal="silver" id="btnMetalSilver">
+              <i class="fa-solid fa-ring"></i>
+              <span data-i18n="filters.silver">🥈 الفضة</span>
+            </button>
+          </div>
+        </div>
+        <!-- Invoice Type Filter -->
+        <div class="metal-filter-group">
+          <span class="metal-filter-label"><i class="fa-solid fa-file-invoice"></i> <span id="invoiceTypeFilterLabel">نوع الفاتورة:</span></span>
+          <div class="metal-filter-buttons">
+            <button class="metal-filter-btn active" data-invoice-type="all" id="btnInvoiceTypeAll">
+              <i class="fa-solid fa-layer-group"></i>
+              <span id="btnInvoiceTypeAllText">الكل</span>
+            </button>
+            <button class="metal-filter-btn" data-invoice-type="taskir" id="btnInvoiceTypeTaskir">
+              <i class="fa-solid fa-coins"></i>
+              <span id="btnInvoiceTypeTaskirText">تسكير</span>
+            </button>
+            <button class="metal-filter-btn" data-invoice-type="mashghul" id="btnInvoiceTypeMashghul">
+              <i class="fa-solid fa-gem"></i>
+              <span id="btnInvoiceTypeMashghulText">مشغولات</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid cards-4">
+        <!-- Statistics Cards -->
+          <!-- Card 1: إجمالي المبيعات -->
+          <div class="stat-card karat-breakdown sales-card">
+            <div class="stat-header">
+              <h3 data-i18n="cards.totalSales">إجمالي المبيعات</h3>
+              <i class="fa-solid fa-arrow-trend-up icon-sales"></i>
+            </div>
+            <div class="stat-body">
+              <div class="stat-numbers-row">
+                <div class="stat-number-group">
+                  <div class="stat-number sales" id="totalSales">0</div>
+                  <div class="stat-sublabel" id="salesBasisLabel">جرام - عيار 24</div>
+                </div>
+                <div class="stat-number-group">
+                  <div class="stat-number sales" id="totalSalesValue">0.00</div>
+                  <div class="stat-sublabel"><i class="fa-solid fa-coins"></i> <span data-i18n="cards.value">القيمة</span></div>
+                </div>
+              </div>
+              
+              <div class="stat-divider"></div>
+              
+              <!-- Karat Breakdown - Gold -->
+              <div class="karat-breakdown-list" id="salesGoldKarats">
+                <!-- 24 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat24">عيار 24</span>
+                    <span class="karat-value" id="sales24">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-24" id="salesBar24" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 22 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat22">عيار 22</span>
+                    <span class="karat-value" id="sales22">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-22" id="salesBar22" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 21 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat21">عيار 21</span>
+                    <span class="karat-value" id="sales21">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-21" id="salesBar21" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 18 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat18">عيار 18</span>
+                    <span class="karat-value" id="sales18">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-18" id="salesBar18" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karat Breakdown - Silver (hidden by default) -->
+              <div class="karat-breakdown-list" id="salesSilverKarats" style="display: none;">
+                <!-- 999 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver999">عيار 999</span>
+                    <span class="karat-value" id="salesSilver999">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-999" id="salesBarSilver999" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 925 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver925">عيار 925</span>
+                    <span class="karat-value" id="salesSilver925">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-925" id="salesBarSilver925" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 900 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver900">عيار 900</span>
+                    <span class="karat-value" id="salesSilver900">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-900" id="salesBarSilver900" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 800 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver800">عيار 800</span>
+                    <span class="karat-value" id="salesSilver800">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-800" id="salesBarSilver800" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: إجمالي المشتريات -->
+          <div class="stat-card karat-breakdown purchase-card">
+            <div class="stat-header">
+              <h3 data-i18n="cards.totalPurchases">إجمالي المشتريات</h3>
+              <i class="fa-solid fa-arrow-trend-down icon-purchase"></i>
+            </div>
+            <div class="stat-body">
+              <div class="stat-numbers-row">
+                <div class="stat-number-group">
+                  <div class="stat-number purchase" id="totalPurchases">0</div>
+                  <div class="stat-sublabel" id="purchasesBasisLabel">جرام - عيار 24</div>
+                </div>
+                <div class="stat-number-group">
+                  <div class="stat-number purchase" id="totalPurchasesValue">0.00</div>
+                  <div class="stat-sublabel"><i class="fa-solid fa-coins"></i> <span data-i18n="cards.value">القيمة</span></div>
+                </div>
+              </div>
+              
+              <div class="stat-divider"></div>
+              
+              <!-- Karat Breakdown - Gold -->
+              <div class="karat-breakdown-list" id="purchasesGoldKarats">
+                <!-- 24 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat24">عيار 24</span>
+                    <span class="karat-value" id="purchase24">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-24" id="purchaseBar24" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 22 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat22">عيار 22</span>
+                    <span class="karat-value" id="purchase22">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-22" id="purchaseBar22" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 21 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat21">عيار 21</span>
+                    <span class="karat-value" id="purchase21">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-21" id="purchaseBar21" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 18 Karat -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.karat18">عيار 18</span>
+                    <span class="karat-value" id="purchase18">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill karat-18" id="purchaseBar18" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karat Breakdown - Silver (hidden by default) -->
+              <div class="karat-breakdown-list" id="purchasesSilverKarats" style="display: none;">
+                <!-- 999 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver999">عيار 999</span>
+                    <span class="karat-value" id="purchaseSilver999">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-999" id="purchaseBarSilver999" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 925 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver925">عيار 925</span>
+                    <span class="karat-value" id="purchaseSilver925">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-925" id="purchaseBarSilver925" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 900 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver900">عيار 900</span>
+                    <span class="karat-value" id="purchaseSilver900">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-900" id="purchaseBarSilver900" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <!-- 800 Silver -->
+                <div class="karat-item">
+                  <div class="karat-label-row">
+                    <span class="karat-name" data-i18n="cards.silver800">عيار 800</span>
+                    <span class="karat-value" id="purchaseSilver800">0 جم</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill silver-800" id="purchaseBarSilver800" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: الأرباح والخسائر -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <h3 data-i18n="cards.profitLossTitle">الأرباح والخسائر</h3>
+              <i class="fa-solid fa-chart-mixed"></i>
+            </div>
+            <div class="stat-body">
+              <div class="stat-numbers-row">
+                <div class="stat-number-group">
+                  <div class="stat-number" id="profitLoss" style="color: var(--success);">0.00</div>
+                  <div class="stat-sublabel" id="profitLossLabel"><i class="fa-solid fa-balance-scale"></i> <span id="profitLossText" data-i18n="cards.profitNet">الصافي</span></div>
+                </div>
+                <div class="stat-number-group">
+                  <div class="stat-number" id="profitLossPercentage" style="color: var(--primary);">0%</div>
+                  <div class="stat-sublabel"><i class="fa-solid fa-percent"></i> <span data-i18n="cards.percentage">النسبة</span></div>
+                </div>
+              </div>
+              
+              <div class="stat-divider"></div>
+              
+              <div class="stat-row">
+                <span class="stat-label"><i class="fa-solid fa-arrow-trend-up icon-sales"></i> <span data-i18n="cards.totalSalesLabel">إجمالي المبيعات</span></span>
+                <span class="stat-value sales" id="profitSalesValue">0.00</span>
+              </div>
+              
+              <div class="stat-row">
+                <span class="stat-label"><i class="fa-solid fa-arrow-trend-down icon-purchase"></i> <span data-i18n="cards.totalPurchasesLabel">إجمالي المشتريات</span></span>
+                <span class="stat-value purchase" id="profitPurchasesValue">0.00</span>
+              </div>
+              
+              <div class="stat-divider"></div>
+              
+              <div class="stat-row">
+                <span class="stat-label" id="weightDifferenceLabel"><i class="fa-solid fa-weight-scale"></i> <span data-i18n="cards.weightDifference24">فارق الوزن (عيار 24)</span></span>
+                <span class="stat-value" id="weightDifference">0.000</span>
+              </div>
+              
+              <div class="stat-row">
+                <span class="stat-label"><i class="fa-solid fa-calculator"></i> <span data-i18n="cards.rateLabel">المعدل (ر.ي/جم)</span></span>
+                <span class="stat-value" id="profitRate">0.00</span>
+              </div>
+              
+              <div class="stat-row">
+                <span class="stat-label"><i class="fa-solid fa-globe"></i> <span data-i18n="cards.globalPosition">المركز (أونصة عالمية)</span></span>
+                <span class="stat-value" id="profitPosition" style="font-weight: 700;">0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: إجمالي الحركة -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <h3 data-i18n="cards.totalMovement">إجمالي الحركة</h3>
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="stat-body">
+              <!-- Date Range Filter -->
+              <div class="date-filter-group">
+                <!-- Row 1: From + Reset -->
+                <div class="date-row">
+                  <div class="date-field">
+                    <label for="dateFrom">
+                      <i class="fa-solid fa-calendar-days"></i>
+                      <span data-i18n="filters.from">من</span>
+                    </label>
+                    <input type="date" id="dateFrom" class="date-input">
+                  </div>
+                  <button class="btn-reset" id="btnResetDateFilter" data-i18n-title="actions.reset">
+                    <i class="fa-solid fa-rotate-left"></i>
+                  </button>
+                </div>
+                
+                <!-- Row 2: To + Filter -->
+                <div class="date-row">
+                  <div class="date-field">
+                    <label for="dateTo">
+                      <i class="fa-solid fa-calendar-days"></i>
+                      <span data-i18n="filters.to">إلى</span>
+                    </label>
+                    <input type="date" id="dateTo" class="date-input">
+                  </div>
+                  <button class="btn-filter" id="btnApplyDateFilter" data-i18n-title="actions.apply">
+                    <i class="fa-solid fa-filter"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="stat-divider"></div>
+              
+              <div class="stat-row">
+                <span class="stat-label" data-i18n="cards.salesInvoices">عدد فواتير البيع:</span>
+                <span class="stat-value sales" id="salesCount">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label" data-i18n="cards.purchaseInvoices">عدد فواتير الشراء:</span>
+                <span class="stat-value purchase" id="purchaseCount">0</span>
+              </div>
+            </div>
+          </div>
+        
+        <!-- Main Content: Data Grid -->
+        <div class="card table-card grid-span-4 fullwide" id="sales-grid">
+          <!-- Toolbar -->
+          <div class="data-grid-toolbar">
+            <h3 data-i18n="grid.transactionsTitle">قائمة المعاملات</h3>
+            <div class="toolbar-actions">
+              <!-- Search Box -->
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" data-i18n-placeholder="search.transactions" placeholder="بحث عن معامل...">
+              </div>
+              
+              <!-- Filter Buttons -->
+              <button class="btn btn-filter-type active" id="btnFilterAll" data-i18n-title="filters.allTitle">
+                <i class="fa-solid fa-list"></i>
+                <span data-i18n="filters.all">الكل</span>
+              </button>
+              <button class="btn btn-filter-type btn-sell" data-filter="SELL" id="btnFilterSell" data-i18n-title="filters.sellTitle">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span data-i18n="filters.sell">SELL</span>
+              </button>
+              <button class="btn btn-filter-type btn-buy" data-filter="BUY" id="btnFilterBuy" data-i18n-title="filters.buyTitle">
+                <i class="fa-solid fa-arrow-trend-down"></i>
+                <span data-i18n="filters.buy">BUY</span>
+              </button>
+              <button class="btn btn-filter-type btn-cash" data-payment-filter="cash" id="btnFilterCash" data-i18n-title="filters.cashTitle">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <span data-i18n="filters.cash">نقدي</span>
+              </button>
+              <button class="btn btn-filter-type btn-credit" data-payment-filter="credit" id="btnFilterCredit" data-i18n-title="filters.creditTitle">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span data-i18n="filters.credit">آجل</span>
+              </button>
+              
+              <!-- Action Buttons -->
+              <button class="btn secondary btn-with-text" id="btnExportPDF" data-i18n-title="actions.exportPdf">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span data-i18n="actions.pdf">PDF</span>
+              </button>
+              <button class="btn secondary btn-with-text" id="btnExportExcel" data-i18n-title="actions.exportExcel">
+                <i class="fa-solid fa-file-excel"></i>
+                <span data-i18n="actions.excel">Excel</span>
+              </button>
+              <button class="btn primary btn-with-text" id="btnImportExcel" data-i18n-title="actions.importExcel">
+                <i class="fa-solid fa-file-import"></i>
+                <span data-i18n="actions.import">استيراد</span>
+              </button>
+              <button class="btn secondary btn-icon-only" id="btnRefresh" data-i18n-title="actions.refresh">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-responsive">
+            <table class="data-table" id="dataTable">
+              <thead>
+                <tr>
+                  <th data-i18n="table.invoiceNo">رقم الفاتورة</th>
+                  <th data-i18n="table.referenceNo">رقم مرجعي</th>
+                  <th data-i18n="table.entityName">اسم العميل/المورد</th>
+                  <th data-i18n="table.date">التاريخ</th>
+                  <th data-i18n="table.operationType">نوع العملية</th>
+                  <th data-i18n="table.karat">العيار</th>
+                  <th data-i18n="table.weight">الوزن</th>
+                  <th data-i18n="table.ounce">الأونصة</th>
+                  <th data-i18n="table.pricePerGram">سعر الجرام</th>
+                  <th data-i18n="table.labor">الأجور</th>
+                  <th data-i18n="table.value">القيمة</th>
+                  <th data-i18n="table.memo">البيان</th>
+                </tr>
+              </thead>
+              <tbody id="dataTableBody">
+                <!-- Empty rows for now -->
+                <tr class="empty-row">
+                  <td colspan="12" style="text-align: center; padding: 60px; color: var(--subtle);">
+                    <i class="fa-solid fa-inbox" style="font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.3;"></i>
+                    <span data-i18n="table.empty">لا توجد بيانات لعرضها</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Invoice Details Modal -->
+  <div id="invoiceDetailsModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2>
+          <i class="fa-solid fa-file-invoice"></i>
+          <span data-i18n="invoice.title">تفاصيل الفاتورة</span>
+        </h2>
+        <button class="modal-close" onclick="closeInvoiceDetailsModal()" data-i18n-title="actions.close">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Invoice Header Info -->
+        <div class="invoice-header-info">
+          <div class="info-row">
+            <div class="info-item">
+              <label data-i18n="invoice.invoiceNo"><i class="fa-solid fa-hashtag"></i> رقم الفاتورة:</label>
+              <span id="modal_invoice_id" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <label data-i18n="invoice.date"><i class="fa-solid fa-calendar"></i> التاريخ:</label>
+              <span id="modal_invoice_date" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <label data-i18n="invoice.time"><i class="fa-solid fa-clock"></i> الوقت:</label>
+              <span id="modal_invoice_time" class="info-value">-</span>
+            </div>
+            <div class="info-item">
+              <label data-i18n="invoice.operationType"><i class="fa-solid fa-tag"></i> نوع العملية:</label>
+              <span id="modal_invoice_type" class="info-value">-</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-item full-width">
+              <label data-i18n="invoice.entity"><i class="fa-solid fa-user"></i> العميل/المورد:</label>
+              <span id="modal_customer_name" class="info-value">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Invoice Details Table -->
+        <div class="invoice-details-section">
+          <h3><i class="fa-solid fa-list"></i> <span data-i18n="invoice.detailsTitle">تفاصيل الأصناف</span></h3>
+          <div class="table-responsive">
+            <table class="data-table" id="invoiceDetailsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th data-i18n="invoice.karat">العيار</th>
+                  <th data-i18n="invoice.weight">الوزن (جم)</th>
+                  <th data-i18n="invoice.ounce">الأونصة</th>
+                  <th data-i18n="invoice.pricePerGram">سعر الجرام</th>
+                  <th data-i18n="invoice.labor">الأجور</th>
+                  <th data-i18n="invoice.value">القيمة</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceDetailsTableBody">
+                <tr class="empty-row">
+                  <td colspan="7" style="text-align: center; padding: 40px;">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span data-i18n="invoice.loading">جاري التحميل...</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Invoice Summary -->
+        <div class="invoice-summary">
+          <div class="summary-row">
+            <label data-i18n="invoice.totalWeight">إجمالي الوزن:</label>
+            <span id="modal_total_weight" class="summary-value">0.00 جم</span>
+          </div>
+          <div class="summary-row">
+            <label data-i18n="invoice.totalOunce">إجمالي الأونصة:</label>
+            <span id="modal_total_ounce" class="summary-value">0.000</span>
+          </div>
+          <div class="summary-row total">
+            <label data-i18n="invoice.totalValue">إجمالي القيمة:</label>
+            <span id="modal_total_value" class="summary-value">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeInvoiceDetailsModal()">
+          <i class="fa-solid fa-times"></i>
+          <span data-i18n="actions.close">إغلاق</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Excel Modal -->
+  <div class="modal" id="importExcelModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px)">
+    <div class="modal-content import-modal-content" style="width:95%; max-width:1200px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; border-radius:16px; box-shadow:0 25px 50px rgba(0,0,0,0.3); border:1px solid var(--border)">
+      <div class="modal-header" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; padding:16px 24px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center">
+        <h2 style="margin:0; display:flex; align-items:center; gap:12px; font-size:1.25rem">
+          <i class="fa-solid fa-file-import"></i>
+          <span data-i18n="import.title">استيراد فواتير من Excel</span>
+        </h2>
+        <button type="button" class="btn-close-modal" onclick="closeImportModal()" data-i18n-title="actions.close" style="background:rgba(255,255,255,0.2); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:18px; transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body" style="padding:24px; overflow-y:auto; flex:1; background:var(--background)">
+        <!-- Step 1: Choose Type & File -->
+        <div id="importStep1">
+          <!-- Horizontal layout for options and upload -->
+          <div style="display:grid; grid-template-columns:1fr 2fr; gap:24px; align-items:start">
+            
+            <!-- Left: Invoice Type & Options -->
+            <div style="display:flex; flex-direction:column; gap:16px">
+              <!-- Invoice Type -->
+              <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px">
+                <h4 style="margin:0 0 12px 0; color:var(--text); font-size:14px; display:flex; align-items:center; gap:8px">
+                  <i class="fa-solid fa-receipt" style="color:#10b981"></i> <span data-i18n="import.invoiceType">نوع الفاتورة</span>
+                </h4>
+                <div style="display:flex; gap:8px">
+                  <label style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 8px; border:2px solid #ef4444; border-radius:10px; cursor:pointer; transition:all 0.2s; background:rgba(239,68,68,0.1)" onclick="this.querySelector('input').checked=true; this.style.borderColor='#ef4444'; this.style.background='rgba(239,68,68,0.1)'; this.parentElement.querySelector('label:last-child').style.borderColor='var(--border)'; this.parentElement.querySelector('label:last-child').style.background='transparent'">
+                    <input type="radio" name="importInvoiceType" value="SELL" checked style="display:none">
+                    <i class="fa-solid fa-arrow-trend-up" style="color:#ef4444; font-size:20px"></i>
+                    <span style="font-weight:600; font-size:12px; color:#ef4444" data-i18n="orderModal.sellLabel">بيع</span>
+                  </label>
+                  <label style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 8px; border:2px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.2s; background:transparent" onclick="this.querySelector('input').checked=true; this.style.borderColor='#22c55e'; this.style.background='rgba(34,197,94,0.1)'; this.parentElement.querySelector('label:first-child').style.borderColor='var(--border)'; this.parentElement.querySelector('label:first-child').style.background='transparent'">
+                    <input type="radio" name="importInvoiceType" value="BUY" style="display:none">
+                    <i class="fa-solid fa-arrow-trend-down" style="color:#22c55e; font-size:20px"></i>
+                    <span style="font-weight:600; font-size:12px; color:#22c55e" data-i18n="orderModal.buyLabel">شراء</span>
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Auto-create option -->
+              <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer">
+                  <input type="checkbox" id="autoCreateEntity" checked style="width:18px; height:18px; accent-color:#10b981; margin-top:2px">
+                  <div>
+                    <div style="font-weight:600; color:var(--text); font-size:13px" data-i18n="import.autoCreate">إنشاء عميل/مورد جديد</div>
+                    <div style="font-size:11px; color:var(--subtle); margin-top:2px" data-i18n="import.autoCreateHint">تلقائياً إذا لم يكن موجوداً</div>
+                  </div>
+                </label>
+              </div>
+              
+              <!-- Download Template -->
+              <button type="button" onclick="downloadTemplate()" style="width:100%; padding:10px; background:transparent; border:1px dashed var(--border); border-radius:8px; color:var(--subtle); cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.2s" onmouseover="this.style.borderColor='#10b981'; this.style.color='#10b981'" onmouseout="this.style.borderColor=''; this.style.color=''">
+                <i class="fa-solid fa-download"></i> <span data-i18n="import.downloadTemplate">تحميل قالب Excel</span>
+              </button>
+            </div>
+            
+            <!-- Right: File Upload Area -->
+            <div id="dropZone" style="border:2px dashed var(--border); border-radius:12px; padding:40px 20px; text-align:center; cursor:pointer; transition:all 0.3s; background:var(--card); display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:200px" onmouseover="this.style.borderColor='#10b981'" onmouseout="this.style.borderColor=''">
+              <i class="fa-solid fa-cloud-arrow-up" style="font-size:48px; color:#10b981; margin-bottom:16px"></i>
+              <h3 style="margin:0 0 8px 0; color:var(--text); font-size:16px" data-i18n="import.dragInstruction">اسحب ملف Excel هنا</h3>
+              <p style="color:var(--subtle); margin:0 0 16px 0; font-size:13px" data-i18n="import.orClick">أو انقر لاختيار الملف</p>
+              <button type="button" style="padding:10px 24px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); border:none; border-radius:8px; color:white; cursor:pointer; font-size:14px; display:flex; align-items:center; gap:8px; transition:transform 0.2s" id="btnSelectFile" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fa-solid fa-folder-open"></i>
+                <span data-i18n="import.chooseFile">اختيار ملف</span>
+              </button>
+              <p style="color:var(--subtle); margin:16px 0 0 0; font-size:11px" data-i18n="import.formats">xlsx, xls, csv</p>
+            </div>
+          </div>
+            <input type="file" id="importFileInput" accept=".xlsx,.xls,.csv" style="display:none">
+        </div>
+        
+        <!-- Step 2: Preview Data -->
+        <div id="importStep2" style="display:none">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px">
+            <div style="display:flex; align-items:center; gap:12px">
+              <i class="fa-solid fa-file-excel" style="color:#22c55e; font-size:32px"></i>
+              <div>
+                <div style="font-weight:600; color:var(--text)" id="importFileName">-</div>
+                <div style="font-size:13px; color:var(--subtle)" id="importFileStats">-</div>
+              </div>
+            </div>
+            <button type="button" class="btn secondary" onclick="resetImport()">
+              <i class="fa-solid fa-arrow-rotate-right"></i>
+              <span data-i18n="import.chooseAnother">اختيار ملف آخر</span>
+            </button>
+          </div>
+          
+          <!-- Preview Table -->
+          <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden; max-height:350px; overflow-y:auto">
+            <table class="data-table" id="importPreviewTable" style="margin:0">
+              <thead style="position:sticky; top:0; background:var(--card)">
+                <tr>
+                  <th style="width:40px"><input type="checkbox" id="selectAllImport" checked></th>
+                  <th data-i18n="import.preview.entityId">رقم العميل/المورد</th>
+                  <th data-i18n="import.preview.entityName">اسم العميل/المورد</th>
+                  <th data-i18n="import.preview.date">التاريخ</th>
+                  <th data-i18n="import.preview.karat">العيار</th>
+                  <th data-i18n="import.preview.weight">الوزن</th>
+                  <th data-i18n="import.preview.ounce">الأونصة</th>
+                  <th data-i18n="import.preview.pricePerGram">سعر الجرام</th>
+                  <th data-i18n="import.preview.value">القيمة</th>
+                  <th data-i18n="import.preview.status">الحالة</th>
+                </tr>
+              </thead>
+              <tbody id="importPreviewBody">
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Import Summary -->
+          <div style="margin-top:16px; padding:16px; background:var(--background); border-radius:10px; display:flex; gap:24px">
+            <div style="text-align:center; flex:1">
+              <div style="font-size:28px; font-weight:700; color:var(--primary)" id="importTotalRows">0</div>
+              <div style="font-size:13px; color:var(--subtle)" data-i18n="import.totalRows">إجمالي الصفوف</div>
+            </div>
+            <div style="text-align:center; flex:1">
+              <div style="font-size:28px; font-weight:700; color:#22c55e" id="importValidRows">0</div>
+              <div style="font-size:13px; color:var(--subtle)" data-i18n="import.validRows">صفوف صالحة</div>
+            </div>
+            <div style="text-align:center; flex:1">
+              <div style="font-size:28px; font-weight:700; color:#ef4444" id="importErrorRows">0</div>
+              <div style="font-size:13px; color:var(--subtle)" data-i18n="import.errorRows">صفوف بها أخطاء</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Step 3: Import Progress -->
+        <div id="importStep3" style="display:none; text-align:center; padding:40px">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size:64px; color:var(--primary); margin-bottom:20px"></i>
+          <h3 style="margin:0 0 8px 0" data-i18n="import.importing">جاري استيراد الفواتير...</h3>
+          <p style="color:var(--subtle); margin:0 0 20px 0" id="importProgressText" data-i18n="import.pleaseWait">يرجى الانتظار</p>
+          <div style="background:var(--border); border-radius:10px; height:12px; overflow:hidden; max-width:400px; margin:0 auto">
+            <div id="importProgressBar" style="background:linear-gradient(90deg, #10b981, #22c55e); height:100%; width:0%; transition:width 0.3s"></div>
+          </div>
+        </div>
+        
+        <!-- Step 4: Import Complete -->
+        <div id="importStep4" style="display:none; text-align:center; padding:40px">
+          <i class="fa-solid fa-check-circle" style="font-size:80px; color:#22c55e; margin-bottom:20px"></i>
+          <h3 style="margin:0 0 8px 0; color:#22c55e" data-i18n="import.completed">تم الاستيراد بنجاح!</h3>
+          <p style="color:var(--subtle); margin:0 0 20px 0" id="importResultText">-</p>
+          <button type="button" class="btn primary" onclick="closeImportModal(); loadMovementData();">
+            <i class="fa-solid fa-check"></i>
+            <span data-i18n="import.closeAndRefresh">إغلاق وتحديث البيانات</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="modal-footer" style="padding:16px 20px; border-top:1px solid var(--border); display:flex; justify-content:space-between" id="importModalFooter">
+        <button type="button" class="btn secondary" onclick="closeImportModal()">
+          <i class="fa-solid fa-times"></i>
+          <span data-i18n="actions.cancel">إلغاء</span>
+        </button>
+        <button type="button" class="btn primary" id="btnStartImport" style="display:none">
+          <i class="fa-solid fa-file-import"></i>
+          <span data-i18n="import.startImport">بدء الاستيراد</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    /* Import Modal Styles */
+    .import-modal-content {
+      background: #ffffff !important;
+    }
+    .import-modal-content .modal-body {
+      background: #ffffff !important;
+    }
+    [data-theme="dark"] .import-modal-content,
+    .dark .import-modal-content {
+      background: #1a1a2e !important;
+    }
+    [data-theme="dark"] .import-modal-content .modal-body,
+    .dark .import-modal-content .modal-body {
+      background: #1a1a2e !important;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .import-modal-content {
+        background: #1a1a2e !important;
+      }
+      :root:not([data-theme="light"]) .import-modal-content .modal-body {
+        background: #1a1a2e !important;
+      }
+    }
+    .import-type-option:has(input:checked) {
+      border-color: var(--primary) !important;
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .import-type-option:hover {
+      border-color: var(--primary);
+    }
+    #dropZone.drag-over {
+      border-color: var(--primary);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    #importPreviewTable .row-error {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    #importPreviewTable .row-valid {
+      background: rgba(34, 197, 94, 0.05);
+    }
+    #importPreviewTable .status-badge {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    #importPreviewTable .status-valid {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    #importPreviewTable .status-error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  </style>
+
+  <script src="../../shared-styles/permission-denied-modal.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

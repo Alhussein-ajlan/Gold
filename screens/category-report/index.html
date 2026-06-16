@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="categoryReport.title">تقرير حسب الأصناف</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+</head>
+<body>
+  <main class="dashboard">
+    <section class="panel active" id="panel-category-report">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="page-header-icon">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div class="page-header-content">
+          <h1 data-i18n="categoryReport.title">تقرير حسب الأصناف</h1>
+          <p data-i18n="categoryReport.subtitle">جرد الأصناف حسب العيارات</p>
+        </div>
+      </div>
+      
+      <!-- Filters Card -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <!-- القسم -->
+          <div class="filter-group">
+            <label data-i18n="categoryReport.filters.section">القسم</label>
+            <select id="f_section">
+              <option value="all" data-i18n="categoryReport.sections.all">الكل</option>
+              <option value="mashghulat" data-i18n="categoryReport.sections.mashghulat">المشغولات</option>
+              <option value="kasr" data-i18n="categoryReport.sections.kasr">الكسر</option>
+              <option value="silver" data-i18n="categoryReport.sections.silver">الفضة</option>
+            </select>
+          </div>
+          
+          <!-- العيار -->
+          <div class="filter-group">
+            <label data-i18n="categoryReport.filters.karat">العيار</label>
+            <select id="f_karat">
+              <option value="all" data-i18n="categoryReport.filters.allKarats">جميع العيارات</option>
+              <option value="24">24</option>
+              <option value="22">22</option>
+              <option value="21">21</option>
+              <option value="18">18</option>
+              <option value="14">14</option>
+              <option value="9">9</option>
+              <option value="999">999 (فضة)</option>
+              <option value="925">925 (فضة)</option>
+              <option value="900">900 (فضة)</option>
+              <option value="800">800 (فضة)</option>
+            </select>
+          </div>
+          
+          <!-- من تاريخ -->
+          <div class="filter-group">
+            <label data-i18n="categoryReport.filters.dateFrom">من تاريخ</label>
+            <input type="date" id="f_from">
+          </div>
+          
+          <!-- إلى تاريخ -->
+          <div class="filter-group">
+            <label data-i18n="categoryReport.filters.dateTo">إلى تاريخ</label>
+            <input type="date" id="f_to">
+          </div>
+          
+          <!-- زر العرض -->
+          <div class="filter-group filter-btn">
+            <button class="view-btn premium-view-btn" id="btn_view" type="button">
+              <i class="fa-solid fa-boxes-stacked"></i>
+              <span data-i18n="categoryReport.filters.view">عرض</span>
+            </button>
+          </div>
+          
+          <!-- زر الطباعة -->
+          <div class="filter-group">
+            <button class="print-btn" id="btn_print" type="button">
+              <i class="fa-solid fa-print"></i>
+              <span data-i18n="categoryReport.filters.print">طباعة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Summary Cards -->
+      <div class="summary-row" id="summary_container" style="display:none">
+        <div class="summary-box total-items-box">
+          <div class="summary-icon"><i class="fa-solid fa-cubes"></i></div>
+          <div class="summary-info">
+            <span class="summary-title" data-i18n="categoryReport.summary.totalItems">إجمالي الأصناف</span>
+            <span class="summary-amount" id="totalItemsValue">0</span>
+          </div>
+        </div>
+        
+        <div class="summary-box total-in-box">
+          <div class="summary-icon"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="summary-info">
+            <span class="summary-title" data-i18n="categoryReport.summary.totalIn">إجمالي الداخل</span>
+            <span class="summary-amount" id="totalInValue">0.00 جم</span>
+          </div>
+        </div>
+        
+        <div class="summary-box total-out-box">
+          <div class="summary-icon"><i class="fa-solid fa-arrow-up"></i></div>
+          <div class="summary-info">
+            <span class="summary-title" data-i18n="categoryReport.summary.totalOut">إجمالي الخارج</span>
+            <span class="summary-amount" id="totalOutValue">0.00 جم</span>
+          </div>
+        </div>
+        
+        <div class="summary-box net-box">
+          <div class="summary-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          <div class="summary-info">
+            <span class="summary-title" data-i18n="categoryReport.summary.netBalance">الصافي</span>
+            <span class="summary-amount" id="netBalanceValue">0.00 جم</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Results Table -->
+      <div class="results-section" id="results_container" style="display:none">
+        <div class="data-card">
+          <div class="data-card-header">
+            <i class="fa-solid fa-table-list"></i>
+            <span data-i18n="categoryReport.table.title">تفاصيل الجرد</span>
+            <span class="items-count" id="itemsCount"></span>
+          </div>
+          <div class="search-box-container">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-search search-icon"></i>
+              <input type="text" id="tableSearchInput" class="table-search-input" data-i18n-placeholder="categoryReport.search.placeholder" placeholder="بحث في الجدول...">
+              <button type="button" id="clearSearchBtn" class="clear-search-btn" style="display:none">
+                <i class="fa-solid fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="data-card-body">
+            <div class="table-responsive">
+              <table id="reportTable">
+                <thead>
+                  <tr>
+                    <th data-i18n="categoryReport.table.itemNo">رقم الصنف</th>
+                    <th data-i18n="categoryReport.table.itemName">اسم الصنف</th>
+                    <th data-i18n="categoryReport.table.karat">العيار</th>
+                    <th data-i18n="categoryReport.table.totalIn">إجمالي الداخل</th>
+                    <th data-i18n="categoryReport.table.totalOut">إجمالي الخارج</th>
+                    <th data-i18n="categoryReport.table.net">الصافي</th>
+                  </tr>
+                </thead>
+                <tbody id="reportTableBody"></tbody>
+                <tfoot id="reportTableFoot"></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Empty State -->
+      <div class="empty-state" id="empty_state" style="display:none">
+        <i class="fa-solid fa-inbox"></i>
+        <p data-i18n="categoryReport.emptyState">لا توجد بيانات للعرض</p>
+      </div>
+      
+      <!-- Loading -->
+      <div class="loading-state" id="loading_state" style="display:none">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p data-i18n="categoryReport.loading">جاري التحميل...</p>
+      </div>
+    </section>
+  </main>
+  
+  <script src="../../shared-styles/number-formatter.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

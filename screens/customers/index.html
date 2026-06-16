@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>لوحة التحكم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-styles/themes.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="../../shared-styles/theme-loader.js"></script>
+    <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+    <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+    <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+    <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+    <script src="../../shared-styles/number-formatter.js"></script>
+  </head>
+  <body>
+    <main class="dashboard">
+      <section id="panel-customers" class="panel active" role="tabpanel" aria-labelledby="tab-customers">
+          <div class="toolbar">
+            <div class="actions">
+              <button class="btn primary" id="btnNewCustomer" style="display:inline-flex;align-items:center;gap:8px"><i class="fa-solid fa-user-plus"></i><span id="btnNewCustomerText">عميل جديد</span></button>
+            </div>
+          </div>
+          <div class="grid cards-3">
+            <div class="card form-card professional-stat-card" id="totalCustomersCard" data-color="#3b82f6">
+              <div class="professional-card-header" style="border-top-color:#3b82f6">
+                <h3 id="totalCustomersTitle">إجمالي العملاء</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="totalCustomersValue">0</div>
+              <div class="stat-sub" id="totalCustomersMonth"><i class="fa-solid fa-calendar-days" style="color:#3b82f6"></i> 0 عملاء تم إضافتهم هذا الشهر</div>
+              <div class="progress" aria-hidden="true"><div class="progress-bar" id="monthBar" style="width:0%"></div></div>
+              <div class="stat-sub" id="totalCustomersWeek"><i class="fa-solid fa-calendar-week" style="color:#3b82f6"></i> 0 عملاء تم إضافتهم هذا الأسبوع</div>
+              <div class="progress" aria-hidden="true"><div class="progress-bar" id="weekBar" style="width:0%"></div></div>
+            </div>
+            <div class="card form-card professional-stat-card" id="activeCustomersCard" data-color="#10b981">
+              <div class="professional-card-header" style="border-top-color:#10b981">
+                <h3 id="activeCustomersTitle">العملاء النشطون</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
+                  <i class="fa-solid fa-user-check"></i>
+                </div>
+              </div>
+              <div class="row" style="gap:12px; align-items:center; margin-top:10px">
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-circle-check" style="color:#10b981;font-size:14px"></i><strong id="activeLabel">نشطون:</strong> <span id="activeCustomersValue">0</span></div>
+                <div style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-circle-xmark" style="color:#ef4444;font-size:14px"></i><strong id="inactiveLabel">غير نشطون:</strong> <span id="inactiveCustomersValue">0</span></div>
+              </div>
+            </div>
+            <div class="card form-card professional-stat-card" data-color="#f59e0b">
+              <div class="professional-card-header" style="border-top-color:#f59e0b">
+                <h3 id="customersDebtTitle">مديونية العملاء</h3>
+                <div class="professional-card-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+                  <i class="fa-solid fa-coins"></i>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                <select id="customersKaratSelector" style="font-size:11px;padding:6px 10px;min-height:32px">
+                  <option value="24" id="karat24Opt">عيار 24 صافي</option>
+                  <option value="22" id="karat22Opt">عيار 22</option>
+                  <option value="21" id="karat21Opt" selected>عيار 21</option>
+                  <option value="18" id="karat18Opt">عيار 18</option>
+                </select>
+              </div>
+              <div class="stat-sub" style="font-size:13px; margin-top:8px; display:flex; align-items:center; gap:6px">
+                <i class="fa-solid fa-money-bill-wave" style="color:#10b981"></i>
+                <span id="customersDebtCash" style="font-size:15px; font-weight:700">0.00</span>
+              </div>
+              <div class="stat-sub" style="font-size:13px; display:flex; align-items:center; gap:6px">
+                <i class="fa-solid fa-weight-hanging" style="color:#f59e0b"></i>
+                <span id="customersDebtGold" style="font-size:15px; font-weight:700">0.00</span>
+              </div>
+            </div>
+            <div class="card table-card grid-span-3 fullwide" id="customers-grid">
+              <div class="table-head">
+                <h3 id="customersListTitle">قائمة العملاء</h3>
+                <div class="head-search">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input type="search" id="customersSearch" aria-label="بحث عن عميل">
+                </div>
+                <div class="row">
+                  <button class="icon-btn" id="btnRefreshCustomers" title="تحديث"><i class="fa-solid fa-rotate-right"></i></button>
+                  <button class="icon-btn" id="btnExportExcel" title="تصدير Excel"><i class="fa-regular fa-file-excel"></i></button>
+                  <button class="icon-btn" title="PDF" id="btnExportPdf"><i class="fa-regular fa-file-pdf"></i></button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th id="th_customerId">رقم العميل</th>
+                      <th id="th_customerName">اسم العميل</th>
+                      <th id="th_taxNo">الرقم الضريبي</th>
+                      <th id="th_phone">رقم الهاتف</th>
+                      <th id="th_email">البريد الإلكتروني</th>
+                      <th id="th_region">المنطقة</th>
+                      <th id="th_active">نشط</th>
+                      <th id="th_date">التاريخ</th>
+                      <th id="th_debtLimit">سقف المديونية</th>
+                      <th id="th_actions">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </section>
+    </main>
+
+    <!-- New Customer Modal -->
+    <div class="modal" id="newCustomerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog customer-modal" role="document" style="max-height:90vh; display:flex; flex-direction:column">
+        <div class="modal-header" style="flex-shrink:0">
+          <div class="customer-header-main">
+            <div class="customer-avatar"></div>
+            <div class="customer-header-titles">
+              <div style="display:flex; align-items:center; gap:12px">
+                <h3 id="modalTitle" style="margin:0">إضافة عميل</h3>
+                <label class="customer-active-switch">
+                  <input type="checkbox" id="nc_active" checked>
+                  <span class="customer-active-slider"></span>
+                </label>
+              </div>
+              <span class="customer-header-sub" id="customerHeaderSubtitle"></span>
+            </div>
+          </div>
+          <button class="icon-btn" id="modalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="flex:1; overflow-y:auto">
+          <form id="newCustomerForm" class="customer-form-3cols">
+            <!-- Column 1: Basic Info Card -->
+            <div class="customer-col-card">
+              <div class="customer-col-card-header" id="basicInfoHeader"><i class="fa-solid fa-user-circle" style="margin-inline-end:8px;color:#3b82f6"></i>البيانات الأساسية</div>
+              <div class="customer-col-card-body">
+                <label class="form-field">
+                  <span id="field_customerId"><i class="fa-solid fa-hashtag" style="margin-inline-end:4px;color:var(--primary);font-size:11px"></i>رقم العميل</span>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-hashtag icon" aria-hidden="true"></i>
+                    <input type="text" id="nc_id" inputmode="numeric" pattern="\\d*" data-digits-only required placeholder="مثال: 1004" readonly>
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_customerName"><i class="fa-solid fa-user" style="margin-inline-end:4px;color:var(--primary);font-size:11px"></i>اسم العميل</span>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-user icon" aria-hidden="true"></i>
+                    <input type="text" id="nc_name" required placeholder="اسم العميل">
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_taxNo"><i class="fa-solid fa-id-card" style="margin-inline-end:4px;color:var(--primary);font-size:11px"></i>الرقم الضريبي</span>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-id-card icon" aria-hidden="true"></i>
+                    <input type="text" id="nc_tax" inputmode="numeric" pattern="\d*" maxlength="15" data-digits-only placeholder="مثال: 311242003700003">
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_phone"><i class="fa-solid fa-phone" style="margin-inline-end:4px;color:var(--primary);font-size:11px"></i>رقم الهاتف</span>
+                  <div class="input-wrap">
+                    <i class="fa-solid fa-phone icon" aria-hidden="true"></i>
+                    <input type="text" id="nc_phone" inputmode="numeric" pattern="\d*" data-digits-only placeholder="مثال: 9665XXXXXXXX">
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_date"><i class="fa-solid fa-calendar" style="margin-inline-end:4px;color:var(--primary);font-size:11px"></i>التاريخ</span>
+                  <input type="date" id="nc_date" required>
+                </label>
+              </div>
+            </div>
+
+            <!-- Column 2: Contact & Classification Card -->
+            <div class="customer-col-card">
+              <div class="customer-col-card-header" id="contactHeader"><i class="fa-solid fa-address-book" style="margin-inline-end:8px;color:#8b5cf6"></i>التواصل والتصنيف</div>
+              <div class="customer-col-card-body">
+                <label class="form-field">
+                  <span id="field_email"><i class="fa-solid fa-envelope" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>البريد الإلكتروني</span>
+                  <div class="input-wrap">
+                    <i class="fa-regular fa-envelope icon" aria-hidden="true"></i>
+                    <input type="email" id="nc_email" placeholder="مثال: name@example.com">
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_region"><i class="fa-solid fa-map-marker-alt" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>المنطقة</span>
+                  <div class="input-wrap">
+                    <i class="fa-solid fa-map-marker-alt icon" aria-hidden="true"></i>
+                    <input type="text" id="nc_region" placeholder="مثال: الرياض">
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_classification"><i class="fa-solid fa-tags" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>التصنيف</span>
+                  <div style="display:flex; gap:8px; align-items:center">
+                    <div class="input-wrap" style="flex:1">
+                      <i class="fa-solid fa-tags icon" aria-hidden="true"></i>
+                      <select id="nc_category" style="width:100%; padding-inline-end:30px">
+                        <option value="">بدون تصنيف</option>
+                      </select>
+                    </div>
+                    <button type="button" id="btnManageCategories" class="icon-btn" title="إدارة التصنيفات" style="background:linear-gradient(135deg,var(--primary),var(--primary-600));color:#fff;width:36px;height:36px;border-radius:10px;flex-shrink:0">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </label>
+                <label class="form-field">
+                  <span id="field_branchAccess"><i class="fa-solid fa-code-branch" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>صلاحية الفروع</span>
+                  <div class="input-wrap">
+                    <i class="fa-solid fa-code-branch icon" aria-hidden="true"></i>
+                    <select id="nc_branch_scope" style="width:100%; padding-inline-end:30px">
+                      <option value="single">فرع واحد</option>
+                      <option value="multiple">عدة فروع</option>
+                      <option value="all">كل الفروع</option>
+                    </select>
+                  </div>
+                </label>
+                <div id="nc_branch_single_wrap" class="form-field" style="margin-top:0">
+                  <span id="field_branchSingle"><i class="fa-solid fa-building" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>الفرع</span>
+                  <div class="input-wrap">
+                    <i class="fa-solid fa-building icon" aria-hidden="true"></i>
+                    <select id="nc_branch_single" style="width:100%; padding-inline-end:30px"></select>
+                  </div>
+                </div>
+                <div id="nc_branch_multi_wrap" class="form-field branch-access-field" style="margin-top:0">
+                  <span id="field_branchMulti"><i class="fa-solid fa-layer-group" style="margin-inline-end:4px;color:#8b5cf6;font-size:11px"></i>الفروع المسموح بها</span>
+                  <div class="branch-picker branch-picker-compact" id="nc_branch_picker">
+                    <button type="button" id="nc_branch_picker_trigger" class="branch-picker-trigger" aria-expanded="false">
+                      <div class="branch-picker-summary" id="nc_branch_multi_summary"></div>
+                      <span class="branch-picker-trigger-icon"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+                    </button>
+                  </div>
+                </div>
+                <p id="nc_branch_hint" style="margin:4px 0 0;color:var(--subtle);font-size:12px"></p>
+              </div>
+            </div>
+
+            <!-- Column 3: Ounce Settings & Limits Card -->
+            <div class="customer-col-card">
+              <div class="customer-col-card-header" id="ounceSettingsHeader"><i class="fa-solid fa-sliders" style="margin-inline-end:8px;color:#f59e0b"></i>إعدادات الأونصة والسقف</div>
+              <div class="customer-col-card-body">
+                <div class="customer-oz-card">
+                  <div class="customer-oz-card-header" id="saleOunceHeader"><i class="fa-solid fa-arrow-trend-up" style="margin-inline-end:6px;color:#10b981;font-size:11px"></i>أونصة البيع</div>
+                  <div class="customer-oz-card-body">
+                    <div class="customer-oz-row">
+                      <span class="customer-oz-label" id="sale_oz_add_label">زيادة</span>
+                      <input type="number" step="0.01" id="nc_sale_oz_add" class="customer-oz-input" placeholder="3.00">
+                      <label class="customer-oz-check">
+                        <input type="checkbox" id="nc_sale_oz_add_enabled">
+                        <span id="sale_oz_add_enabled_label">تفعيل</span>
+                      </label>
+                    </div>
+                    <div class="customer-oz-row">
+                      <span class="customer-oz-label" id="sale_oz_sub_label">نقص</span>
+                      <input type="number" step="0.01" id="nc_sale_oz_sub" class="customer-oz-input" placeholder="2.00-">
+                      <label class="customer-oz-check">
+                        <input type="checkbox" id="nc_sale_oz_sub_enabled">
+                        <span id="sale_oz_sub_enabled_label">تفعيل</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="customer-oz-card">
+                  <div class="customer-oz-card-header" id="purchaseOunceHeader"><i class="fa-solid fa-arrow-trend-down" style="margin-inline-end:6px;color:#ef4444;font-size:11px"></i>أونصة الشراء</div>
+                  <div class="customer-oz-card-body">
+                    <div class="customer-oz-row">
+                      <span class="customer-oz-label" id="purchase_oz_add_label">زيادة</span>
+                      <input type="number" step="0.01" id="nc_purchase_oz_add" class="customer-oz-input" placeholder="3.00">
+                      <label class="customer-oz-check">
+                        <input type="checkbox" id="nc_purchase_oz_add_enabled">
+                        <span id="purchase_oz_add_enabled_label">تفعيل</span>
+                      </label>
+                    </div>
+                    <div class="customer-oz-row">
+                      <span class="customer-oz-label" id="purchase_oz_sub_label">نقص</span>
+                      <input type="number" step="0.01" id="nc_purchase_oz_sub" class="customer-oz-input" placeholder="2.00-">
+                      <label class="customer-oz-check">
+                        <input type="checkbox" id="nc_purchase_oz_sub_enabled">
+                        <span id="purchase_oz_sub_enabled_label">تفعيل</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="customer-oz-card">
+                  <div class="customer-oz-card-header" id="debtLimitHeader"><i class="fa-solid fa-hand-holding-dollar" style="margin-inline-end:6px;color:#f59e0b;font-size:11px"></i>سقف المديونية</div>
+                  <div class="customer-oz-card-body">
+                    <label class="form-field" style="margin:0">
+                      <div class="input-wrap">
+                        <i class="fa-regular fa-money-bill-1 icon" aria-hidden="true"></i>
+                        <input type="text" id="nc_debt" inputmode="decimal" placeholder="مثال: 5000">
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+          <p class="error" id="nc_error"></p>
+        </div>
+        <div class="modal-footer" style="padding:12px 20px; gap:10px">
+          <button class="btn" id="modalCancel" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; font-size:14px; font-weight:600; border-radius:10px; transition:all 0.3s ease; cursor:pointer">
+            <i class="fa-solid fa-arrow-rotate-left" style="font-size:15px"></i>
+            <span id="modalCancelText">إلغاء</span>
+          </button>
+          <button class="btn primary" id="modalSave" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px; font-size:14px; font-weight:600; border-radius:10px; transition:all 0.3s ease; cursor:pointer">
+            <i class="fa-solid fa-check-circle" style="font-size:15px"></i>
+            <span id="modalSaveText">حفظ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal" id="confirmDelModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:450px">
+        <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+          <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+            <span>تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="confirmDelClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px; text-align:center">
+          <div style="margin-bottom:16px">
+            <i class="fa-solid fa-circle-exclamation confirm-del-icon" style="font-size:48px; opacity:0.9"></i>
+          </div>
+          <p id="confirmDelMsg" style="font-size:15px; margin:0; line-height:1.6"></p>
+        </div>
+        <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+          <button class="btn primary" id="confirmDelYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px; display:flex; align-items:center; gap:8px; justify-content:center">
+            <i class="fa-regular fa-circle-check"></i> <span id="confirmDelYesText">نعم، احذف</span>
+          </button>
+          <button class="btn secondary" id="confirmDelNo" style="font-size:14px; padding:10px 24px; display:flex; align-items:center; gap:8px; justify-content:center">
+            <i class="fa-regular fa-circle-xmark"></i> <span id="confirmDelNoText">إلغاء الأمر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- تمت إزالة مودال الموردين من شاشة العملاء -->
+
+    <!-- Categories Management Modal -->
+    <div class="modal" id="categoriesModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:600px">
+        <div class="modal-header categories-modal-header">
+          <h3 style="margin:0;display:flex;align-items:center;gap:10px;font-size:18px">
+            <i class="fa-solid fa-tags"></i>
+            <span id="categoriesModalTitle">إدارة التصنيفات</span>
+          </h3>
+          <button class="icon-btn" id="categoriesModalClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:20px;max-height:60vh;overflow-y:auto">
+          <div style="margin-bottom:16px">
+            <h4 style="margin:0 0 12px;color:var(--primary);font-size:14px;display:flex;align-items:center;gap:6px">
+              <i class="fa-solid fa-list"></i> <span id="availableCategoriesLabel">التصنيفات المتاحة</span>
+            </h4>
+            <div id="categoriesList" style="display:flex;flex-direction:column;gap:8px">
+              <p style="text-align:center;color:var(--subtle)">جاري التحميل...</p>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding:16px;background:color-mix(in oklab,var(--primary) 8%,var(--card) 92%);border-radius:12px;border:1px solid color-mix(in oklab,var(--primary) 20%,var(--border) 80%)">
+            <h4 style="margin:0 0 12px;color:var(--primary);font-size:14px;display:flex;align-items:center;gap:6px">
+              <i class="fa-solid fa-plus-circle"></i> <span id="addNewCategoryLabel">إضافة تصنيف جديد</span>
+            </h4>
+            <div style="display:flex;gap:10px;align-items:center;flex-direction:row-reverse">
+              <input type="text" id="newCategoryName" placeholder="اسم التصنيف (مثال: البطحاء)" style="flex:3;min-width:250px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-muted);color:var(--text);font-size:14px">
+              <button type="button" id="btnAddCategory" class="btn primary" style="flex:1;max-width:100px;padding:10px 12px;font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px">
+                <i class="fa-solid fa-plus"></i><span id="btnAddCategoryText">إضافة</span>
+              </button>
+            </div>
+            <p id="categoryError" style="color:var(--error);font-size:12px;margin:8px 0 0;display:none"></p>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:12px 20px;border-top:1px solid var(--border)">
+          <button class="btn" id="categoriesModalDone" style="width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-600));color:#fff;border:none;padding:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px">
+            <i class="fa-solid fa-check"></i><span id="categoriesModalDoneText">تم</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch Selection Modal -->
+    <div class="modal branch-picker-modal" id="nc_branch_picker_modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:680px">
+        <div class="modal-header branch-picker-modal-header">
+          <h3 style="margin:0;display:flex;align-items:center;gap:10px;font-size:18px">
+            <i class="fa-solid fa-code-branch"></i>
+            <span id="nc_branch_picker_title">تحديد الفروع</span>
+          </h3>
+          <button class="icon-btn" id="nc_branch_picker_modal_close" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body branch-picker-modal-body">
+          <div class="branch-picker-toolbar">
+            <div class="branch-picker-popover-title">&nbsp;</div>
+            <div class="branch-picker-actions">
+              <button type="button" id="nc_branch_multi_select_all" class="branch-picker-action">تحديد الكل</button>
+              <button type="button" id="nc_branch_multi_clear" class="branch-picker-action branch-picker-action-muted">مسح الكل</button>
+            </div>
+          </div>
+          <div id="nc_branch_multi_selected" class="branch-picker-selected branch-picker-selected-panel"></div>
+          <label class="branch-picker-search" for="nc_branch_multi_search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="text" id="nc_branch_multi_search" placeholder="ابحث عن فرع أو كود الفرع">
+          </label>
+          <div id="nc_branch_multi_list" class="branch-picker-list"></div>
+        </div>
+        <div class="modal-footer" style="padding:12px 20px;border-top:1px solid var(--border)">
+          <button class="btn" id="nc_branch_picker_done" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;padding:12px">
+            <i class="fa-solid fa-check"></i><span id="nc_branch_picker_done_text">تم</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Category Confirm Modal -->
+    <div class="modal" id="deleteCategoryModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-dialog" role="document" style="max-width:400px">
+        <div class="modal-header delete-category-modal-header">
+          <h3 style="margin:0;display:flex;align-items:center;gap:10px;font-size:16px">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>تأكيد الحذف</span>
+          </h3>
+          <button class="icon-btn" id="deleteCategoryModalClose"><i class="fa-regular fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="padding:24px;text-align:center">
+          <div style="width:64px;height:64px;background:linear-gradient(135deg,#fef2f2,#fee2e2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <i class="fa-solid fa-trash" style="font-size:28px;color:#ef4444"></i>
+          </div>
+          <p id="deleteCategoryMsg" style="font-size:15px;color:var(--text);margin:0">هل تريد حذف هذا التصنيف؟</p>
+          <p id="deleteCategoryName" style="font-size:14px;color:var(--subtle);margin:8px 0 0"></p>
+        </div>
+        <div class="modal-footer" style="padding:12px 20px;display:flex;gap:10px">
+          <button class="btn" id="deleteCategoryCancel" style="flex:1;padding:10px;background:var(--bg-muted);color:var(--text);border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px">
+            <i class="fa-solid fa-xmark"></i><span id="deleteCategoryCancelText">إلغاء</span>
+          </button>
+          <button class="btn" id="deleteCategoryConfirm" style="flex:1;padding:10px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px">
+            <i class="fa-solid fa-trash"></i><span id="deleteCategoryConfirmText">حذف</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      /* Professional Button Styles - moved to main CSS */
+    </style>
+
+    <script src="../../shared-styles/common-utils.js"></script>
+    <script src="../../shared-styles/modal-close-effects.js"></script>
+    <script src="../../shared-styles/permission-denied-modal.js"></script>
+    <script src="../../shared-styles/screen-permissions.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

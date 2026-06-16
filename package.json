@@ -1,0 +1,143 @@
+{
+  "name": "benajlan-gold-accounting",
+  "productName": "المحاسب الذكي BenAjlan",
+  "version": "3.2.8",
+  "description": "نظام محاسبي ذكي شامل لمحلات الذهب - BenAjlan Smart Accounting",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "electron-rebuild",
+    "prestart": "taskkill /F /IM electron.exe /T 2>nul || echo. && electron-rebuild -f -w better-sqlite3 2>nul || echo.",
+    "start": "electron .",
+    "rebuild": "electron-rebuild",
+    "rebuild-dev": "npm rebuild better-sqlite3 --update-binary",
+    "prebuild": "node build/verify-deps.js && node build/clean-before-build.js",
+    "build:mt5-bridge": "python -c \"import MetaTrader5\" && python -m PyInstaller --noconfirm --clean --onefile --name mt5_bridge --distpath resources --workpath build/mt5_bridge_build --specpath build/mt5_bridge_build --hidden-import=numpy --hidden-import=MetaTrader5 --collect-all=MetaTrader5 resources/mt5_bridge.py",
+    "build": "npm run build:mt5-bridge && electron-builder --win --x64 --dir && node build/add-manifest.js",
+    "build:dir": "npm run build:mt5-bridge && electron-builder --win --x64 --dir",
+    "build:inno": "node build/run-inno.js",
+    "build:full": "npm run build && npm run build:inno",
+    "build:installer": "node installer-build/build-installer.js",
+    "dist": "npm run build:mt5-bridge && electron-builder",
+    "build-release": "node build-release.js",
+    "clean-db": "node clean-database.js",
+    "reset-users": "node reset-users.js"
+  },
+  "keywords": [
+    "gold",
+    "accounting",
+    "jewelry",
+    "محاسبة",
+    "ذهب"
+  ],
+  "author": {
+    "name": "م. الحسين بن عجلان",
+    "email": "al.hussein.ajlan@gmail.com"
+  },
+  "license": "Proprietary",
+  "dependencies": {
+    "@libsql/client": "^0.17.0",
+    "better-sqlite3": "^12.6.2",
+    "chart.js": "^4.5.1",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
+    "qrcode": "^1.5.4",
+    "whatsapp-web.js": "^1.23.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
+    "app-builder-bin": "^5.0.0-alpha.12",
+    "electron": "^38.8.4",
+    "electron-builder": "^26.8.1",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^4.0.1"
+  },
+  "build": {
+    "appId": "com.benajlan.smartaccounting",
+    "productName": "المحاسب الذكي BenAjlan",
+    "copyright": "© 2025 م.الحسين بن عجلان - جميع الحقوق محفوظة",
+    "artifactName": "BenAjlan-Setup-${version}.${ext}",
+    "directories": {
+      "output": "../GoldBuild",
+      "buildResources": "resources"
+    },
+    "files": [
+      "**/*",
+      "!**/_symlink_test_*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!node_modules/*.d.ts",
+      "!node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
+      "!build-icon.js",
+      "!build/mt5_bridge_build/**",
+      "!installer.iss",
+      "!*.log",
+      "!**/*.md",
+      "!**/*.bat",
+      "!**/*.py",
+      "!resources/mt5_bridge.exe",
+      "!**/test-*.{js,html}",
+      "!**/check-*.js",
+      "!build.ps1",
+      "README.md",
+      "LICENSE.txt"
+    ],
+    "extraResources": [
+      {
+        "from": "database",
+        "to": "../database",
+        "filter": [
+          "**/*",
+          "!license.dat",
+          "!license-history.json"
+        ]
+      },
+      {
+        "from": "data",
+        "to": "../data",
+        "filter": [
+          "logos/**/*",
+          "!cloud-db-config.json",
+          "!cloud-db-token.json",
+          "!cloud-db-last-sync.json",
+          "!notification-settings.json",
+          "!settings.json"
+        ]
+      },
+      {
+        "from": "resources",
+        "to": "resources",
+        "filter": [
+          "**/*",
+          "!**/*.py"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "dir"
+        }
+      ],
+      "icon": "resources/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "artifactName": "BenAjlan-Setup-${version}.${ext}",
+      "asar": true,
+      "asarUnpack": [
+        "database/**/*",
+        "node_modules/better-sqlite3/**/*"
+      ]
+    },
+    "compression": "maximum",
+    "removePackageScripts": true,
+    "npmRebuild": true,
+    "buildDependenciesFromSource": false
+  }
+}

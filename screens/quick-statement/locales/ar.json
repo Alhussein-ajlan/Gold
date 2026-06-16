@@ -1,0 +1,58 @@
+{
+  "quickStatement": {
+    "title": "كشف حساب سريع",
+    "subtitle": "عرض أرصدة الحسابات حسب العيارات",
+    "filters": {
+      "type": "النوع",
+      "number": "الرقم",
+      "name": "الاسم",
+      "namePlaceholder": "اسم العميل/المورد/الحساب",
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ",
+      "openingBalance": "رصيد افتتاحي",
+      "goldBasis": "عيار رصيد الذهب",
+      "silverBasis": "عيار رصيد الفضة",
+      "yes": "نعم",
+      "no": "لا",
+      "pure": "صافي",
+      "view": "عرض"
+    },
+    "types": {
+      "customer": "عميل",
+      "supplier": "مورد",
+      "account": "حساب"
+    },
+    "summary": {
+      "goldTotal": "إجمالي الذهب",
+      "silverTotal": "إجمالي الفضة",
+      "cashBalance": "رصيد الريال",
+      "gram": "جم",
+      "karat": "عيار",
+      "riyal": "ريال"
+    },
+    "tables": {
+      "gold": "الذهب",
+      "silver": "الفضة",
+      "karat": "العيار",
+      "debit": "مدين",
+      "credit": "دائن",
+      "net": "صافي",
+      "noGoldMovement": "لا توجد حركة ذهب",
+      "noSilverMovement": "لا توجد حركة فضة"
+    },
+    "lookup": {
+      "search": "بحث",
+      "searchCustomer": "بحث عميل",
+      "searchSupplier": "بحث مورد",
+      "searchAccount": "بحث حساب",
+      "searchPlaceholder": "اكتب رقم أو اسم للبحث...",
+      "noResults": "لا توجد نتائج",
+      "cancel": "إلغاء",
+      "close": "إغلاق"
+    },
+    "errors": {
+      "noId": "الرجاء إدخال رقم الحساب",
+      "fetchError": "حدث خطأ في جلب البيانات"
+    }
+  }
+}

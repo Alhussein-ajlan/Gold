@@ -1,0 +1,42 @@
+{
+  "categoryReport": {
+    "title": "تقرير حسب الأصناف",
+    "subtitle": "جرد الأصناف حسب العيارات",
+    "filters": {
+      "section": "القسم",
+      "karat": "العيار",
+      "allKarats": "جميع العيارات",
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ",
+      "view": "عرض",
+      "print": "طباعة"
+    },
+    "sections": {
+      "all": "الكل",
+      "mashghulat": "المشغولات",
+      "kasr": "الكسر",
+      "silver": "الفضة"
+    },
+    "summary": {
+      "totalItems": "إجمالي الأصناف",
+      "totalIn": "إجمالي الداخل",
+      "totalOut": "إجمالي الخارج",
+      "netBalance": "الصافي",
+      "gram": "جم"
+    },
+    "table": {
+      "title": "تفاصيل الجرد",
+      "itemNo": "رقم الصنف",
+      "itemName": "اسم الصنف",
+      "karat": "العيار",
+      "totalIn": "إجمالي الداخل",
+      "totalOut": "إجمالي الخارج",
+      "net": "الصافي",
+      "total": "الإجمالي",
+      "itemsCount": "{count} صنف"
+    },
+    "emptyState": "لا توجد بيانات للعرض",
+    "loading": "جاري التحميل...",
+    "noItemName": "بدون اسم"
+  }
+}

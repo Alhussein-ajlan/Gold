@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="movement.title">الحركة</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="../customers/style.css">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../shared-styles/premium-view-buttons.css">
+</head>
+<body>
+  <main class="movement-main">
+    <section class="panel active" id="panel-movement">
+      
+      <!-- ═══════════════════ TOP BAR ═══════════════════ -->
+      <div class="movement-topbar">
+        <div class="topbar-title">
+          <i class="fa-solid fa-chart-line"></i>
+          <h2 data-i18n="movement.title">الحركة</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="btnCompact" type="button" data-i18n-title="movement.buttons.compact" title="ضغط المستوى 1">
+            <i class="fa-solid fa-layer-group"></i>
+            <span class="compact-level">1</span>
+          </button>
+          <button class="btn-action print" id="btnPrintMovement" type="button" data-i18n-title="movement.buttons.printTitle" title="طباعة">
+            <i class="fa-solid fa-print"></i>
+            <span data-i18n="movement.buttons.print">طباعة</span>
+          </button>
+          <button class="btn-action close" id="btnCloseMovement" type="button" data-i18n-title="movement.buttons.closeTitle" title="إغلاق">
+            <i class="fa-solid fa-xmark"></i>
+            <span data-i18n="movement.buttons.close">إغلاق</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ FILTER CARD ═══════════════════ -->
+      <div class="filter-card">
+        <div class="filter-grid">
+          <!-- Single Row: All Filters -->
+          <div class="filter-row">
+            <label class="filter-field">
+              <span class="filter-label" data-i18n="movement.filters.typeLabel">نوع الحركة</span>
+              <div class="select-wrapper">
+                <select id="movementType">
+                  <option value="all" data-i18n="movement.filters.typeOptions.all">الجميع</option>
+                  <option value="sales" data-i18n="movement.filters.typeOptions.sales">فواتير المبيعات</option>
+                  <option value="purchases" data-i18n="movement.filters.typeOptions.purchases">فواتير المشتريات</option>
+                  <option value="receipts" data-i18n="movement.filters.typeOptions.receipts">سندات القبض</option>
+                  <option value="vouchers" data-i18n="movement.filters.typeOptions.vouchers">سندات الصرف</option>
+                  <option value="journals" data-i18n="movement.filters.typeOptions.journals">القيود اليومية</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+              </div>
+            </label>
+            <label class="filter-field">
+              <span class="filter-label" data-i18n="movement.filters.goldKaratLabel">عيار الذهب</span>
+              <div class="select-wrapper">
+                <select id="goldKarat">
+                  <option value="24" selected data-i18n="movement.filters.goldKaratOptions.24">24 صافي</option>
+                  <option value="22" data-i18n="movement.filters.goldKaratOptions.22">22</option>
+                  <option value="21" data-i18n="movement.filters.goldKaratOptions.21">21</option>
+                  <option value="18" data-i18n="movement.filters.goldKaratOptions.18">18</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+              </div>
+            </label>
+            <label class="filter-field">
+              <span class="filter-label" data-i18n="movement.filters.silverKaratLabel">عيار الفضة</span>
+              <div class="select-wrapper">
+                <select id="silverKarat">
+                  <option value="999" selected data-i18n="movement.filters.silverKaratOptions.999">999 صافي</option>
+                  <option value="925" data-i18n="movement.filters.silverKaratOptions.925">925</option>
+                  <option value="900" data-i18n="movement.filters.silverKaratOptions.900">900</option>
+                  <option value="800" data-i18n="movement.filters.silverKaratOptions.800">800</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+              </div>
+            </label>
+            <label class="filter-field">
+              <span class="filter-label" data-i18n="movement.filters.dateFromLabel">من تاريخ</span>
+              <input type="date" id="dateFrom" class="date-input">
+            </label>
+            <label class="filter-field">
+              <span class="filter-label" data-i18n="movement.filters.dateToLabel">إلى تاريخ</span>
+              <input type="date" id="dateTo" class="date-input">
+            </label>
+            <button class="btn-view premium-view-btn" id="btnView" type="button">
+              <i class="fa-solid fa-chart-line"></i>
+              <span data-i18n="movement.buttons.view">عرض</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SUMMARY STRIP ═══════════════════ -->
+      <div class="summary-strip" id="summaryStrip" style="display: none;">
+        <div class="summary-card cash-debit">
+          <div class="summary-icon"><i class="fa-solid fa-arrow-up"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.cashDebit">مدين ريال</span>
+            <span class="summary-value" id="summCashDebit">0.00</span>
+          </div>
+        </div>
+        <div class="summary-card cash-credit">
+          <div class="summary-icon"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.cashCredit">دائن ريال</span>
+            <span class="summary-value" id="summCashCredit">0.00</span>
+          </div>
+        </div>
+        <div class="summary-card gold-debit">
+          <div class="summary-icon"><i class="fa-solid fa-coins"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.goldDebit">مدين ذهب</span>
+            <span class="summary-value" id="summGoldDebit">0.00</span>
+          </div>
+        </div>
+        <div class="summary-card gold-credit">
+          <div class="summary-icon"><i class="fa-solid fa-coins"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.goldCredit">دائن ذهب</span>
+            <span class="summary-value" id="summGoldCredit">0.00</span>
+          </div>
+        </div>
+        <div class="summary-card silver-debit">
+          <div class="summary-icon"><i class="fa-solid fa-medal"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.silverDebit">مدين فضة</span>
+            <span class="summary-value" id="summSilverDebit">0.00</span>
+          </div>
+        </div>
+        <div class="summary-card silver-credit">
+          <div class="summary-icon"><i class="fa-solid fa-medal"></i></div>
+          <div class="summary-content">
+            <span class="summary-label" data-i18n="movement.summary.silverCredit">دائن فضة</span>
+            <span class="summary-value" id="summSilverCredit">0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ KARAT NOTICE ═══════════════════ -->
+      <div class="karat-notice" id="goldKaratNotice" style="display: none;">
+        <i class="fa-solid fa-info-circle"></i>
+        <span>
+          <strong data-i18n="movement.karatNotice.title">ملاحظة:</strong>
+          <span data-i18n="movement.karatNotice.goldText">جميع أوزان الذهب معروضة بعيار</span>
+          <span id="displayedGoldKarat" class="karat-value">24</span>
+          <span data-i18n="movement.karatNotice.separator">و</span>
+          <span data-i18n="movement.karatNotice.silverText">جميع أوزان الفضة معروضة بعيار</span>
+          <span id="displayedSilverKarat" class="karat-value">999</span>
+        </span>
+      </div>
+
+      <!-- ═══════════════════ TABLE CARD ═══════════════════ -->
+      <div class="table-card" id="movement-grid">
+        <div class="table-wrapper">
+          <table class="movement-table" id="movementTable">
+            <thead id="movementTableHead">
+              <tr>
+                <th class="col-date sticky-col" data-i18n="movement.table.headers.date">التاريخ</th>
+                <th class="col-doc sticky-col" data-i18n="movement.table.headers.docNo">رقم المستند</th>
+                <th class="col-type" data-i18n="movement.table.headers.operationType">نوع العملية</th>
+                <th class="col-party" data-i18n="movement.table.headers.party">الطرف</th>
+                <th class="col-number debit" data-i18n="movement.table.headers.cashDebit">مدين ريال</th>
+                <th class="col-number credit" data-i18n="movement.table.headers.cashCredit">دائن ريال</th>
+                <th class="col-karat" data-i18n="movement.table.headers.karat">العيار</th>
+                <th class="col-number debit" data-i18n="movement.table.headers.goldDebit">مدين ذهب</th>
+                <th class="col-number credit" data-i18n="movement.table.headers.goldCredit">دائن ذهب</th>
+                <th class="col-number debit" data-i18n="movement.table.headers.silverDebit">مدين فضة</th>
+                <th class="col-number credit" data-i18n="movement.table.headers.silverCredit">دائن فضة</th>
+              </tr>
+            </thead>
+            <tbody id="movementTableBody">
+              <tr class="empty-state-row">
+                <td colspan="11" style="text-align: center;">
+                  <div class="empty-state">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <h4 data-i18n="movement.states.emptyTitle">لا توجد بيانات</h4>
+                    <p data-i18n="movement.states.initialHint">اختر نوع الحركة والمدة ثم اضغط على زر "عرض"</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Sticky Totals Bar -->
+        <div class="totals-bar" id="totalsBar" style="display: none;">
+          <div class="totals-label" data-i18n="movement.totals.grand">الإجمالي الكلي</div>
+          <div class="totals-values">
+            <span class="total-item debit"><span data-i18n="movement.table.headers.cashDebit">مدين ريال</span>: <b id="totalCashDebit">0.00</b></span>
+            <span class="total-item credit"><span data-i18n="movement.table.headers.cashCredit">دائن ريال</span>: <b id="totalCashCredit">0.00</b></span>
+            <span class="total-item debit"><span data-i18n="movement.table.headers.goldDebit">مدين ذهب</span>: <b id="totalGoldDebit">0.00</b></span>
+            <span class="total-item credit"><span data-i18n="movement.table.headers.goldCredit">دائن ذهب</span>: <b id="totalGoldCredit">0.00</b></span>
+            <span class="total-item debit"><span data-i18n="movement.table.headers.silverDebit">مدين فضة</span>: <b id="totalSilverDebit">0.00</b></span>
+            <span class="total-item credit"><span data-i18n="movement.table.headers.silverCredit">دائن فضة</span>: <b id="totalSilverCredit">0.00</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ LOADING OVERLAY ═══════════════════ -->
+      <div class="loading-overlay" id="loadingIndicator" style="display: none;">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <span data-i18n="movement.states.loading">جاري تحميل البيانات...</span>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ DETAILS DRAWER ═══════════════════ -->
+      <div class="drawer-overlay" id="drawerOverlay"></div>
+      <aside class="details-drawer" id="detailsDrawer">
+        <div class="drawer-header">
+          <div class="drawer-title">
+            <span class="drawer-doc-type" id="drawerDocType"></span>
+            <span class="drawer-doc-no" id="drawerDocNo"></span>
+          </div>
+          <button class="drawer-close" id="drawerClose" type="button">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="drawer-meta">
+          <div class="meta-item">
+            <i class="fa-regular fa-calendar"></i>
+            <span id="drawerDate"></span>
+          </div>
+          <div class="meta-item">
+            <i class="fa-regular fa-user"></i>
+            <span id="drawerParty"></span>
+          </div>
+          <div class="meta-item">
+            <i class="fa-solid fa-tag"></i>
+            <span id="drawerKarat"></span>
+          </div>
+        </div>
+        <div class="drawer-body">
+          <h4 data-i18n="movement.drawer.detailsTitle">تفاصيل الحركة</h4>
+          <div class="drawer-table-wrapper">
+            <table class="drawer-table" id="drawerDetailsTable">
+              <thead id="drawerDetailsHead"></thead>
+              <tbody id="drawerDetailsBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="drawer-footer">
+          <div class="drawer-totals" id="drawerTotals"></div>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+  
+  <script src="../../shared-styles/common-utils.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

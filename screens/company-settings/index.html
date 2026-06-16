@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="pageTitle">إعدادات الشركة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    
+    <!-- شريط التنقل بالكبسولات -->
+    <div class="settings-nav-pills">
+      <button class="nav-pill active" data-target="company-info-card">
+        <i class="fa-solid fa-building"></i>
+        <span data-i18n="navCompanyInfo">معلومات الشركة</span>
+      </button>
+      <button class="nav-pill" data-target="backup-card">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span data-i18n="navBackup">النسخ الاحتياطي</span>
+      </button>
+      <button class="nav-pill" data-target="currency-card">
+        <i class="fa-solid fa-coins"></i>
+        <span data-i18n="navCurrency">إدارة العملات</span>
+      </button>
+      <button class="nav-pill" data-target="stats-card">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span data-i18n="navStats">الإحصاءات</span>
+      </button>
+      <button class="nav-pill" data-target="subscription-card">
+        <i class="fa-solid fa-id-card"></i>
+        <span data-i18n="navSubscription">الاشتراك</span>
+      </button>
+      <button class="nav-pill" data-target="theme-card">
+        <i class="fa-solid fa-palette"></i>
+        <span data-i18n="navTheme">المظهر</span>
+      </button>
+      <button class="nav-pill" data-target="invoice-settings-card">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span data-i18n="navInvoiceSettings">إعدادات الفواتير</span>
+      </button>
+      <button class="nav-pill" data-target="notifications-card">
+        <i class="fa-solid fa-bell"></i>
+        <span data-i18n="navNotifications">الإشعارات</span>
+      </button>
+    </div>
+    
+    <!-- بطاقة معلومات الشركة فقط -->
+    <div class="company-card company-info-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-building"></i> <span data-i18n="companyInfoTitle">معلومات الشركة</span>
+      </h2>
+
+      <div class="company-content">
+        
+        <!-- Logo Section -->
+        <div class="logo-section">
+          <div class="logo-wrapper" id="logoWrapper">
+            <img id="logoPreview" src="" alt="شعار الشركة" style="display: none;">
+            <div class="logo-placeholder">
+              <i class="fa-solid fa-camera"></i>
+              <span data-i18n="logoPlaceholder">انقر لإضافة شعار</span>
+            </div>
+          </div>
+          <p class="logo-hint" data-i18n="logoHint">انقر على الدائرة لتغيير الشعار</p>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="form-section">
+          
+          <div class="field-row">
+            <div class="field-group">
+              <label for="companyName">
+                <i class="fa-solid fa-building"></i> اسم الشركة
+              </label>
+              <input type="text" id="companyName" placeholder="مثال: شركة الذهب للمحاسبة">
+            </div>
+            <div class="field-group">
+              <label for="companyNameEn">
+                <i class="fa-solid fa-building"></i> Company Name (English)
+              </label>
+              <input type="text" id="companyNameEn" placeholder="e.g. Gold Accounting Company" dir="ltr" style="text-align:left">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="companyAddress">
+                <i class="fa-solid fa-location-dot"></i> العنوان
+              </label>
+              <input type="text" id="companyAddress" placeholder="مثال: الرياض، المملكة العربية السعودية">
+            </div>
+            <div class="field-group">
+              <label for="companyAddressEn">
+                <i class="fa-solid fa-location-dot"></i> Address (English)
+              </label>
+              <input type="text" id="companyAddressEn" placeholder="e.g. Riyadh, Saudi Arabia" dir="ltr" style="text-align:left">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="companyTax">
+                <i class="fa-solid fa-receipt"></i> <span data-i18n="taxNumber">الرقم الضريبي</span>
+              </label>
+              <input type="text" id="companyTax" placeholder="مثال: 300040394304303" maxlength="15">
+            </div>
+            <div class="field-group">
+              <label for="companyPhone">
+                <i class="fa-solid fa-phone"></i> <span data-i18n="phone">رقم الهاتف</span>
+              </label>
+              <input type="text" id="companyPhone" placeholder="مثال: +966 50 123 4567">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="companyEmail">
+                <i class="fa-solid fa-envelope"></i> <span data-i18n="email">البريد الإلكتروني</span>
+              </label>
+              <input type="email" id="companyEmail" placeholder="مثال: info@company.com">
+            </div>
+            <div class="field-group">
+              <label for="companyWebsite">
+                <i class="fa-solid fa-globe"></i> <span data-i18n="website">الموقع الإلكتروني</span>
+              </label>
+              <input type="text" id="companyWebsite" placeholder="مثال: www.company.com">
+            </div>
+          </div>
+
+          <button class="btn-save" id="btnSave">
+            <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="saveInfo">حفظ المعلومات</span>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- بطاقة النسخ الاحتياطي التلقائي -->
+    <div class="company-card backup-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="backupTitle">النسخ الاحتياطي التلقائي</span>
+      </h2>
+
+      <div class="backup-control">
+        <!-- Toggle Switch -->
+        <div class="backup-toggle-section">
+          <div class="toggle-header">
+            <div class="toggle-info">
+              <strong data-i18n="enableAutoBackup">تفعيل النسخ الاحتياطي التلقائي</strong>
+              <span class="toggle-description" data-i18n="backupDesc">يتم إنشاء نسخة احتياطية دورية من قاعدة البيانات تلقائياً</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="backupEnabled" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Backup Settings (visible when enabled) -->
+        <div id="backupSettings" class="backup-settings">
+          <!-- Interval Setting -->
+          <div class="setting-row">
+            <label class="setting-label">
+              <i class="fa-solid fa-hourglass-half"></i>
+              <span data-i18n="intervalLabel">التكرار (كل كم ساعة)</span>
+            </label>
+            <div class="interval-control">
+              <button type="button" class="interval-btn" id="btnDecreaseInterval">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input type="number" id="backupInterval" class="interval-input" value="6" min="1" max="24" step="1">
+              <button type="button" class="interval-btn" id="btnIncreaseInterval">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <span class="interval-label" data-i18n="hour">ساعة</span>
+            </div>
+          </div>
+
+          <!-- Keep Count Setting -->
+          <div class="setting-row">
+            <label class="setting-label">
+              <i class="fa-solid fa-archive"></i>
+              <span data-i18n="keepCountLabel">عدد النسخ المحفوظة</span>
+            </label>
+            <div class="interval-control">
+              <button type="button" class="interval-btn" id="btnDecreaseKeep">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input type="number" id="backupKeepCount" class="interval-input" value="30" min="5" max="100" step="5">
+              <button type="button" class="interval-btn" id="btnIncreaseKeep">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <span class="interval-label" data-i18n="copy">نسخة</span>
+            </div>
+          </div>
+
+          <!-- Last Backup Info -->
+          <div class="backup-info-section">
+            <div class="backup-info-row">
+              <span class="info-label"><i class="fa-solid fa-calendar-check"></i> <span data-i18n="lastBackup">آخر نسخة احتياطية:</span></span>
+              <span class="info-value" id="lastBackupTime" data-i18n="loading">جار التحميل...</span>
+            </div>
+            <div class="backup-info-row">
+              <span class="info-label"><i class="fa-solid fa-folder"></i> <span data-i18n="existingBackups">عدد النسخ الموجودة:</span></span>
+              <span class="info-value" id="backupCount" data-i18n="loading">جار التحميل...</span>
+            </div>
+            <div class="backup-info-row">
+              <span class="info-label"><i class="fa-solid fa-clock"></i> <span data-i18n="nextBackup">النسخة القادمة بعد:</span></span>
+              <span class="info-value" id="nextBackupTime" data-i18n="loading">جار التحميل...</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="backup-actions">
+            <button class="btn-action primary" id="btnCreateBackup">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span data-i18n="createBackupNow">إنشاء نسخة الآن</span>
+            </button>
+            <button class="btn-action secondary" id="btnViewBackups">
+              <i class="fa-solid fa-list"></i>
+              <span data-i18n="viewBackups">عرض النسخ</span>
+            </button>
+            <button class="btn-action secondary" id="btnOpenBackupFolder">
+              <i class="fa-solid fa-folder-open"></i>
+              <span data-i18n="openFolder">فتح المجلد</span>
+            </button>
+          </div>
+
+          <!-- Save Settings Button -->
+          <div class="save-settings-section">
+            <button class="btn-save success" id="btnSaveBackupSettings">
+              <i class="fa-solid fa-check"></i> <span data-i18n="saveSettings">حفظ الإعدادات</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة نظام العملات -->
+    <div class="company-card currency-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-coins"></i> <span data-i18n="currencyTitle">إدارة العملات وأسعار الصرف</span>
+        <div class="card-title-actions">
+          <button class="btn-refresh-rates-icon" id="btnRefreshRates" data-i18n-title="refreshRates" title="تحديث أسعار الصرف">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+          <button class="btn-add-currency" id="btnAddCurrency">
+            <i class="fa-solid fa-plus"></i> <span data-i18n="addCurrency">إضافة عملة</span>
+          </button>
+        </div>
+      </h2>
+
+      <div class="currency-content">
+        
+        <!-- Currency Info Bar -->
+        <div class="currency-info-bar">
+          <div class="info-item">
+            <i class="fa-solid fa-star"></i>
+            <span><span data-i18n="defaultCurrency">العملة الافتراضية:</span> <strong id="defaultCurrencyName">ريال سعودي</strong></span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-coins"></i>
+            <span><span data-i18n="totalCurrencies">إجمالي العملات:</span> <strong id="totalCurrenciesCount">0</strong></span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span><span data-i18n="lastUpdate">آخر تحديث:</span> <strong id="lastUpdateTime" data-i18n="today">اليوم</strong></span>
+          </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="currency-controls">
+          <div class="search-box">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="currencySearchInput" data-i18n-placeholder="searchCurrency" placeholder="ابحث عن عملة بالاسم أو الرمز...">
+          </div>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">
+              <i class="fa-solid fa-globe"></i> <span data-i18n="filterAll">الكل</span>
+            </button>
+            <button class="filter-btn" data-filter="arab">
+              <i class="fa-solid fa-earth-americas"></i> <span data-i18n="filterArab">عربية</span>
+            </button>
+            <button class="filter-btn" data-filter="world">
+              <i class="fa-solid fa-chart-line"></i> <span data-i18n="filterWorld">عالمية</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Currency DataGrid -->
+        <div class="currency-datagrid-wrapper">
+          <table class="currency-datagrid">
+            <thead>
+              <tr>
+                <th class="col-flag" data-i18n="colFlag">العلم</th>
+                <th class="col-name" data-i18n="colName">اسم العملة</th>
+                <th class="col-code" data-i18n="colCode">الرمز</th>
+                <th class="col-symbol" data-i18n="colSymbol">العلامة</th>
+                <th class="col-rate" data-i18n="colRate">سعر الصرف</th>
+                <th class="col-default" data-i18n="colDefault">افتراضي</th>
+                <th class="col-actions" data-i18n="colActions">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="currencyDatagridBody">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- No Data Message -->
+        <div class="no-currencies-message" id="noCurrenciesMessage" style="display: none;">
+          <i class="fa-solid fa-inbox"></i>
+          <p data-i18n="noCurrencies">لا توجد عملات متاحة</p>
+          <button class="btn-primary" onclick="document.getElementById('btnAddCurrency').click()">
+            <i class="fa-solid fa-plus"></i> <span data-i18n="addNewCurrency">إضافة عملة جديدة</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- بطاقة إحصاءات الجداول -->
+    <div class="company-card stats-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-chart-bar"></i> <span data-i18n="statsTitle">إحصاءات الجداول</span>
+        <button id="icoRefreshStats" class="icon-refresh" data-i18n-title="refresh" title="تحديث">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+      </h2>
+
+      <div class="stats-content">
+        
+        <div class="stats-info">
+          <div class="stat-item">
+            <i class="fa-solid fa-table"></i>
+            <span><span data-i18n="tableCount">عدد الجداول:</span> <strong id="tblTotal">0</strong></span>
+          </div>
+          <div class="stat-item">
+            <i class="fa-solid fa-folder-open"></i>
+            <span id="dbPathInfo"><span data-i18n="dbPath">المسار:</span> —</span>
+          </div>
+        </div>
+
+        <div id="tblBars" class="tables-grid"></div>
+
+        <div class="db-actions">
+          <h3 class="section-title">
+            <i class="fa-solid fa-database"></i> <span data-i18n="dbManagement">إدارة قاعدة البيانات</span>
+          </h3>
+          
+          <div class="action-buttons">
+            <button class="btn-action primary" id="btnExportDb">
+              <i class="fa-solid fa-file-export"></i>
+              <span data-i18n="exportDb">تصدير قاعدة البيانات</span>
+            </button>
+            <button class="btn-action primary" id="btnImportDb">
+              <i class="fa-solid fa-file-import"></i>
+              <span data-i18n="importDb">استيراد قاعدة البيانات</span>
+            </button>
+          </div>
+          
+          <div id="dbStatus" class="status-message" style="display:none"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- بطاقة الاشتراك المتميزة -->
+    <div class="company-card subscription-card premium-card">
+      <div class="premium-card-header">
+        <div class="premium-badge">
+          <i class="fa-solid fa-crown"></i>
+          <span data-i18n="premiumBadge">اشتراك مميز</span>
+        </div>
+        <h2 class="premium-title">
+          <i class="fa-solid fa-gem"></i> <span data-i18n="subscriptionInfo">معلومات الاشتراك</span>
+        </h2>
+      </div>
+
+      <div class="subscription-content premium-content">
+        <!-- بطاقة الحالة الرئيسية -->
+        <div class="status-hero" id="subscriptionStatus">
+          <div class="status-glow"></div>
+          <div class="status-badge active" id="statusBadge">
+            <div class="badge-icon">
+              <i class="fa-solid fa-shield-check"></i>
+              <div class="pulse-ring"></div>
+            </div>
+            <div class="badge-content">
+              <span class="badge-label" data-i18n="subscriptionStatus">حالة الاشتراك</span>
+              <h3 id="licenseStatusText">جارِ التحميل...</h3>
+              <span class="badge-type" id="licenseTypeText">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- لوحة الأيام المتبقية -->
+        <div class="days-dashboard">
+          <div class="days-circle-container">
+            <div class="days-circle" id="daysCircle">
+              <svg viewBox="0 0 100 100">
+                <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="circle-progress" id="circleProgress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+              </svg>
+              <div class="days-number">
+                <span id="daysRemainingText">--</span>
+                <small data-i18n="day">يوم</small>
+              </div>
+            </div>
+            <p class="days-label"><i class="fa-solid fa-hourglass-half"></i> <span data-i18n="daysRemaining">الأيام المتبقية</span></p>
+          </div>
+          <div class="days-stats">
+            <div class="stat-item">
+              <div class="stat-icon green"><i class="fa-solid fa-play"></i></div>
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="startDate">تاريخ البدء</span>
+                <span class="stat-value" id="activationDate">--</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon red"><i class="fa-solid fa-flag-checkered"></i></div>
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="expiryDate">تاريخ الانتهاء</span>
+                <span class="stat-value" id="expiryDate">--</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon blue"><i class="fa-solid fa-percent"></i></div>
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="usagePercent">نسبة الاستهلاك</span>
+                <span class="stat-value" id="progressPercentText">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- بطاقات المعلومات -->
+        <div class="info-cards-grid">
+          <div class="info-card glass-card">
+            <div class="info-card-icon">
+              <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="info-card-content">
+              <span class="info-card-label" data-i18n="deviceId">معرف الجهاز</span>
+              <span class="info-card-value mono" id="deviceId">--</span>
+            </div>
+            <button class="copy-btn-small" onclick="copyDeviceId()" data-i18n-title="copyBtn" title="نسخ">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+          <div class="info-card glass-card">
+            <div class="info-card-icon gold">
+              <i class="fa-solid fa-certificate"></i>
+            </div>
+            <div class="info-card-content">
+              <span class="info-card-label" data-i18n="licenseType">نوع الترخيص</span>
+              <span class="info-card-value" id="licenseType">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- شريط التقدم المتقدم -->
+        <div class="premium-progress">
+          <div class="progress-info">
+            <span><i class="fa-solid fa-battery-three-quarters"></i> <span data-i18n="subscriptionUsage">استهلاك الاشتراك</span></span>
+            <span id="totalDaysText">من -- يوم</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="daysProgressBar" style="width: 0%">
+              <div class="progress-shine"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- رسالة التحذير -->
+        <div class="premium-warning" id="licenseWarning" style="display:none;">
+          <div class="warning-icon-wrapper">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="warning-content">
+            <strong data-i18n="warning">تنبيه!</strong>
+            <span id="warningText" data-i18n="licenseExpiring">الترخيص على وشك الانتهاء!</span>
+          </div>
+        </div>
+
+        <!-- قسم التجديد -->
+        <div class="renewal-section">
+          <div class="renewal-header">
+            <div class="renewal-icon">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            <div>
+              <h4 data-i18n="renewSubscription">تجديد الاشتراك</h4>
+              <p data-i18n="renewDesc">تواصل معنا للتجديد أو الترقية</p>
+            </div>
+          </div>
+          <div class="renewal-buttons">
+            <button onclick="sendWhatsAppRenewal()" class="renewal-btn whatsapp">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span data-i18n="whatsapp">واتساب</span>
+              <div class="btn-shine"></div>
+            </button>
+            <button onclick="sendEmailRenewal()" class="renewal-btn email">
+              <i class="fa-solid fa-envelope"></i>
+              <span data-i18n="emailBtn">البريد الإلكتروني</span>
+              <div class="btn-shine"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- بطاقة المظهر والثيمات -->
+    <div class="company-card theme-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-palette"></i> <span data-i18n="themeTitle">المظهر والثيمات</span>
+      </h2>
+
+      <div class="theme-content">
+        
+        <!-- قسم الوضع (فاتح/داكن) -->
+        <div class="theme-section">
+          <h3 class="section-title">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+            <span data-i18n="themeMode">وضع العرض</span>
+          </h3>
+          <div class="theme-mode-selector">
+            <button class="mode-btn" data-mode="light" id="lightModeBtn">
+              <div class="mode-icon">
+                <i class="fa-solid fa-sun"></i>
+              </div>
+              <span data-i18n="lightMode">فاتح</span>
+            </button>
+            <button class="mode-btn active" data-mode="dark" id="darkModeBtn">
+              <div class="mode-icon">
+                <i class="fa-solid fa-moon"></i>
+              </div>
+              <span data-i18n="darkMode">داكن</span>
+            </button>
+            <button class="mode-btn" data-mode="auto" id="autoModeBtn">
+              <div class="mode-icon">
+                <i class="fa-solid fa-desktop"></i>
+              </div>
+              <span data-i18n="autoMode">تلقائي</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- قسم اختيار الثيم -->
+        <div class="theme-section">
+          <h3 class="section-title">
+            <i class="fa-solid fa-swatchbook"></i>
+            <span data-i18n="themeColor">لون الثيم</span>
+          </h3>
+          <div class="theme-colors-grid">
+            <!-- الثيم الافتراضي (فيروزي/بترولي) -->
+            <div class="theme-color-option active" data-theme="turquoise" data-i18n-title="colorTurquoise">
+              <div class="color-preview turquoise-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorTurquoise">فيروزي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- ذهبي -->
+            <div class="theme-color-option" data-theme="gold" data-i18n-title="colorGold">
+              <div class="color-preview gold-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorGold">ذهبي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- أزرق -->
+            <div class="theme-color-option" data-theme="blue" data-i18n-title="colorBlue">
+              <div class="color-preview blue-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorBlue">أزرق</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- أخضر -->
+            <div class="theme-color-option" data-theme="green" data-i18n-title="colorGreen">
+              <div class="color-preview green-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorGreen">أخضر</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- أحمر -->
+            <div class="theme-color-option" data-theme="red" data-i18n-title="colorRed">
+              <div class="color-preview red-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorRed">أحمر</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- برتقالي -->
+            <div class="theme-color-option" data-theme="orange" data-i18n-title="colorOrange">
+              <div class="color-preview orange-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorOrange">برتقالي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- سماوي -->
+            <div class="theme-color-option" data-theme="sky" data-i18n-title="colorSky">
+              <div class="color-preview sky-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorSky">سماوي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- رمادي -->
+            <div class="theme-color-option" data-theme="gray" data-i18n-title="colorGray">
+              <div class="color-preview gray-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorGray">رمادي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- كحلي -->
+            <div class="theme-color-option" data-theme="navy" data-i18n-title="colorNavy">
+              <div class="color-preview navy-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorNavy">كحلي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- نيلي -->
+            <div class="theme-color-option" data-theme="indigo" data-i18n-title="colorIndigo">
+              <div class="color-preview indigo-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorIndigo">نيلي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- أزرق مخضر -->
+            <div class="theme-color-option" data-theme="teal" data-i18n-title="colorTeal">
+              <div class="color-preview teal-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorTeal">أزرق مخضر</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- وردي -->
+            <div class="theme-color-option" data-theme="rose" data-i18n-title="colorRose">
+              <div class="color-preview rose-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorRose">وردي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- كهرماني -->
+            <div class="theme-color-option" data-theme="amber" data-i18n-title="colorAmber">
+              <div class="color-preview amber-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorAmber">كهرماني</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- سماوي فاتح -->
+            <div class="theme-color-option" data-theme="cyan" data-i18n-title="colorCyan">
+              <div class="color-preview cyan-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorCyan">سماوي فاتح</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- زمردي -->
+            <div class="theme-color-option" data-theme="emerald" data-i18n-title="colorEmerald">
+              <div class="color-preview emerald-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorEmerald">زمردي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- رمادي داكن -->
+            <div class="theme-color-option" data-theme="slate" data-i18n-title="colorSlate">
+              <div class="color-preview slate-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorSlate">رمادي داكن</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <!-- بنفسجي -->
+            <div class="theme-color-option" data-theme="violet" data-i18n-title="colorViolet">
+              <div class="color-preview violet-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorViolet">بنفسجي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="theme-color-option" data-theme="royal" data-i18n-title="colorRoyal">
+              <div class="color-preview royal-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorRoyal">ملكي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="theme-color-option" data-theme="sage" data-i18n-title="colorSage">
+              <div class="color-preview sage-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorSage">زيتوني</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="theme-color-option" data-theme="sunset" data-i18n-title="colorSunset">
+              <div class="color-preview sunset-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorSunset">غروب</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="theme-color-option" data-theme="orchid" data-i18n-title="colorOrchid">
+              <div class="color-preview orchid-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorOrchid">أوركيد</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+            <div class="theme-color-option" data-theme="charcoal" data-i18n-title="colorCharcoal">
+              <div class="color-preview charcoal-theme">
+                <div class="color-primary"></div>
+                <div class="color-secondary"></div>
+              </div>
+              <span data-i18n="colorCharcoal">فحمي</span>
+              <i class="fa-solid fa-check check-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- معاينة الثيم -->
+        <div class="theme-section">
+          <h3 class="section-title">
+            <i class="fa-solid fa-eye"></i>
+            <span data-i18n="themePreview">معاينة</span>
+          </h3>
+          <div class="theme-preview-box" id="themePreviewBox">
+            <div class="preview-header">
+              <div class="preview-title">عنوان البطاقة</div>
+              <div class="preview-actions">
+                <button class="preview-btn primary">زر رئيسي</button>
+                <button class="preview-btn secondary">زر ثانوي</button>
+              </div>
+            </div>
+            <div class="preview-content">
+              <div class="preview-card">
+                <div class="preview-stat">
+                  <span class="stat-label">إجمالي المبيعات</span>
+                  <span class="stat-value">15,000</span>
+                </div>
+              </div>
+              <div class="preview-input-group">
+                <input type="text" class="preview-input" placeholder="حقل إدخال" readonly>
+                <select class="preview-select" disabled>
+                  <option>قائمة منسدلة</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- زر الحفظ -->
+        <button class="save-theme-btn" id="btnSaveTheme">
+          <i class="fa-solid fa-palette"></i> <span data-i18n="saveTheme">حفظ المظهر</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- بطاقة إعدادات الإشعارات -->
+    <div class="company-card notifications-card">
+      <h2 class="card-title">
+        <i class="fa-solid fa-bell"></i> <span data-i18n="notificationsTitle">إعدادات الإشعارات</span>
+      </h2>
+
+      <div class="notifications-content">
+        <p class="notifications-desc">
+          <i class="fa-solid fa-info-circle"></i>
+          <span data-i18n="notificationsDesc">الإشعارات تظهر فقط في الوضع السحابي وعند المستخدمين الآخرين (ليس من قام بالعملية)</span>
+        </p>
+
+        <!-- مفتاح تشغيل/إيقاف الكل -->
+        <div class="notification-master-toggle">
+          <div class="toggle-info">
+            <i class="fa-solid fa-bell-slash"></i>
+            <div>
+              <span class="toggle-title" data-i18n="notificationsEnableAll">تفعيل جميع الإشعارات</span>
+              <span class="toggle-subtitle" data-i18n="notificationsEnableAllDesc">تشغيل أو إيقاف جميع الإشعارات دفعة واحدة</span>
+            </div>
+          </div>
+          <label class="switch-toggle">
+            <input type="checkbox" id="notifMasterToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="notifications-divider"></div>
+
+        <!-- مفاتيح الإشعارات الفردية -->
+        <div class="notifications-grid" id="notificationsGrid">
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-file-invoice-dollar notif-icon sales"></i>
+              <span data-i18n="notifSalesInvoice">فاتورة بيع</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifSalesInvoice" data-key="salesInvoice" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-file-invoice notif-icon purchase"></i>
+              <span data-i18n="notifPurchaseInvoice">فاتورة شراء</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifPurchaseInvoice" data-key="purchaseInvoice" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-hand-holding-dollar notif-icon receipt"></i>
+              <span data-i18n="notifReceipt">سند قبض</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifReceipt" data-key="receipt" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-money-bill-transfer notif-icon voucher"></i>
+              <span data-i18n="notifVoucher">سند صرف</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifVoucher" data-key="voucher" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-book notif-icon journal"></i>
+              <span data-i18n="notifJournal">قيد يومية</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifJournal" data-key="journal" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-users notif-icon customer"></i>
+              <span data-i18n="notifCustomer">العملاء</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifCustomer" data-key="customer" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-truck notif-icon supplier"></i>
+              <span data-i18n="notifSupplier">الموردين</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifSupplier" data-key="supplier" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-scale-balanced notif-icon opening"></i>
+              <span data-i18n="notifOpening">الأرصدة الافتتاحية</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifOpening" data-key="opening" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-building-columns notif-icon opening"></i>
+              <span data-i18n="notifAccounts">الحسابات</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifAccounts" data-key="accounts" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-gem notif-icon orders"></i>
+              <span data-i18n="notifGoldItems">أصناف العيارات</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifGoldItems" data-key="goldItems" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-users-gear notif-icon customer"></i>
+              <span data-i18n="notifUsers">المستخدمين</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifUsers" data-key="users" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-building notif-icon supplier"></i>
+              <span data-i18n="notifCompanySettings">إعدادات الشركة</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifCompanySettings" data-key="companySettings" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-file-contract notif-icon sales"></i>
+              <span data-i18n="notifTaxDeclaration">الإقرار الضريبي</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifTaxDeclaration" data-key="taxDeclaration" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-clipboard-list notif-icon orders"></i>
+              <span data-i18n="notifOrdersFromUsers">الأوردرات (من المستخدمين)</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifOrdersFromUsers" data-key="ordersFromUsers" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="notification-item">
+            <div class="notif-info">
+              <i class="fa-solid fa-circle-check notif-icon orders-completed"></i>
+              <span data-i18n="notifOrdersCompleted">اكتمال الأوردر</span>
+            </div>
+            <label class="switch-toggle">
+              <input type="checkbox" id="notifOrdersCompleted" data-key="ordersCompleted" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="notifications-actions">
+          <button class="btn-action primary" id="btnSaveNotifications">
+            <i class="fa-solid fa-save"></i>
+            <span data-i18n="saveNotifications">حفظ إعدادات الإشعارات</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Include Export/Import Modal -->
+  <div id="modalContainer"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Confirm Modal -->
+  <div class="confirm-modal-overlay" id="confirmModalOverlay">
+    <div class="confirm-modal">
+      <div class="confirm-modal-icon" id="confirmModalIcon">
+        <i class="fa-solid fa-question-circle"></i>
+      </div>
+      <h3 class="confirm-modal-title" id="confirmModalTitle">تأكيد</h3>
+      <p class="confirm-modal-message" id="confirmModalMessage">هل أنت متأكد؟</p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn cancel" id="confirmModalCancel">
+          <i class="fa-solid fa-xmark"></i>
+          <span>إلغاء</span>
+        </button>
+        <button class="confirm-modal-btn confirm" id="confirmModalConfirm">
+          <i class="fa-solid fa-check"></i>
+          <span>تأكيد</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backup List Modal Container -->
+  <div id="backupModalContainer"></div>
+
+  <!-- Currency Form Modal Container -->
+  <div id="currencyFormModalContainer"></div>
+
+  <script src="../../shared-styles/common-utils.js"></script>
+  <script src="./script.js"></script>
+  
+  <script>
+    // Load export-import modal HTML and then load manager
+    fetch('./export-import-modal.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('modalContainer').innerHTML = html;
+        // Load manager script after modal is loaded
+        const script = document.createElement('script');
+        script.src = './export-import-manager.js';
+        document.body.appendChild(script);
+        // Apply translations to modal
+        if (typeof applySettingsTranslations === 'function') applySettingsTranslations();
+      });
+    
+    // Load backup list modal HTML
+    fetch('./backup-list-modal.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('backupModalContainer').innerHTML = html;
+        // Apply translations to modal
+        if (typeof applySettingsTranslations === 'function') applySettingsTranslations();
+      });
+    
+    // Load currency form modal HTML
+    fetch('./currency-form-modal.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('currencyFormModalContainer').innerHTML = html;
+        // Apply translations to modal
+        if (typeof applySettingsTranslations === 'function') applySettingsTranslations();
+      });
+    
+    // Load invoice settings card HTML - should be last card
+    fetch('./invoice-settings-card.html')
+      .then(r => r.text())
+      .then(html => {
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        const card = container.firstElementChild;
+        
+        // Insert at the end (after theme card which is the last static card)
+        const themeCard = document.querySelector('.theme-card');
+        if (themeCard && themeCard.parentNode) {
+          // Insert after theme card
+          themeCard.parentNode.insertBefore(card, themeCard.nextSibling);
+        } else {
+          // Fallback: append to container
+          const mainContainer = document.querySelector('.container');
+          if (mainContainer) {
+            mainContainer.appendChild(card);
+          }
+        }
+        
+        // Apply translations to card
+        if (typeof applySettingsTranslations === 'function') {
+          applySettingsTranslations();
+        }
+        
+        // Initialize invoice settings manager after card is loaded
+        setTimeout(() => {
+          if (window.InvoiceSettingsManager) {
+            window.InvoiceSettingsManager.init();
+          }
+        }, 100);
+        
+        // Force re-observation with multiple attempts
+        const reobserveAttempts = [50, 150, 300, 600, 1000, 1500, 2000];
+        reobserveAttempts.forEach(delay => {
+          setTimeout(() => {
+            if (typeof window.observeAllCards === 'function') {
+              const count = window.observeAllCards();
+            }
+          }, delay);
+        });
+        
+        // Also trigger on next animation frame
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (typeof window.observeAllCards === 'function') {
+              window.observeAllCards();
+            }
+          });
+        });
+      })
+      .catch(err => {
+        // Error loading invoice settings card
+      });
+  </script>
+  
+  <!-- Invoice Settings Card Styles and Scripts -->
+  <link rel="stylesheet" href="./invoice-settings-card.css">
+  <script src="../../shared-styles/confirm-modal.js"></script>
+  <script src="./invoice-settings-manager.js"></script>
+</body>
+</html>

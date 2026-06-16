@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>القيود اليومية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="../customers/style.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../../shared-styles/modern-datagrid.css">
+  <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+  <link rel="stylesheet" href="../../shared-styles/date-time-inputs.css">
+  <link rel="stylesheet" href="../../shared-styles/button-styles.css">
+  <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+  <link rel="stylesheet" href="../../shared-styles/compact-layout.css">
+  <link rel="stylesheet" href="../../shared-styles/debt-limit-modal.css">
+  <script src="../../shared-styles/number-formatter.js"></script>
+  <script src="../../shared-styles/common-utils.js"></script>
+  <style>
+    /* Add any additional styles here */
+    /* Keep only the last action column transparent */
+    #journalLinesTable tbody td:last-child,
+    #journalLinesTable thead th:last-child{
+      background: transparent !important;
+    }
+
+    .icon-gap {
+      margin-inline-end: 6px;
+    }
+    
+    /* Remove row styling effects (like purchase invoice) */
+    #journalLinesTable tbody tr,
+    #journalLinesTable tbody tr:nth-child(even) {
+      background: transparent !important;
+    }
+
+    /* ===== Chevron button styles are in style.css ===== */
+    .icon-gap {
+      margin-inline-end: 6px;
+    }
+    
+    #journalLinesTable tbody tr:hover {
+      background: transparent !important;
+      transform: none !important;
+      box-shadow: none !important;
+      cursor: default !important;
+    }
+    
+    /* Show spinner arrows in number inputs */
+    #journalLinesTable input[type="number"] {
+      -moz-appearance: number-input !important;
+      appearance: auto !important;
+    }
+    
+    #journalLinesTable input[type="number"]::-webkit-inner-spin-button,
+    #journalLinesTable input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: inner-spin-button !important;
+      opacity: 1 !important;
+      cursor: pointer !important;
+      background: none !important;
+      border: 0 !important;
+      filter: brightness(0.8) !important;
+      mix-blend-mode: multiply !important;
+    }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <section id="panel-journal" class="panel active" role="tabpanel">
+      <div class="toolbar" style="display:flex; justify-content:space-between; align-items:center; gap:0; flex-wrap:nowrap;">
+        <div class="pager" id="j_pager" style="flex-shrink:0;">
+          <button class="btn icon" id="btnLast" title="الأخير" aria-label="الأخير"><i class="fa-solid fa-angles-right icon-gap" aria-hidden="true"></i></button>
+          <button class="btn icon" id="btnNext" title="التالي" aria-label="التالي"><i class="fa-solid fa-angle-right icon-gap" aria-hidden="true"></i></button>
+          <input type="number" id="nav_id" class="nav-id" placeholder="رقم القيد" title="اذهب لرقم">
+          <div class="counter"><span id="nav_counter">0 / 0</span></div>
+          <button class="btn icon" id="btnPrev" title="السابق" aria-label="السابق"><i class="fa-solid fa-angle-left icon-gap" aria-hidden="true"></i></button>
+          <button class="btn icon" id="btnFirst" title="الأول" aria-label="الأول"><i class="fa-solid fa-angles-left icon-gap" aria-hidden="true"></i></button>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="btnNewJournal" title="قيد يومية جديد"><span id="btnNewJournalText"><i class="fa-solid fa-file-circle-plus"></i> جديد</span></button>
+          <button class="btn secondary" id="btnEditTop" title="تعديل"><span id="btnEditTopText"><i class="fa-solid fa-pen-to-square"></i> تعديل</span></button>
+          <button class="btn primary" id="btnSaveTop" title="حفظ"><span id="btnSaveTopText"><i class="fa-solid fa-circle-check"></i> حفظ</span></button>
+          <button class="btn danger" id="btnDeleteTop" title="حذف"><span id="btnDeleteTopText"><i class="fa-solid fa-circle-xmark"></i> حذف</span></button>
+          <button class="btn print" id="btnPrintTop" title="طباعة PDF"><span id="btnPrintTopText"><i class="fa-solid fa-file-pdf"></i> طباعة PDF</span></button>
+          <button class="btn whatsapp" id="btnWhatsApp" title="واتساب"><span><i class="fa-brands fa-whatsapp"></i> واتساب</span></button>
+          <button class="btn close-screen" id="j_btnCloseTop" title="إغلاق"><span id="btnCloseTopText"><i class="fa-solid fa-arrow-right-from-bracket"></i> إغلاق</span></button>
+        </div>
+      </div>
+
+      <div class="grid cards-3">
+        <div class="card form-card grid-span-3 fullwide">
+          <h3 id="j_header_title" style="margin:0 0 12px 0">رأس قيد اليومية</h3>
+          <div class="form-grid" style="display:flex; gap:12px; align-items:end; flex-wrap:nowrap; overflow:auto">
+            <label class="form-field" style="min-width:160px">
+              <span><i class="fa-solid fa-hashtag icon-gap" aria-hidden="true" style="color:#f59e0b"></i><span id="j_field_no">رقم القيد</span></span>
+              <input type="text" id="journalId" readonly placeholder="تلقائي">
+            </label>
+            <label class="form-field" style="min-width:190px">
+              <span><i class="fa-solid fa-calendar-days icon-gap" aria-hidden="true" style="color:#ef4444"></i><span id="j_field_date">التاريخ</span> <span style="color:var(--error)">*</span></span>
+              <input type="date" id="journalDate" required>
+            </label>
+            <label class="form-field" style="min-width:160px">
+              <span><i class="fa-solid fa-clock icon-gap" aria-hidden="true" style="color:#8b5cf6"></i><span id="j_field_time">الوقت</span></span>
+              <input type="time" id="journalTime" readonly>
+            </label>
+            <label class="form-field" style="flex:1 1 auto; min-width:300px">
+              <span><i class="fa-solid fa-file-lines icon-gap" aria-hidden="true" style="color:#10b981"></i><span id="j_field_memo">البيان</span></span>
+              <div style="display:flex; gap:6px; align-items:stretch">
+                <input type="text" id="journalMemo" placeholder="وصف القيد" style="flex:1">
+                <button type="button" id="btnCopyMemo" class="btn primary" title="نسخ البيان إلى جميع السطور" style="width:38px; height:100%; padding:0; font-size:14px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; line-height:1">
+                  <i class="fa-solid fa-chevron-down" style="margin:0; padding:0"></i>
+                </button>
+              </div>
+            </label>
+          </div>
+          <!-- User tracking info -->
+          <div id="j_user_tracking_info" style="display:none; margin-top:6px; padding:5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--bg-muted); font-size:11px; color:var(--subtle);">
+            <div id="j_created_info" style="margin:0;"></div>
+          </div>
+        </div>
+        <div class="card table-card grid-span-3 fullwide" id="journalGrid">
+          <div class="table-head">
+            <h3 id="j_table_title">سطور القيد</h3>
+            <div class="head-search" style="visibility:hidden"></div>
+            <div class="row">
+              <button class="btn primary" id="btnAddLine" type="button" style="width:auto"><i class="fa-solid fa-circle-plus icon-gap"></i> <span id="btnAddLineText">إضافة سطر</span></button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="journalLinesTable" style="min-width:1400px;table-layout:fixed">
+              <thead>
+                <tr>
+                  <th id="j_th_item" style="width:40px">#</th>
+                  <th id="j_th_customer_id" style="width:100px">رقم العميل</th>
+                  <th id="j_th_supplier_id" style="width:100px">رقم المورد</th>
+                  <th id="j_th_account_id" style="width:100px">رقم الحساب</th>
+                  <th id="j_th_name" style="width:200px">الاسم</th>
+                  <th id="j_th_debit" style="width:120px">المدين</th>
+                  <th id="j_th_credit" style="width:120px">الدائن</th>
+                  <th id="j_th_currency" style="width:150px">نوع العملة</th>
+                  <th id="j_th_memo" style="width:250px">البيان</th>
+                  <th id="j_th_delete" style="width:60px">حذف</th>
+                </tr>
+              </thead>
+              <tbody id="journalLinesBody">
+                <!-- Lines will be added here -->
+              </tbody>
+              <tfoot style="display: none;">
+                <tr style="background:var(--bg-muted);font-weight:700;font-size:11px">
+                  <td style="text-align:center;vertical-align:middle">#</td>
+                  <td style="text-align:center;vertical-align:middle;font-size:14px">الإجمالي</td>
+                  <td style="text-align:center">
+                    <div style="font-size:10px;color:var(--subtle);margin-bottom:4px">مدين</div>
+                    <div style="font-size:13px;font-weight:700" id="totalDebitCash">0.00</div>
+                  </td>
+                  <td style="text-align:center">
+                    <div style="font-size:10px;color:var(--subtle);margin-bottom:4px">دائن</div>
+                    <div style="font-size:13px;font-weight:700" id="totalCreditCash">0.00</div>
+                  </td>
+                  <td style="text-align:center" id="balanceCash">
+                    <div style="font-size:10px;color:var(--subtle);margin-bottom:4px">الفرق</div>
+                    <div style="font-size:13px;font-weight:700">متزن 0.00</div>
+                  </td>
+                  <td style="text-align:center">
+                    <div style="font-size:9px;color:var(--subtle);margin-bottom:2px">مدين(ذهب)</div>
+                    <div style="font-size:8px;color:var(--subtle);font-style:italic;margin-bottom:2px">عيار 21</div>
+                    <div style="font-size:13px;font-weight:700" id="totalDebitGold">0.00</div>
+                  </td>
+                  <td style="text-align:center">
+                    <div style="font-size:9px;color:var(--subtle);margin-bottom:2px">دائن(ذهب)</div>
+                    <div style="font-size:8px;color:var(--subtle);font-style:italic;margin-bottom:2px">عيار 21</div>
+                    <div style="font-size:13px;font-weight:700" id="totalCreditGold">0.00</div>
+                  </td>
+                  <td style="text-align:center" id="balanceGold">
+                    <div style="font-size:9px;color:var(--subtle);margin-bottom:2px">الفرق</div>
+                    <div style="font-size:8px;color:var(--subtle);font-style:italic;margin-bottom:2px">عيار 21</div>
+                    <div style="font-size:13px;font-weight:700">متزن 0.00</div>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+            <!-- قائمة أنواع العملات للفلترة -->
+            <datalist id="currency_datalist">
+              <option value="ريال سعودي">ريال سعودي</option>
+              <option value="ذهب عيار 24">ذهب عيار 24</option>
+              <option value="ذهب عيار 22">ذهب عيار 22</option>
+              <option value="ذهب عيار 21">ذهب عيار 21</option>
+              <option value="ذهب عيار 18">ذهب عيار 18</option>
+              <option value="فضة عيار 999">فضة عيار 999</option>
+              <option value="فضة عيار 925">فضة عيار 925</option>
+              <option value="فضة عيار 900">فضة عيار 900</option>
+              <option value="فضة عيار 800">فضة عيار 800</option>
+            </datalist>
+          </div>
+        </div>
+      </div>
+      
+      <!-- بطاقة الإجماليات أسفل الشاشة -->
+      <div class="card form-card grid-span-3 fullwide bottom-card" id="journal_bottom">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 4px 0;">
+          <!-- إجماليات الريال -->
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;"><span id="j_total_debit_label">مدين</span>: <span id="totalDebitCash_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;"><span id="j_total_credit_label">دائن</span>: <span id="totalCreditCash_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;" id="balanceCash_display"><span id="j_total_balance_label">الفرق</span>: <span id="balanceCash_value" style="font-weight: 700;">متزن 0.00</span></span>
+          </div>
+          
+          <!-- إجماليات الذهب -->
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;"><span id="j_total_gold_debit_label">مدين(ذهب 21)</span>: <span id="totalDebitGold_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;"><span id="j_total_gold_credit_label">دائن(ذهب 21)</span>: <span id="totalCreditGold_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: var(--text); font-size: 13px;" id="balanceGold_display"><span id="j_total_gold_balance_label">الفرق</span>: <span id="balanceGold_value" style="font-weight: 700;">متزن 0.00</span></span>
+          </div>
+          
+          <!-- إجماليات الفضة -->
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <span style="font-weight: 600; color: #9ca3af; font-size: 13px;"><span id="j_total_silver_debit_label">مدين(فضة 999)</span>: <span id="totalDebitSilver_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: #9ca3af; font-size: 13px;"><span id="j_total_silver_credit_label">دائن(فضة 999)</span>: <span id="totalCreditSilver_display" style="font-weight: 700;">0.00</span></span>
+            <span style="font-weight: 600; color: #9ca3af; font-size: 13px;" id="balanceSilver_display"><span id="j_total_silver_balance_label">الفرق</span>: <span id="balanceSilver_value" style="font-weight: 700;">متزن 0.00</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Customer Lookup Modal (F9) -->
+  <div class="modal" id="lookupCustomerModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h3 id="j_lookupCustomerTitle">اختر عميل</h3>
+        <button class="icon-btn" id="lookupCustomerClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-field" style="margin-bottom:10px">
+          <span id="j_lookupCustomerSearchLabel">بحث عن عميل</span>
+          <input type="search" id="lc_search" data-placeholder-key="lookupSearchPlaceholder">
+        </label>
+        <div class="table-responsive" style="max-height:45vh; overflow:auto">
+          <table class="table" id="lc_table" style="min-width:480px">
+            <thead>
+              <tr>
+                <th id="j_lc_th_id" style="width:140px">رقم العميل</th>
+                <th id="j_lc_th_name">اسم العميل</th>
+              </tr>
+            </thead>
+            <tbody id="lc_tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="lookupCustomerCancel"><i class="fa-regular fa-circle-xmark"></i> <span id="j_lc_cancel">إلغاء</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplier Lookup Modal (F9) -->
+  <div class="modal" id="lookupSupplierModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h3 id="j_lookupSupplierTitle">اختر مورد</h3>
+        <button class="icon-btn" id="lookupSupplierClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-field" style="margin-bottom:10px">
+          <span id="j_lookupSupplierSearchLabel">بحث عن مورد</span>
+          <input type="search" id="ls_search" data-placeholder-key="lookupSearchPlaceholder">
+        </label>
+        <div class="table-responsive" style="max-height:45vh; overflow:auto">
+          <table class="table" id="ls_table" style="min-width:480px">
+            <thead>
+              <tr>
+                <th id="j_ls_th_id" style="width:140px">رقم المورد</th>
+                <th id="j_ls_th_name">اسم المورد</th>
+              </tr>
+            </thead>
+            <tbody id="ls_tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="lookupSupplierCancel"><i class="fa-regular fa-circle-xmark"></i> <span id="j_ls_cancel">إلغاء</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Lookup Modal (F9) -->
+  <div class="modal" id="lookupAccountModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <h3 id="j_lookupAccountTitle">اختر حساب</h3>
+        <button class="icon-btn" id="lookupAccountClose" aria-label="إغلاق"><i class="fa-regular fa-circle-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-field" style="margin-bottom:10px">
+          <span id="j_lookupAccountSearchLabel">بحث عن حساب</span>
+          <input type="search" id="la_search" data-placeholder-key="lookupSearchPlaceholder">
+        </label>
+        <div class="table-responsive" style="max-height:45vh; overflow:auto">
+          <table class="table" id="la_table" style="min-width:520px">
+            <thead>
+              <tr>
+                <th id="j_la_th_id" style="width:160px">رقم الحساب</th>
+                <th id="j_la_th_name">اسم الحساب</th>
+              </tr>
+            </thead>
+            <tbody id="la_tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="lookupAccountCancel"><i class="fa-regular fa-circle-xmark"></i> <span id="j_la_cancel">إلغاء</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal" id="confirmDeleteModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="document" style="max-width:450px">
+      <div class="modal-header" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); color:white; padding:14px 20px">
+        <h3 style="margin:0; display:flex; align-items:center; gap:10px; font-size:16px">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size:18px"></i>
+          <span id="j_confirmDeleteTitle">تأكيد الحذف</span>
+        </h3>
+        <button class="icon-btn" id="confirmDeleteClose" aria-label="إغلاق" style="color:white; opacity:0.95; transition:opacity 0.2s"><i class="fa-regular fa-circle-xmark"></i></button>
+      </div>
+      <div class="modal-body" style="padding:20px; text-align:center">
+        <div style="margin-bottom:16px">
+          <i class="fa-solid fa-circle-exclamation" style="font-size:48px; color:var(--primary); opacity:0.9"></i>
+        </div>
+        <p id="confirmDeleteMsg" style="font-size:15px; color:var(--text); margin:0; line-height:1.6">هل أنت متأكد؟</p>
+      </div>
+      <div class="modal-footer two-cols" style="padding:12px 20px; gap:10px">
+        <button class="btn primary" id="confirmDeleteYes" style="background:linear-gradient(135deg, var(--primary), var(--primary-600)); border:none; font-size:14px; padding:10px 24px">
+          <i class="fa-solid fa-circle-check"></i> <span id="j_confirmDeleteYesText">نعم، احذف</span>
+        </button>
+        <button class="btn secondary" id="confirmDeleteNo" style="font-size:14px; padding:10px 24px">
+          <i class="fa-regular fa-circle-xmark"></i> <span id="j_confirmDeleteNoText">إلغاء الأمر</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unsaved Changes Confirmation Modal (Elegant Style) -->
+  <div class="permission-denied-modal" id="unsavedChangesModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="permission-denied-backdrop" data-close></div>
+    <div class="permission-denied-content" style="max-width:420px">
+      <div class="permission-denied-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding:28px 24px 24px;">
+        <div class="permission-denied-icon" style="width:72px; height:72px; font-size:32px; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); border:3px solid rgba(255,255,255,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+          <i class="fa-solid fa-file-pen"></i>
+        </div>
+        <h3 class="permission-denied-title" id="unsavedChangesTitle" style="font-size:18px; margin-top:16px; text-shadow:0 2px 4px rgba(0,0,0,0.1);">تغييرات غير محفوظة</h3>
+        <button id="unsavedChangesClose" aria-label="إغلاق" style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.2); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; backdrop-filter:blur(4px);">
+          <i class="fa-solid fa-xmark" style="font-size:14px;"></i>
+        </button>
+      </div>
+      <div class="permission-denied-body" style="padding:28px 24px 20px;">
+        <p class="permission-denied-message" id="unsavedChangesMessage" style="font-size:15px; font-weight:600; color:var(--text); margin:0 0 10px 0; line-height:1.7;">لديك تعديلات لم يتم حفظها بعد</p>
+        <p class="permission-denied-detail" id="unsavedChangesDetail" style="font-size:13px; color:var(--subtle); margin:0; line-height:1.7; opacity:0.85;">هل تريد المتابعة والخروج بدون حفظ التغييرات؟</p>
+      </div>
+      <div class="permission-denied-footer" style="padding:16px 24px 24px; display:flex; gap:12px; flex-direction:row-reverse;">
+        <button id="unsavedStayBtn" type="button" style="flex:1; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:white; border:none; font-size:14px; font-weight:600; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(16,185,129,0.3); transition:all 0.2s;">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+          <span id="unsavedStayBtnText">العودة للتعديل</span>
+        </button>
+        <button id="unsavedLeaveBtn" type="button" style="flex:1; background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color:white; border:none; font-size:14px; font-weight:500; padding:12px 20px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 15px rgba(107,114,128,0.25); transition:all 0.2s;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span id="unsavedLeaveBtnText">خروج بدون حفظ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+  <script src="../../shared-styles/modal-close-effects.js"></script>
+  <script src="../../shared-styles/permission-denied-modal.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="../../shared-styles/debt-limit-modal.js"></script>
+  <script src="../../shared-styles/inactive-entity-modal.js"></script>
+  <script src="../main/edit-confirm.js"></script>
+  <script type="module" src="./script.js"></script>
+</body>
+</html>

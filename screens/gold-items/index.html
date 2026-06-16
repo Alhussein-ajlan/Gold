@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>أصناف العيارات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared-styles/themes.css">
+  <script src="../../shared-styles/theme-loader.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../shared-styles/toast-notifications.css">
+  <link rel="stylesheet" href="../../shared-styles/permission-denied-modal.css">
+</head>
+<body>
+  <div class="gold-items-container">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="header-title">
+        <div class="title-icon">
+          <i class="fa-solid fa-gem"></i>
+        </div>
+        <div>
+          <h1 id="pageTitle">أصناف العيارات</h1>
+          <p id="pageSubtitle">Gold Items Categories</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="searchInput" placeholder="بحث عن صنف...">
+          <button class="clear-search" id="clearSearch" title="مسح"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <button class="btn-action" id="btnRefresh" title="تحديث">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button class="btn-primary" id="btnAddItem">
+          <i class="fa-solid fa-plus"></i>
+          <span id="btnAddItemText">إضافة صنف</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- بطاقة الأقسام -->
+    <div class="sections-bar">
+      <div class="section-tab active" data-section="mashghulat">
+        <div class="section-tab-icon mashghulat-icon">
+          <i class="fa-solid fa-gem"></i>
+        </div>
+        <div class="section-tab-info">
+          <span class="section-tab-title" id="tabMashghulatTitle">المشغولات</span>
+          <span class="section-tab-count">5 عيارات</span>
+        </div>
+      </div>
+      <div class="section-tab" data-section="kasr">
+        <div class="section-tab-icon kasr-icon">
+          <i class="fa-solid fa-coins"></i>
+        </div>
+        <div class="section-tab-info">
+          <span class="section-tab-title" id="tabKasrTitle">الكسر</span>
+          <span class="section-tab-count">4 عيارات</span>
+        </div>
+      </div>
+      <div class="section-tab" data-section="silver">
+        <div class="section-tab-icon silver-icon">
+          <i class="fa-solid fa-ring"></i>
+        </div>
+        <div class="section-tab-info">
+          <span class="section-tab-title" id="tabSilverTitle">الفضة</span>
+          <span class="section-tab-count">4 عيارات</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- بطاقة العيارات (يمين في RTL) -->
+      <div class="karats-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-star"></i> <span id="karatsTitle">العيارات</span></h2>
+          <span class="selected-section-badge" id="selectedSectionBadge">المشغولات</span>
+        </div>
+        <div class="karats-list" id="karatsList">
+          <!-- عيارات المشغولات (افتراضي) -->
+          <div class="karat-item active" data-karat="22" data-type="mashghulat">
+            <span class="karat-value">22</span>
+            <span class="karat-label">عيار</span>
+            <span class="karat-purity">916.67</span>
+          </div>
+          <div class="karat-item" data-karat="21" data-type="mashghulat">
+            <span class="karat-value">21</span>
+            <span class="karat-label">عيار</span>
+            <span class="karat-purity">875</span>
+          </div>
+          <div class="karat-item" data-karat="18" data-type="mashghulat">
+            <span class="karat-value">18</span>
+            <span class="karat-label">عيار</span>
+            <span class="karat-purity">750</span>
+          </div>
+          <div class="karat-item" data-karat="14" data-type="mashghulat">
+            <span class="karat-value">14</span>
+            <span class="karat-label">عيار</span>
+            <span class="karat-purity">583.33</span>
+          </div>
+          <div class="karat-item" data-karat="9" data-type="mashghulat">
+            <span class="karat-value">9</span>
+            <span class="karat-label">عيار</span>
+            <span class="karat-purity">375</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقة الأصناف (يسار في RTL) -->
+      <div class="items-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-list"></i> <span id="tableTitle">قائمة الأصناف</span></h2>
+          <span class="items-count" id="itemsCount">0 صنف</span>
+        </div>
+        <div class="items-container">
+          <div class="loading-indicator" id="loadingIndicator">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span id="loadingText">جاري التحميل...</span>
+          </div>
+          <table class="data-table" id="itemsTable">
+            <thead>
+              <tr>
+                <th id="thItemId">رقم</th>
+                <th id="thItemName">اسم الصنف</th>
+                <th id="thItemNameEn">بالإنجليزية</th>
+                <th id="thDescription">الوصف</th>
+                <th id="thPurity">النقاوة</th>
+                <th id="thStatus">الحالة</th>
+                <th id="thActions">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="itemsTableBody">
+              <!-- Items will be loaded here -->
+            </tbody>
+          </table>
+          <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fa-solid fa-box-open"></i>
+            <p id="emptyStateText">لا توجد أصناف لهذا العيار</p>
+            <button class="btn-primary btn-sm" id="btnAddFirstItem">
+              <i class="fa-solid fa-plus"></i>
+              <span id="btnAddFirstItemText">إضافة صنف</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Item Modal -->
+  <div class="modal-overlay" id="itemModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-gem"></i> <span id="modalTitle">إضافة صنف جديد</span></h3>
+        <button class="modal-close" id="modalClose"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="itemForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label><i class="fa-solid fa-hashtag"></i> <span id="labelItemId">رقم الصنف</span></label>
+              <input type="text" id="itemId" readonly>
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-signature"></i> <span id="labelItemName">اسم الصنف (عربي)</span></label>
+              <input type="text" id="itemName" required placeholder="مثال: خاتم">
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-language"></i> <span id="labelItemNameEn">اسم الصنف (إنجليزي)</span></label>
+              <input type="text" id="itemNameEn" placeholder="Example: Ring">
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-star"></i> <span id="labelDefaultKarat">العيار الافتراضي</span></label>
+              <select id="defaultKarat">
+                <optgroup label="المشغولات">
+                  <option value="22">عيار 22</option>
+                  <option value="21" selected>عيار 21</option>
+                  <option value="18">عيار 18</option>
+                  <option value="14">عيار 14</option>
+                  <option value="9">عيار 9</option>
+                </optgroup>
+                <optgroup label="الكسر">
+                  <option value="24">صافي 24</option>
+                </optgroup>
+                <optgroup label="الفضة">
+                  <option value="999">فضة 999</option>
+                  <option value="925">فضة 925</option>
+                  <option value="900">فضة 900</option>
+                  <option value="800">فضة 800</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-toggle-on"></i> <span id="labelStatus">الحالة</span></label>
+              <select id="itemStatus">
+                <option value="active" id="optActive">نشط</option>
+                <option value="inactive" id="optInactive">غير نشط</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label><i class="fa-solid fa-gem"></i> <span id="labelPurity">النقاوة</span></label>
+              <input type="number" id="itemPurity" min="0" max="1000" step="0.01" placeholder="مثال: 916.67">
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-align-left"></i> <span id="labelDescription">الوصف</span></label>
+              <textarea id="itemDescription" rows="2" placeholder="وصف اختياري للصنف..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btnCancel">
+          <i class="fa-solid fa-times"></i>
+          <span id="btnCancelText">إلغاء</span>
+        </button>
+        <button class="btn-save" id="btnSave">
+          <i class="fa-solid fa-check"></i>
+          <span id="btnSaveText">حفظ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-container modal-small">
+      <div class="modal-header danger">
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> <span id="deleteModalTitle">تأكيد الحذف</span></h3>
+        <button class="modal-close" id="deleteModalClose"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-warning">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <p id="deleteWarningText">هل أنت متأكد من حذف هذا الصنف؟</p>
+          <strong id="deleteItemName"></strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="deleteCancel">
+          <i class="fa-solid fa-times"></i>
+          <span id="deleteCancelText">إلغاء</span>
+        </button>
+        <button class="btn-danger" id="deleteConfirm">
+          <i class="fa-solid fa-trash"></i>
+          <span id="deleteConfirmText">حذف</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="../../shared-styles/common-utils.js"></script>
+  <script src="../../shared-styles/permission-denied-modal.js"></script>
+  <script src="../../shared-styles/screen-permissions.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

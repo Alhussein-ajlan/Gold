@@ -1,0 +1,111 @@
+
+      <html dir="rtl">
+      <head>
+        <meta charset="utf-8">
+        <style>
+          table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+          th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+          th { background: #FFFF00; font-weight: bold; }
+          .header { background: #FFFFFF; font-weight: bold; font-size: 14px; }
+          .section-header { background: #FFFF00; font-weight: bold; }
+          .num { text-align: center; }
+        </style>
+      </head>
+      <body>
+        <table>
+          <tr class="header"><td colspan="4">اسم الشركة</td></tr>
+          <tr class="header"><td colspan="4">للفترة من 2026-03-01 إلى الفترة 2026-03-31</td></tr>
+          <tr class="header"><td colspan="4">إقرار ضريبة القيمة المضافة لشهر مارس 2026 2026</td></tr>
+          <tr><td colspan="2">رقم الإقرار: 202603-0002</td><td colspan="2">الرقم الضريبي: -</td></tr>
+          <tr><td colspan="2">المسؤول: المحاسب الذكي</td><td colspan="2">تاريخ التقديم: 02/03/2026</td></tr>
+          <tr><td colspan="4">الحالة: غير معروف</td></tr>
+          
+          <tr class="section-header"><td colspan="4">ضريبة القيمة المضافة على المبيعات</td></tr>
+          <tr>
+            <th>ضريبة القيمة المضافة على المبيعات</th>
+            <th>المبلغ (ريال)</th>
+            <th>مبلغ التعديل (ريال)</th>
+            <th>مبلغ ضريبة القيمة المضافة (ريال)</th>
+          </tr>
+          <tr>
+            <td>المبيعات الخاضعة للنسبة الأساسية 15%</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>المبيعات للمواطنين (الخدمات الصحية/ التعليم الأهلي الخاص/ المسكن الأول)</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>المبيعات الخاضعة للنسبة الصفرية</td>
+            <td class="num">638,995.61</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>إجمالي المبيعات</td>
+            <td class="num">638,995.61</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          
+          <tr class="section-header"><td colspan="4">الضريبة على المشتريات</td></tr>
+          <tr>
+            <th>الضريبة على المشتريات</th>
+            <th>المبلغ (ريال)</th>
+            <th>مبلغ التعديل (ريال)</th>
+            <th>مبلغ ضريبة القيمة المضافة</th>
+          </tr>
+          <tr>
+            <td>المشتريات الخاضعة للنسبة الأساسية 15%</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>المشتريات الخاضعة للنسبة الصفرية</td>
+            <td class="num">619,584.61</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>المشتريات المعفاة</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>المصاريف الضريبية (سندات الصرف)</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td>إجمالي المشتريات</td>
+            <td class="num">619,584.61</td>
+            <td class="num">0.00</td>
+            <td class="num">0.00</td>
+          </tr>
+          
+          <tr>
+            <td colspan="3">إجمالي ضريبة القيمة المضافة المستحقة عن الفترة الضريبية الحالية</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td colspan="3">تصحيحات من الفترات السابقة</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr>
+            <td colspan="3">صافي الضريبة المستحقة</td>
+            <td class="num">0.00</td>
+          </tr>
+          <tr><td colspan="4">أقر بأن البيانات الواردة في هذا الإقرار صحيحة وكاملة، وأتحمل المسؤولية الكاملة عن أي معلومات خاطئة أو مضللة.</td></tr>
+          <tr><td colspan="3">التوقيع والختم</td><td>اسم المسؤول</td></tr>
+          <tr><td colspan="3"></td><td>المحاسب الذكي</td></tr>
+        </table>
+      </body>
+      </html>
+    

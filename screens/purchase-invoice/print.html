@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طباعة فاتورة الشراء</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <script src="../../node_modules/html2canvas/dist/html2canvas.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 8mm;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      direction: rtl;
+      background: #f5f5f5;
+      padding: 10px;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .invoice-container {
+      max-width: 210mm;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    /* Header Section */
+    .invoice-header {
+      background: linear-gradient(135deg, #e8f5f3 0%, #d4edea 100%);
+      color: #2c3e50;
+      padding: 20px 15px;
+      border: 2px solid #00897B;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 0;
+    }
+
+    .header-top {
+      /* ثلاث أعمدة: معلومات عربية - الشعار - معلومات إنجليزية، مع بقاء الشعار في المنتصف دائماً */
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      margin-bottom: 12px;
+      width: 100%;
+      direction: ltr;
+      column-gap: 20px;
+    }
+
+    .company-info {
+      text-align: right;
+      direction: rtl;
+    }
+
+    .company-info h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0 0 8px 0;
+    }
+
+    .company-info .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* RTL: start = right */
+      gap: 8px;
+      font-size: 11px;
+      color: #2c3e50;
+      margin: 4px 0;
+    }
+
+    .company-info .info-item i {
+      color: #00897B;
+      font-size: 12px;
+    }
+
+    .invoice-qr {
+      width: 120px;
+      height: 120px;
+    }
+
+    .invoice-qr img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    .invoice-qr-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    /* First row should have three columns */
+    .details-row.three-cols {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .company-logo {
+      width: 130px;
+      height: 130px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      border: 4px solid #00897B;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,137,123,0.2);
+      margin: 0 auto;
+    }
+    
+    .company-logo img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+    }
+
+    .company-info-left {
+      text-align: left;
+      direction: ltr;
+    }
+
+    .company-info-left h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0 0 8px 0;
+    }
+
+    .company-info-left .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      font-size: 11px;
+      color: #2c3e50;
+      margin: 4px 0;
+    }
+
+    .company-info-left .info-item i {
+      color: #00897B;
+      font-size: 12px;
+    }
+
+    .invoice-title {
+      text-align: center;
+      background: #e8f5f3;
+      padding: 4px 15px;
+      border-radius: 12px;
+      border: 2px solid #00897B;
+      margin: 5px 0;
+    }
+
+    .invoice-title h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00897B;
+      margin: 0;
+    }
+
+    /* Invoice Details */
+    .invoice-details {
+      padding: 6px 15px; /* مطابق لفاتورة البيع */
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    /* Main Details Box */
+    .details-box {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: 2px;
+      display: grid;
+      grid-template-columns: 130px 1fr; /* QR column + details */
+    }
+
+    .details-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .details-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-field, .detail-field-right, .detail-field-left, .detail-field-vertical {
+      display: flex;
+      align-items: center;
+      padding: 3px 6px;
+      gap: 6px;
+      border-left: 1px solid #ddd;
+    }
+
+    .detail-field:first-child, .detail-field-right:first-child, .detail-field-left:first-child, .detail-field-vertical:first-child {
+      border-left: none;
+    }
+
+    .detail-field-vertical {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .detail-field-right {
+      justify-content: flex-start;
+      flex-direction: row-reverse;
+      gap: 15px;
+    }
+
+    .detail-field-left {
+      justify-content: flex-start;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #2c3e50;
+      white-space: nowrap;
+    }
+
+    .field-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #2c3e50;
+      direction: ltr;
+      text-align: left;
+    }
+
+    /* Description Box */
+    .description-box {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: 3px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .description-box .field-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .description-box .field-value {
+      font-size: 10px;
+      font-weight: 600;
+      color: #2c3e50;
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Table Section */
+    .invoice-table {
+      padding: 0 15px 6px; /* يوازي عرض مستطيل الفاتورة */
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: 0;
+      border: 3px solid #2c3e50;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Empty rows to fill space */
+    tbody tr.empty-filler td {
+      height: 28px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    thead {
+      background: linear-gradient(to bottom, #e8f4f8, #d0e8f0);
+      border-bottom: 3px solid #2c3e50;
+    }
+
+    thead th {
+      padding: 6px 4px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 10px;
+      color: #2c3e50;
+      border-right: 1px solid #b0c4ce;
+      border-bottom: 1px solid #b0c4ce;
+      line-height: 1.1;
+    }
+    
+    thead th:first-child {
+      border-top-right-radius: 6px;
+    }
+    
+    thead th:last-child {
+      border-right: none;
+      border-top-left-radius: 6px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #e0e0e0;
+      transition: background-color 0.2s;
+    }
+    
+    tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    
+    tbody tr:hover {
+      background-color: #f0f7fa;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    tbody tr:last-child td:first-child {
+      border-bottom-right-radius: 6px;
+    }
+    
+    tbody tr:last-child td:last-child {
+      border-bottom-left-radius: 6px;
+    }
+
+    tbody td {
+      padding: 5px;
+      text-align: center;
+      font-size: 10px;
+      border-right: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    tbody td:last-child {
+      border-right: none;
+    }
+    
+    tfoot td {
+      padding: 4px;
+      text-align: center;
+      font-size: 10px;
+      border-right: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      background-color: #f0f7fa;
+      font-weight: 600;
+    }
+    
+    tfoot td:last-child {
+      border-right: none;
+    }
+
+    /* Totals Section */
+    .invoice-totals {
+      padding: 0 20px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+    }
+
+    .totals-wrapper {
+      background: white;
+      padding: 0;
+      margin-top: 4px;
+      margin-bottom: 3px;
+    }
+
+    .karat-totals-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 2px solid #2c3e50;
+    }
+
+    .karat-totals-row .karat-box {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+    }
+
+    .karat-totals-row .karat-box .karat-label {
+      font-size: 8px;
+      color: #7f8c8d;
+      margin-bottom: 0;
+    }
+
+    .karat-totals-row .karat-box .karat-value {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .main-totals-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 2px solid #2c3e50;
+    }
+
+    .main-totals-row .total-box {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+    }
+
+    .main-totals-row .total-box .total-label {
+      font-size: 8px;
+      color: #7f8c8d;
+      margin-bottom: 0;
+      font-weight: 600;
+    }
+
+    .main-totals-row .total-box .total-value {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .tax-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      border-bottom: 2px solid #2c3e50;
+    }
+
+    .tax-row .tax-info {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+      font-size: 9px;
+      color: #2c3e50;
+    }
+
+    .tax-row .tax-box {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+    }
+
+    .tax-row .tax-box .tax-label {
+      font-size: 8px;
+      color: #7f8c8d;
+      margin-bottom: 0;
+    }
+
+    .tax-row .tax-box .tax-value {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .final-total-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+    }
+
+    .final-total-row .final-label {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #2c3e50;
+      background: #f8f9fa;
+      line-height: 1.1;
+    }
+
+    .final-total-row .final-value {
+      border: 1px solid #ddd;
+      padding: 2px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #00897B;
+      background: #f8f9fa;
+    }
+
+    /* Signatures Section */
+    .signatures-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 3px 0;
+      margin-top: 4px;
+    }
+
+    .signature-box {
+      text-align: center;
+      padding: 3px;
+    }
+
+    .signature-box .signature-line {
+      border-top: 1px solid #2c3e50;
+      margin: 10px 8px 4px;
+    }
+
+    .signature-box .signature-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+      line-height: 1.1;
+    }
+
+    /* Footer */
+    .invoice-footer {
+      padding: 6px 20px;
+      background: white;
+      border: 2px solid #2c3e50;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 8px;
+      line-height: 1.2;
+    }
+    
+    .invoice-footer p {
+      margin: 2px 0;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .invoice-container {
+        box-shadow: none;
+        border-radius: 0;
+        max-width: 100%;
+      }
+      
+      table {
+        box-shadow: none;
+        page-break-inside: auto;
+      }
+      
+      tbody tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+      
+      tbody tr:hover {
+        background-color: transparent;
+      }
+      
+      tbody tr.empty-filler {
+        height: 28px;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+      
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
+    /* Print Button */
+    .print-button {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: linear-gradient(135deg, #00897B 0%, #00695C 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,137,123,0.4);
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .print-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0,137,123,0.5);
+    }
+
+    .print-button i {
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-container">
+    <!-- Header -->
+    <div class="invoice-header">
+      <div class="header-top">
+        <div class="company-info-left">
+          <h1 id="company_name_en">Company Name</h1>
+          <div class="info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="company_address_en">Address</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span id="company_phone_en">Phone</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span id="company_email_en">Email</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span id="company_tax_en">Tax No</span>
+          </div>
+        </div>
+        <div class="company-logo" id="company_logo">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <div class="company-info">
+          <h1 id="company_name_ar">اسم الشركة</h1>
+          <div class="info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="company_address_ar">العنوان</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span id="company_phone_ar">رقم الهاتف</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span id="company_email_ar">البريد الإلكتروني</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span id="company_tax_ar">الرقم الضريبي</span>
+          </div>
+        </div>
+      </div>
+      <div class="invoice-title">
+        <h2>فاتورة شراء ضريبية</h2>
+      </div>
+    </div>
+
+    <!-- Invoice Details -->
+    <div class="invoice-details">
+      <!-- Main Details Box -->
+      <div class="details-box">
+        <!-- Left QR column spanning the whole details area -->
+        <div class="invoice-qr-wrapper">
+          <div id="invoice_qr" class="invoice-qr"></div>
+        </div>
+
+        <!-- Right details area with 3 rows -->
+        <div>
+          <div class="details-row three-cols">
+            <div class="detail-field">
+              <span class="field-label" id="account_type_label">رقم الحساب</span>
+              <span class="field-value" id="print_account_no">266</span>
+            </div>
+            <div class="detail-field">
+              <span class="field-label" id="account_name_label">اسم الحساب</span>
+              <span class="field-value" id="print_customer_name">شركة زهرة اليمامة للذهب فرع 2 عبد العزيز</span>
+            </div>
+            <div class="detail-field-left">
+              <span class="field-label">رقم الفاتورة</span>
+              <span class="field-value" id="print_invoice_id">560100033</span>
+            </div>
+          </div>
+        
+        <div class="details-row">
+          <div class="detail-field">
+            <span class="field-label">العنوان</span>
+            <span class="field-value" id="print_address">تبوك_البلدة القديمة_47914_3453</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">التاريخ</span>
+            <span class="field-value" id="print_date">26/10/2025</span>
+          </div>
+        </div>
+        
+        <div class="details-row">
+          <div class="detail-field">
+            <span class="field-label">الرقم الضريبي</span>
+            <span class="field-value" id="print_tax_number">-</span>
+          </div>
+          <div class="detail-field">
+            <span class="field-label">رقم الجوال</span>
+            <span class="field-value" id="print_phone">-</span>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+      <!-- Description Box -->
+      <div class="description-box">
+        <span class="field-label">البيان</span>
+        <span class="field-value" id="print_description">بيع صافي 499.3*900</span>
+      </div>
+      <div class="description-box">
+        <span class="field-label" id="print_branch_scope_label">نطاق الفروع</span>
+        <span class="field-value" id="print_branch_scope_value">-</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="invoice-table">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 70px">العيار<br>Karat</th>
+            <th style="width: 150px">اسم الصنف<br>Item</th>
+            <th style="width: 55px">الوزن الكلي<br>Weight</th>
+            <th style="width: 55px">الأونصة<br>Ounce</th>
+            <th style="width: 55px">سعر الذهب<br>Gold Price</th>
+            <th style="width: 50px">الأجور<br>Labor</th>
+            <th style="width: 65px">الإجمالي قبل<br>الضريبة</th>
+            <th style="width: 50px">مبلغ الضريبة<br>Tax</th>
+            <th style="width: 65px">الإجمالي شامل<br>الضريبة</th>
+          </tr>
+        </thead>
+        <tbody id="print_items_body">
+          <!-- Items will be inserted here -->
+        </tbody>
+      </table>
+
+      <!-- Totals Section -->
+      <div class="totals-wrapper">
+        <!-- Karat Totals Row -->
+        <div class="karat-totals-row">
+          <div class="karat-box">
+            <div class="karat-label">عيار 18</div>
+            <div class="karat-value" id="karat_18">0.00</div>
+          </div>
+          <div class="karat-box">
+            <div class="karat-label">عيار 21</div>
+            <div class="karat-value" id="karat_21">0.00</div>
+          </div>
+          <div class="karat-box">
+            <div class="karat-label">عيار 22</div>
+            <div class="karat-value" id="karat_22">0.00</div>
+          </div>
+          <div class="karat-box">
+            <div class="karat-label">عيار 24</div>
+            <div class="karat-value" id="karat_24">0.00</div>
+          </div>
+        </div>
+
+        <!-- Main Totals Row -->
+        <div class="main-totals-row">
+          <div class="total-box">
+            <div class="total-label">إجمالي الوزن القائم</div>
+            <div class="total-value"><span id="print_total_weight">0.00</span></div>
+          </div>
+          <div class="total-box">
+            <div class="total-label">إجمالي الذهب محول عيار 21</div>
+            <div class="total-value"><span id="print_total_weight_21">0.00</span></div>
+          </div>
+          <div class="total-box">
+            <div class="total-label">إجمالي قيمة الذهب</div>
+            <div class="total-value"><span id="print_total_value">0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Tax Rows -->
+        <div class="tax-row">
+          <div class="tax-info">الإجمالي غير شامل الضريبة</div>
+          <div class="tax-box">
+            <div class="tax-value"><span id="print_subtotal">0.00</span></div>
+          </div>
+        </div>
+
+        <div class="tax-row">
+          <div class="tax-info">ضريبة القيمة المضافة 15%</div>
+          <div class="tax-box">
+            <div class="tax-label">قيمة الضريبة</div>
+            <div class="tax-value"><span id="print_tax_value">0.00</span></div>
+          </div>
+        </div>
+
+        <!-- Final Total -->
+        <div class="final-total-row">
+          <div class="final-label">الإجمالي شامل ضريبة القيمة المضافة<br>المبلغ</div>
+          <div class="final-value"><span id="print_final_total">0.00</span></div>
+        </div>
+        
+        <!-- Summary in Words -->
+        <div style="background: #fff; font-size: 8px; padding: 6px; border-top: 2px solid #2c3e50; text-align: center; line-height: 1.2;">
+          <div style="margin-bottom: 2px;">
+            <strong>إجمالي الذهب: <span id="print_summary_gold_words"></span></strong>
+          </div>
+          <div>
+            <strong>إجمالي الريال: <span id="print_summary_cash_words"></span></strong>
+          </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="signatures-section">
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">توقيع العميل<br>CUSTOMER'S SIGNATURE</div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">توقيع المدقق<br>CHECKED BY</div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-label">توقيع أمين المستودع<br>AUTHORISED SIGNATURE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="invoice-footer">
+      <p>شكراً لتعاملكم معنا • تم الطباعة بواسطة نظام محاسبة الذهب بن عجلان</p>
+      <p>تاريخ الطباعة: <span id="print_timestamp"></span></p>
+    </div>
+  </div>
+
+  <!-- Print Button -->
+  <button class="print-button no-print" onclick="window.print()">
+    <i>🖨️</i>
+    طباعة فاتورة الشراء
+  </button>
+
+  <script>
+    // ========== Translation System for Print Template ==========
+    const PRINT_TRANSLATIONS = {
+      ar: {
+        invoiceTitle: 'فاتورة شراء ضريبية',
+        accountNo: 'رقم الحساب',
+        customerNo: 'رقم العميل',
+        supplierNo: 'رقم المورد',
+        accountName: 'اسم الحساب',
+        customerName: 'اسم العميل',
+        supplierName: 'اسم المورد',
+        documentNo: 'رقم الفاتورة',
+        address: 'العنوان',
+        date: 'التاريخ',
+        taxNo: 'الرقم الضريبي',
+        phone: 'رقم الجوال',
+        description: 'البيان',
+        itemName: 'اسم الصنف',
+        labor: 'الأجور',
+        thKarat: 'العيار',
+        thWeight: 'الوزن الكلي',
+        thOunce: 'الأونصة',
+        thGoldPrice: 'سعر الذهب',
+        thSubtotal: 'الإجمالي قبل الضريبة',
+        thTax: 'قيمة الضريبة',
+        thTotal: 'الإجمالي شامل الضريبة',
+        karat18: 'عيار 18',
+        karat21: 'عيار 21',
+        karat22: 'عيار 22',
+        karat24: 'عيار 24',
+        totalWeight: 'إجمالي الوزن القائم',
+        totalWeight21: 'إجمالي الذهب محول عيار 21',
+        totalGoldValue: 'إجمالي قيمة الذهب',
+        subtotalExcludingTax: 'الإجمالي غير شامل الضريبة',
+        vatLabel: 'ضريبة القيمة المضافة 15%',
+        taxValue: 'قيمة الضريبة',
+        finalTotal: 'الإجمالي شامل ضريبة القيمة المضافة',
+        amount: 'المبلغ',
+        totalGold: 'إجمالي الذهب:',
+        totalCash: 'إجمالي الريال:',
+        customerSignature: 'توقيع العميل',
+        checkedBy: 'توقيع المدقق',
+        authorizedSignature: 'توقيع أمين المستودع',
+        footerThanks: 'شكراً لتعاملكم معنا • تم الطباعة بواسطة نظام محاسبة الذهب بن عجلان',
+        printDate: 'تاريخ الطباعة:',
+        printButton: 'طباعة فاتورة الشراء',
+        gram: 'جرام',
+        milligram: 'مل',
+        riyal: 'ريال',
+        branchScopeLabel: 'نطاق الفروع',
+        allBranches: 'كل الفروع',
+        notSpecified: 'غير محدد'
+      },
+      en: {
+        invoiceTitle: 'Tax Purchase Invoice',
+        accountNo: 'Account No.',
+        customerNo: 'Customer No.',
+        supplierNo: 'Supplier No.',
+        accountName: 'Account Name',
+        customerName: 'Customer Name',
+        supplierName: 'Supplier Name',
+        documentNo: 'Document No.',
+        address: 'Address',
+        date: 'Date',
+        taxNo: 'Tax No.',
+        phone: 'Phone',
+        description: 'Description',
+        itemName: 'Item',
+        labor: 'Labor',
+        thKarat: 'KARAT',
+        thWeight: 'WEIGHT',
+        thOunce: 'OUNCE',
+        thGoldPrice: 'GOLD PRICE',
+        thSubtotal: 'SUBTOTAL',
+        thTax: 'TAX',
+        thTotal: 'TOTAL',
+        karat18: '18K',
+        karat21: '21K',
+        karat22: '22K',
+        karat24: '24K',
+        totalWeight: 'Total Weight',
+        totalWeight21: 'Gold Converted to 21K',
+        totalGoldValue: 'Total Gold Value',
+        subtotalExcludingTax: 'Subtotal (Excluding Tax)',
+        vatLabel: 'VAT 15%',
+        taxValue: 'Tax Amount',
+        finalTotal: 'Total (Including VAT)',
+        amount: 'Amount',
+        totalGold: 'Total Gold:',
+        totalCash: 'Total Cash:',
+        customerSignature: 'CUSTOMER SIGNATURE',
+        checkedBy: 'CHECKED BY',
+        authorizedSignature: 'AUTHORIZED SIGNATURE',
+        footerThanks: 'Thank you for your business • Printed by BenAjlan Gold Accounting System',
+        printDate: 'Print Date:',
+        printButton: 'Print Purchase Invoice',
+        gram: 'grams',
+        milligram: 'mg',
+        riyal: 'SAR',
+        branchScopeLabel: 'Branch Scope',
+        allBranches: 'All Branches',
+        notSpecified: 'Not specified'
+      }
+    };
+
+    function getPrintLang() {
+      try {
+        return localStorage.getItem('uiLang') === 'en' ? 'en' : 'ar';
+      } catch (e) {
+        return 'ar';
+      }
+    }
+
+    function tPrint(key) {
+      const lang = getPrintLang();
+      return PRINT_TRANSLATIONS[lang]?.[key] || PRINT_TRANSLATIONS['ar']?.[key] || key;
+    }
+
+    function getStoredPrintCurrentBranch() {
+      try {
+        const raw = localStorage.getItem('currentBranch');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function getStoredPrintBranchScope() {
+      try {
+        const raw = localStorage.getItem('branchScope');
+        const parsed = raw ? JSON.parse(raw) : {};
+        const currentBranch = getStoredPrintCurrentBranch();
+        return {
+          mode: String(parsed?.mode || parsed?.scope || '').trim().toLowerCase() === 'all' ? 'all' : 'branch',
+          branchId: Number(parsed?.branchId || parsed?.branch_id || currentBranch?.id || 0) || null,
+        };
+      } catch (e) {
+        const currentBranch = getStoredPrintCurrentBranch();
+        return {
+          mode: 'branch',
+          branchId: Number(currentBranch?.id || 0) || null,
+        };
+      }
+    }
+
+    function getPrintBranchScopeText() {
+      const lang = getPrintLang();
+      const scopeState = getStoredPrintBranchScope();
+      if (scopeState.mode === 'all') {
+        return tPrint('allBranches');
+      }
+      const currentBranch = getStoredPrintCurrentBranch();
+      const branchCode = String(currentBranch?.code || '').trim();
+      const branchName = String((lang === 'en' ? currentBranch?.name_en || currentBranch?.name : currentBranch?.name || currentBranch?.name_en) || '').trim();
+      if (branchCode && branchName) return `${branchCode} - ${branchName}`;
+      return branchName || branchCode || tPrint('notSpecified');
+    }
+
+    // Number to English words
+    function numberToEnglishWords(num) {
+      if (num === 0) return 'zero';
+      
+      const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+      const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+      const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+      
+      function convertLessThanThousand(n) {
+        if (n === 0) return '';
+        let result = [];
+        const h = Math.floor(n / 100);
+        const t = Math.floor((n % 100) / 10);
+        const o = n % 10;
+        if (h > 0) result.push(ones[h] + ' hundred');
+        if (t === 1) {
+          result.push(teens[o]);
+        } else {
+          if (t > 0) result.push(tens[t]);
+          if (o > 0) result.push(ones[o]);
+        }
+        return result.filter(x => x).join(' ');
+      }
+      
+      const integerPart = Math.floor(num);
+      let parts = [];
+      
+      if (integerPart >= 1000000) {
+        const millions = Math.floor(integerPart / 1000000);
+        parts.push(convertLessThanThousand(millions) + ' million');
+        const remainder = integerPart % 1000000;
+        if (remainder >= 1000) {
+          const thousands = Math.floor(remainder / 1000);
+          parts.push(convertLessThanThousand(thousands) + ' thousand');
+          const lastPart = remainder % 1000;
+          if (lastPart > 0) parts.push(convertLessThanThousand(lastPart));
+        } else if (remainder > 0) {
+          parts.push(convertLessThanThousand(remainder));
+        }
+      } else if (integerPart >= 1000) {
+        const thousands = Math.floor(integerPart / 1000);
+        parts.push(convertLessThanThousand(thousands) + ' thousand');
+        const remainder = integerPart % 1000;
+        if (remainder > 0) parts.push(convertLessThanThousand(remainder));
+      } else {
+        parts.push(convertLessThanThousand(integerPart));
+      }
+      
+      return parts.filter(x => x).join(' ');
+    }
+
+    // Apply translations to print template
+    function applyPrintTranslations() {
+      const lang = getPrintLang();
+      const isRtl = lang === 'ar';
+      
+      // Set document direction
+      document.documentElement.lang = lang;
+      document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+      document.body.style.direction = isRtl ? 'rtl' : 'ltr';
+      
+      // Invoice title
+      const invoiceTitle = document.querySelector('.invoice-title h2');
+      if (invoiceTitle) invoiceTitle.textContent = tPrint('invoiceTitle');
+      
+      // Detail field labels
+      const docNoLabel = document.querySelector('.detail-field-left .field-label');
+      if (docNoLabel) docNoLabel.textContent = tPrint('documentNo');
+      
+      const addressLabel = document.querySelector('.details-row:nth-child(2) .detail-field:first-child .field-label');
+      if (addressLabel) addressLabel.textContent = tPrint('address');
+      
+      const dateLabel = document.querySelector('.details-row:nth-child(2) .detail-field:last-child .field-label');
+      if (dateLabel) dateLabel.textContent = tPrint('date');
+      
+      const taxNoLabel = document.querySelector('.details-row:nth-child(3) .detail-field:first-child .field-label');
+      if (taxNoLabel) taxNoLabel.textContent = tPrint('taxNo');
+      
+      const phoneLabel = document.querySelector('.details-row:nth-child(3) .detail-field:last-child .field-label');
+      if (phoneLabel) phoneLabel.textContent = tPrint('phone');
+      
+      const descLabel = document.querySelector('.description-box .field-label');
+      if (descLabel) descLabel.textContent = tPrint('description');
+      
+      // Table headers (align with sales invoice: 9 columns)
+      const thHeaders = document.querySelectorAll('.invoice-table thead th');
+      if (thHeaders.length >= 9) {
+        if (isRtl) {
+          thHeaders[0].innerHTML = `${tPrint('thKarat')}<br>Karat`;
+          thHeaders[1].innerHTML = `${tPrint('itemName')}<br>Item`;
+          thHeaders[2].innerHTML = `${tPrint('thWeight')}<br>Weight`;
+          thHeaders[3].innerHTML = `${tPrint('thOunce')}<br>Ounce`;
+          thHeaders[4].innerHTML = `${tPrint('thGoldPrice')}<br>Gold Price`;
+          thHeaders[5].innerHTML = `${tPrint('labor')}<br>Labor`;
+          thHeaders[6].innerHTML = tPrint('thSubtotal');
+          thHeaders[7].innerHTML = `${tPrint('thTax')}<br>Tax`;
+          thHeaders[8].innerHTML = tPrint('thTotal');
+        } else {
+          thHeaders[0].textContent = 'KARAT';
+          thHeaders[1].textContent = 'ITEM';
+          thHeaders[2].textContent = 'WEIGHT';
+          thHeaders[3].textContent = 'OUNCE';
+          thHeaders[4].textContent = 'GOLD PRICE';
+          thHeaders[5].textContent = 'LABOR';
+          thHeaders[6].textContent = 'SUBTOTAL';
+          thHeaders[7].textContent = 'TAX';
+          thHeaders[8].textContent = 'TOTAL';
+          thHeaders.forEach(th => th.style.textAlign = 'left');
+        }
+      }
+      
+      // Karat labels
+      const karatLabels = document.querySelectorAll('.karat-box .karat-label');
+      if (karatLabels.length >= 4) {
+        karatLabels[0].textContent = tPrint('karat18');
+        karatLabels[1].textContent = tPrint('karat21');
+        karatLabels[2].textContent = tPrint('karat22');
+        karatLabels[3].textContent = tPrint('karat24');
+      }
+      
+      // Total labels
+      const totalLabels = document.querySelectorAll('.total-box .total-label');
+      if (totalLabels.length >= 3) {
+        totalLabels[0].textContent = tPrint('totalWeight');
+        totalLabels[1].textContent = tPrint('totalWeight21');
+        totalLabels[2].textContent = tPrint('totalGoldValue');
+      }
+      
+      // Tax row labels
+      const taxInfos = document.querySelectorAll('.tax-row .tax-info');
+      if (taxInfos.length >= 2) {
+        taxInfos[0].textContent = tPrint('subtotalExcludingTax');
+        taxInfos[1].textContent = tPrint('vatLabel');
+      }
+      
+      const taxLabels = document.querySelectorAll('.tax-row .tax-label');
+      if (taxLabels.length >= 1) {
+        taxLabels[0].textContent = tPrint('taxValue');
+      }
+      
+      // Final total label
+      const finalLabel = document.querySelector('.final-label');
+      if (finalLabel) {
+        finalLabel.innerHTML = isRtl 
+          ? `${tPrint('finalTotal')}<br>${tPrint('amount')}`
+          : `${tPrint('finalTotal')}<br>${tPrint('amount')}`;
+      }
+      
+      // Summary labels
+      const summaryGold = document.getElementById('print_summary_gold_words')?.parentElement;
+      const summaryCash = document.getElementById('print_summary_cash_words')?.parentElement;
+      if (summaryGold) {
+        const span = summaryGold.querySelector('span');
+        summaryGold.innerHTML = `<strong>${tPrint('totalGold')} <span id="print_summary_gold_words">${span?.textContent || ''}</span></strong>`;
+      }
+      if (summaryCash) {
+        const span = summaryCash.querySelector('span');
+        summaryCash.innerHTML = `<strong>${tPrint('totalCash')} <span id="print_summary_cash_words">${span?.textContent || ''}</span></strong>`;
+      }
+      
+      // Signature labels
+      const signatureLabels = document.querySelectorAll('.signature-label');
+      if (signatureLabels.length >= 3) {
+        signatureLabels[0].innerHTML = isRtl 
+          ? `${tPrint('customerSignature')}<br>CUSTOMER'S SIGNATURE`
+          : tPrint('customerSignature');
+        signatureLabels[1].innerHTML = isRtl 
+          ? `${tPrint('checkedBy')}<br>CHECKED BY`
+          : tPrint('checkedBy');
+        signatureLabels[2].innerHTML = isRtl 
+          ? `${tPrint('authorizedSignature')}<br>AUTHORISED SIGNATURE`
+          : tPrint('authorizedSignature');
+      }
+      
+      // Footer
+      const footerP = document.querySelector('.invoice-footer p:first-child');
+      if (footerP) footerP.textContent = tPrint('footerThanks');
+      
+      const printDateP = document.querySelector('.invoice-footer p:last-child');
+      if (printDateP) {
+        const timestamp = document.getElementById('print_timestamp')?.textContent || '';
+        printDateP.innerHTML = `${tPrint('printDate')} <span id="print_timestamp">${timestamp}</span>`;
+      }
+      
+      // Print button
+      const printBtn = document.querySelector('.print-button');
+      if (printBtn) printBtn.innerHTML = `<i>🖨️</i> ${tPrint('printButton')}`;
+    }
+
+    // Bridge APIs from opener window
+    (function bridgeAPIs() {
+      try {
+        if (window.opener) {
+          if (!window.db && window.opener.db) {
+            window.db = window.opener.db;
+          }
+          if (!window.suppliers && window.opener.suppliers) {
+            window.suppliers = window.opener.suppliers;
+          }
+          if (!window.api && window.opener.api) {
+            window.api = window.opener.api;
+          }
+        }
+      } catch (e) {
+      }
+    })();
+
+    // Number formatter (English numbers)
+    const nf = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true
+    });
+
+    // Convert number to Arabic words
+    function numberToArabicWords(num) {
+      if (num === 0) return 'صفر';
+      
+      const ones = ['', 'واحد', 'اثنان', 'ثلاثة', 'أربعة', 'خمسة', 'ستة', 'سبعة', 'ثمانية', 'تسعة'];
+      const tens = ['', '', 'عشرون', 'ثلاثون', 'أربعون', 'خمسون', 'ستون', 'سبعون', 'ثمانون', 'تسعون'];
+      const teens = ['عشرة', 'أحد عشر', 'اثنا عشر', 'ثلاثة عشر', 'أربعة عشر', 'خمسة عشر', 'ستة عشر', 'سبعة عشر', 'ثمانية عشر', 'تسعة عشر'];
+      const hundreds = ['', 'مائة', 'مائتان', 'ثلاثمائة', 'أربعمائة', 'خمسمائة', 'ستمائة', 'سبعمائة', 'ثمانمائة', 'تسعمائة'];
+      
+      function convertLessThanThousand(n) {
+        if (n === 0) return '';
+        
+        let result = [];
+        
+        const h = Math.floor(n / 100);
+        const t = Math.floor((n % 100) / 10);
+        const o = n % 10;
+        
+        if (h > 0) result.push(hundreds[h]);
+        
+        if (t === 1) {
+          result.push(teens[o]);
+        } else {
+          // الترتيب الصحيح بالعربية: الآحاد ثم العشرات
+          if (o > 0) result.push(ones[o]);
+          if (t > 0) result.push(tens[t]);
+        }
+        
+        return result.filter(x => x).join(' و ');
+      }
+      
+      const integerPart = Math.floor(num);
+      
+      let parts = [];
+      
+      if (integerPart >= 1000000) {
+        const millions = Math.floor(integerPart / 1000000);
+        parts.push(convertLessThanThousand(millions) + ' مليون');
+        const remainder = integerPart % 1000000;
+        if (remainder >= 1000) {
+          const thousands = Math.floor(remainder / 1000);
+          parts.push(convertLessThanThousand(thousands) + ' ألف');
+          const lastPart = remainder % 1000;
+          if (lastPart > 0) {
+            parts.push(convertLessThanThousand(lastPart));
+          }
+        } else if (remainder > 0) {
+          parts.push(convertLessThanThousand(remainder));
+        }
+      } else if (integerPart >= 1000) {
+        const thousands = Math.floor(integerPart / 1000);
+        parts.push(convertLessThanThousand(thousands) + ' ألف');
+        const remainder = integerPart % 1000;
+        if (remainder > 0) {
+          parts.push(convertLessThanThousand(remainder));
+        }
+      } else {
+        parts.push(convertLessThanThousand(integerPart));
+      }
+      
+      return parts.filter(x => x).join(' و ');
+    }
+
+    // Helper function to normalize file path to URL
+    function normalizeFileUrl(p) {
+      if (!p) return '';
+      return p.startsWith('file://') ? p : 'file:///' + String(p).replace(/\\/g, '/');
+    }
+
+    // Load company data from database (same logic as sales invoice so the header is identical)
+    async function loadCompanyData() {
+      try {
+        // Try to get company info from api first
+        let company = null;
+        
+        if (window.api && window.api.getCompanyInfo) {
+          const result = await window.api.getCompanyInfo();
+          if (result && result.success) {
+            company = result.company || result.data;
+          }
+        }
+        
+        // Fallback to db if api not available
+        if (!company) {
+          const db = window.db || (window.opener && window.opener.db) || null;
+          if (db && db.getCompanyInfo) {
+            const companyResult = await db.getCompanyInfo();
+            if (companyResult && companyResult.success) {
+              company = companyResult.data || companyResult.company;
+            }
+          }
+        }
+        
+        if (company) {
+          // Get company data
+          const nameAr = company.name || '';
+          const nameEn = company.name_en || '';
+          const taxNum = company.tax || '';
+          const addressAr = company.address || '';
+          const addressEn = company.address_en || '';
+          const phone = company.phone || '';
+          const email = company.email || '';
+          
+          // Update Arabic company info (right side)
+          document.getElementById('company_name_ar').textContent = nameAr || 'اسم الشركة';
+          document.getElementById('company_address_ar').textContent = addressAr ? 'العنوان: ' + addressAr : '';
+          document.getElementById('company_phone_ar').textContent = phone ? 'رقم الهاتف: ' + phone : '';
+          document.getElementById('company_email_ar').textContent = email ? 'البريد: ' + email : '';
+          document.getElementById('company_tax_ar').textContent = taxNum ? 'الرقم الضريبي: ' + taxNum : '';
+          
+          // Update English company info (left side)
+          document.getElementById('company_name_en').textContent = nameEn || 'Company Name';
+          document.getElementById('company_address_en').textContent = addressEn ? 'Address: ' + addressEn : (addressAr ? 'Address: ' + addressAr : '');
+          document.getElementById('company_phone_en').textContent = phone ? 'Phone: ' + phone : '';
+          document.getElementById('company_email_en').textContent = email ? 'Email: ' + email : '';
+          document.getElementById('company_tax_en').textContent = taxNum ? 'Tax No: ' + taxNum : '';
+
+          // Cache company tax number for QR generation (shared with sales invoice template)
+          try {
+            window.__companyTaxNumber = taxNum || window.__companyTaxNumber || '';
+          } catch (e) {
+          }
+          
+          // Update logo - use logoData first, then logo path
+          const logoElement = document.getElementById('company_logo');
+          if (company.logoData) {
+            logoElement.innerHTML = `<img src="${company.logoData}" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-building\\'></i>'">`;
+          } else if (company.logo) {
+            const logoUrl = normalizeFileUrl(company.logo) + '?v=' + Date.now();
+            logoElement.innerHTML = `<img src="${logoUrl}" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-building\\'></i>'">`;
+          }
+        }
+      } catch (error) {
+      }
+    }
+
+    async function generateInvoiceQR(info) {
+      try {
+        const container = document.getElementById('invoice_qr');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        const lang = getPrintLang();
+        const isPurchase = info.type === 'purchase';
+        const typeLabel = lang === 'en'
+          ? (isPurchase ? 'Purchase Invoice' : 'Sales Invoice')
+          : (isPurchase ? 'فاتورة شراء' : 'فاتورة بيع');
+
+        const lines = [];
+
+        if (lang === 'en') {
+          lines.push(`Invoice Type: ${typeLabel}`);
+          lines.push(`Invoice No: ${info.invoiceId || '-'}`);
+          lines.push(`Date: ${info.date || '-'}`);
+          lines.push(`Account: ${info.accountName || '-'}`);
+          lines.push(`Total (with VAT): ${info.finalTotal || '-'}`);
+          lines.push(`VAT Amount: ${info.taxAmount || '0.00'}`);
+          if (info.companyTax) lines.push(`Company Tax: ${info.companyTax}`);
+        } else {
+          lines.push(`نوع الفاتورة: ${typeLabel}`);
+          lines.push(`رقم الفاتورة: ${info.invoiceId || '-'}`);
+          lines.push(`تاريخ الفاتورة: ${info.date || '-'}`);
+          lines.push(`اسم العميل / المورد: ${info.accountName || '-'}`);
+          lines.push(`الإجمالي شامل الضريبة: ${info.finalTotal || '-'}`);
+          lines.push(`مبلغ الضريبة: ${info.taxAmount || '0.00'}`);
+          if (info.companyTax) lines.push(`الرقم الضريبي للمنشأة: ${info.companyTax}`);
+        }
+
+        const text = lines.join('\n');
+        const qrResult = await window.api?.generateQRCodeDataUrl?.({ text, width: 160, margin: 1 });
+        if (!qrResult || !qrResult.success || !qrResult.dataUrl) return;
+
+        const img = document.createElement('img');
+        img.src = qrResult.dataUrl;
+        img.alt = 'Invoice QR';
+        container.appendChild(img);
+      } catch (e) {
+      }
+    }
+
+    // Load customer or supplier data
+    async function loadCustomerData(invoiceData) {
+      try {
+        const db = window.db || (window.opener && window.opener.db) || null;
+        
+        let customerData = null;
+        
+        // Try to get customer data
+        if (invoiceData.customer_id && db && db.getCustomers) {
+          const customersResult = await db.getCustomers();
+          if (customersResult && customersResult.success) {
+            const customers = customersResult.data || customersResult.customers || [];
+            customerData = customers.find(c => c.id == invoiceData.customer_id);
+          }
+        }
+        
+        // If no customer, try supplier
+        if (!customerData && invoiceData.supplier_id) {
+          const suppliers = window.suppliers || (window.opener && window.opener.suppliers) || null;
+          
+          // Try getSuppliers first (as used in script.js), then list as fallback
+          if (suppliers) {
+            let suppliersResult = null;
+            
+            if (suppliers.getSuppliers) {
+              suppliersResult = await suppliers.getSuppliers();
+            } else if (suppliers.list) {
+              suppliersResult = await suppliers.list();
+            }
+            
+            if (suppliersResult && suppliersResult.success) {
+              const suppliersList = suppliersResult.data || suppliersResult.suppliers || [];
+              customerData = suppliersList.find(s => s.id == invoiceData.supplier_id);
+            }
+          }
+        }
+        
+        // Populate fields and update labels
+        const accountTypeLabel = document.getElementById('account_type_label');
+        const accountNameLabel = document.getElementById('account_name_label');
+        
+        if (invoiceData.customer_id) {
+          accountTypeLabel.textContent = tPrint('customerNo');
+          accountNameLabel.textContent = tPrint('customerName');
+        } else if (invoiceData.supplier_id) {
+          accountTypeLabel.textContent = tPrint('supplierNo');
+          accountNameLabel.textContent = tPrint('supplierName');
+        }
+        
+        if (customerData) {
+          // Populate account number
+          document.getElementById('print_account_no').textContent = customerData.id || invoiceData.customer_id || invoiceData.supplier_id || '-';
+          
+          // Populate account name
+          document.getElementById('print_customer_name').textContent = customerData.name || invoiceData.customer_name || '-';
+          
+          // Populate address (field name is 'region' in database)
+          const address = customerData.region || customerData.address || '-';
+          document.getElementById('print_address').textContent = address;
+          
+          // Populate phone
+          const phone = customerData.phone || '-';
+          document.getElementById('print_phone').textContent = phone;
+          
+          // Populate tax number (field name is 'tax_no' in database)
+          const taxNumber = customerData.tax_no || '-';
+          document.getElementById('print_tax_number').textContent = taxNumber;
+        } else {
+          // Fallback to invoice data if customer/supplier not found
+          document.getElementById('print_account_no').textContent = invoiceData.customer_id || invoiceData.supplier_id || '-';
+          document.getElementById('print_customer_name').textContent = invoiceData.customer_name || '-';
+          document.getElementById('print_address').textContent = '-';
+          document.getElementById('print_phone').textContent = '-';
+          document.getElementById('print_tax_number').textContent = '-';
+        }
+      } catch (error) {
+        // Fallback
+        document.getElementById('print_account_no').textContent = invoiceData.customer_id || invoiceData.supplier_id || '-';
+        document.getElementById('print_customer_name').textContent = invoiceData.customer_name || '-';
+        document.getElementById('print_address').textContent = '-';
+        document.getElementById('print_phone').textContent = '-';
+        document.getElementById('print_tax_number').textContent = '-';
+      }
+    }
+
+    // Get data from URL parameters or localStorage
+    async function loadInvoiceData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      
+      let invoiceData;
+      
+      if (dataParam) {
+        try {
+          invoiceData = JSON.parse(decodeURIComponent(dataParam));
+        } catch (e) {
+          invoiceData = JSON.parse(localStorage.getItem('printInvoiceData') || '{}');
+        }
+      } else {
+        invoiceData = JSON.parse(localStorage.getItem('printInvoiceData') || '{}');
+      }
+
+      if (!invoiceData || !invoiceData.id) {
+        alert(tPrint('noDataAlert'));
+        return;
+      }
+
+      // Load company data
+      await loadCompanyData();
+      
+      // Populate invoice data
+      document.getElementById('print_invoice_id').textContent = invoiceData.id || '-';
+      document.getElementById('print_date').textContent = invoiceData.date || '-';
+      document.getElementById('print_description').textContent = invoiceData.description || '-';
+      document.getElementById('print_branch_scope_label').textContent = tPrint('branchScopeLabel');
+      document.getElementById('print_branch_scope_value').textContent = getPrintBranchScopeText();
+      
+      // Load customer/supplier data
+      await loadCustomerData(invoiceData);
+
+      // Populate items
+      const tbody = document.getElementById('print_items_body');
+      tbody.innerHTML = '';
+      
+      let totalWeight = 0;
+      let totalValue = 0;
+      let totalOunce = 0;
+      let totalTax = 0;
+      let totalSubtotal = 0;
+      const karatTotals = {
+        '18': 0,
+        '21': 0,
+        '22': 0,
+        '24': 0
+      };
+
+      const lang = getPrintLang();
+      const isEnglish = lang === 'en';
+      
+      // لتجميع الوزن المحول حسب النقاوة
+      let totalPurityWeight = 0;
+      
+      (invoiceData.details || []).forEach((item, index) => {
+        const weight = Number(item.weight || 0);
+        const value = Number(item.value || 0);
+        const ounce = Number(item.ounce || 0);
+        const karat = item.karat || '-';
+        const purity = Number(item.purity || 0);
+        const itemName = (item.item_name || item.itemName || '').toString().trim();
+        const pricePerGram = Number(item.price_per_gram || 0);
+        const labor = Number(item.labor || 0);
+        const tax = Number(item.tax || 0);
+        const goldValue = weight * pricePerGram;
+        const laborValue = weight * labor;
+        const subtotal = goldValue + laborValue;
+        
+        totalWeight += weight;
+        totalValue += value;
+        totalOunce += ounce;
+        totalTax += tax;
+        totalSubtotal += subtotal;
+        
+        if (karat !== '-' && weight > 0) {
+          karatTotals[karat] = (karatTotals[karat] || 0) + weight;
+        }
+        
+        // حساب الوزن المحول باستخدام النقاوة (إذا كانت متوفرة)
+        if (weight > 0 && purity > 0) {
+          totalPurityWeight += (weight * purity) / 875;
+        } else if (weight > 0 && karat !== '-') {
+          const karatNum = parseFloat(karat);
+          if (!isNaN(karatNum)) {
+            totalPurityWeight += (weight * karatNum) / 21;
+          }
+        }
+
+        const row = document.createElement('tr');
+        const karatDisplay = isEnglish ? `${karat}K` : `عيار ${karat}`;
+        const purityBadge = purity > 0 ? `<span style="margin-inline-start:4px;padding:1px 4px;font-size:9px;font-weight:600;border-radius:3px;background:#fef3c7;color:#d97706;border:1px solid #fcd34d;">${purity}</span>` : '';
+        row.innerHTML = `
+          <td><span style="display:inline-flex;align-items:center;gap:4px;white-space:nowrap;"><strong>${karatDisplay}</strong>${purityBadge}</span></td>
+          <td style="text-align:right">${itemName || '-'}</td>
+          <td>${nf.format(weight)}</td>
+          <td>${nf.format(ounce)}</td>
+          <td>${nf.format(pricePerGram)}</td>
+          <td>${nf.format(labor)}</td>
+          <td>${nf.format(subtotal)}</td>
+          <td>${nf.format(tax)}</td>
+          <td><strong>${nf.format(value)}</strong></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Fill empty rows to expand table - minimum rows for A4 layout (single page)
+      const minRows = 7;
+      const currentRows = invoiceData.details?.length || 0;
+      const emptyRowsNeeded = Math.max(minRows - currentRows, 0);
+      
+      for (let i = 0; i < emptyRowsNeeded; i++) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.className = 'empty-filler';
+        emptyRow.innerHTML = `
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        `;
+        tbody.appendChild(emptyRow);
+      }
+
+      // استخدام الوزن المحول بالنقاوة (تم حسابه أعلاه في حلقة التفاصيل)
+      const totalWeight21 = totalPurityWeight;
+      
+      // Calculate converted total value (assuming average price)
+      const avgPricePerGram = totalWeight > 0 ? totalValue / totalWeight : 0;
+      const totalConverted = totalWeight21 * avgPricePerGram;
+      
+      // Set totals
+      document.getElementById('print_total_weight').textContent = nf.format(totalWeight);
+      document.getElementById('print_total_weight_21').textContent = nf.format(totalWeight21);
+      document.getElementById('print_total_value').textContent = nf.format(totalSubtotal);
+      document.getElementById('print_subtotal').textContent = nf.format(totalSubtotal);
+      document.getElementById('print_tax_value').textContent = nf.format(totalTax);
+      document.getElementById('print_final_total').textContent = nf.format(totalValue);
+      
+      // Set summary totals in words (Arabic or English based on language)
+      const weightInteger = Math.floor(totalWeight);
+      const weightDecimal = Math.round((totalWeight - weightInteger) * 100);
+      const valueInteger = Math.floor(totalValue);
+      
+      let goldText, cashText;
+      if (isEnglish) {
+        goldText = numberToEnglishWords(weightInteger) + ' ' + tPrint('gram');
+        if (weightDecimal > 0) {
+          goldText += ' and ' + numberToEnglishWords(weightDecimal) + ' ' + tPrint('milligram');
+        }
+        cashText = numberToEnglishWords(valueInteger) + ' ' + tPrint('riyal');
+      } else {
+        goldText = numberToArabicWords(weightInteger) + ' ' + tPrint('gram');
+        if (weightDecimal > 0) {
+          goldText += ' و' + numberToArabicWords(weightDecimal) + ' ' + tPrint('milligram');
+        }
+        cashText = numberToArabicWords(valueInteger) + ' ' + tPrint('riyal');
+      }
+      
+      document.getElementById('print_summary_gold_words').textContent = goldText;
+      document.getElementById('print_summary_cash_words').textContent = cashText;
+
+      // Set karat totals
+      document.getElementById('karat_18').textContent = nf.format(karatTotals['18']);
+      document.getElementById('karat_21').textContent = nf.format(karatTotals['21']);
+      document.getElementById('karat_22').textContent = nf.format(karatTotals['22']);
+      document.getElementById('karat_24').textContent = nf.format(karatTotals['24']);
+
+      // Set print timestamp
+      const now = new Date();
+      document.getElementById('print_timestamp').textContent = isEnglish 
+        ? now.toLocaleString('en-GB')
+        : now.toLocaleString('ar-SA');
+      
+      // Generate QR code with key invoice information
+      const qrInfo = {
+        type: 'purchase',
+        invoiceId: document.getElementById('print_invoice_id')?.textContent || invoiceData.id || '',
+        date: document.getElementById('print_date')?.textContent || invoiceData.date || '',
+        accountName: document.getElementById('print_customer_name')?.textContent || '',
+        finalTotal: document.getElementById('print_final_total')?.textContent || '',
+        taxAmount: document.getElementById('print_tax_value')?.textContent || '',
+        companyTax: (function() {
+          if (window.__companyTaxNumber) return window.__companyTaxNumber;
+          const ar = document.getElementById('company_tax_ar')?.textContent || '';
+          const en = document.getElementById('company_tax_en')?.textContent || '';
+          const raw = ar || en;
+          const idx = raw.indexOf(':');
+          return idx >= 0 ? raw.slice(idx + 1).trim() : raw.trim();
+        })()
+      };
+
+      await generateInvoiceQR(qrInfo);
+      
+      // Apply translations after data is loaded
+      applyPrintTranslations();
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        window.print();
+      }
+    });
+    
+    // WhatsApp Mode - Auto capture and send
+    async function handleWhatsAppMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('whatsapp') !== '1') return;
+      
+      // Wait for invoice to render
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      try {
+        // Get phone number
+        let phoneNumber = localStorage.getItem('whatsappPhone') || '';
+        if (!phoneNumber || phoneNumber.length < 9) {
+          alert('رقم هاتف المورد غير موجود!');
+          return;
+        }
+        
+        // Convert invoice to image
+        const invoiceContainer = document.querySelector('.invoice-container');
+        const canvas = await html2canvas(invoiceContainer, {
+          backgroundColor: '#ffffff',
+          scale: 2,
+          useCORS: true,
+          logging: false
+        });
+        
+        // Convert to blob and copy to clipboard
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+        } catch (clipErr) {
+          // Clipboard copy failed
+        }
+        
+        // Get invoice info for message
+        const invoiceId = document.getElementById('print_invoice_id')?.textContent || '';
+        const supplierName = document.getElementById('print_customer_name')?.textContent || '';
+        const invoiceDate = document.getElementById('print_date')?.textContent || '';
+        const totalValue = document.getElementById('print_final_total')?.textContent || '';
+        const totalWeight = document.getElementById('print_total_weight')?.textContent || '';
+        
+        // Build message
+        const message = `📄 فاتورة شراء رقم: ${invoiceId}
+
+عزيزي المورد: ${supplierName}
+
+📅 التاريخ: ${invoiceDate}
+
+💰 إجمالي الفاتورة: ${totalValue} ريال
+⚖️ إجمالي الوزن: ${totalWeight} غرام
+
+شكراً لتعاملكم معنا 🙏`;
+        
+        // Open WhatsApp
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        if (window.api && window.api.openExternal) {
+          await window.api.openExternal(whatsappUrl);
+        } else if (window.opener && window.opener.api && window.opener.api.openExternal) {
+          await window.opener.api.openExternal(whatsappUrl);
+        } else {
+          window.open(whatsappUrl, '_blank');
+        }
+        
+        // Clear localStorage flags
+        localStorage.removeItem('whatsappPhone');
+        localStorage.removeItem('whatsappMode');
+        
+        // Close this window after a short delay
+        setTimeout(() => window.close(), 1000);
+        
+      } catch (err) {
+        alert('خطأ في إرسال الفاتورة عبر واتساب');
+      }
+    }
+    
+    // Run WhatsApp mode after page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      loadInvoiceData();
+      setTimeout(handleWhatsAppMode, 100);
+    });
+  </script>
+</body>
+</html>

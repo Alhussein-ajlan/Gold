@@ -1,0 +1,190 @@
+:root{--ring: color-mix(in oklab, var(--primary) 25%, transparent)}
+
+#panel-income-statement{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:10px 16px;
+  overflow:hidden;
+  min-height:0;
+}
+
+.is-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 20px;
+  background:linear-gradient(135deg, var(--card) 0%, var(--bg-muted) 100%);
+  border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+
+.is-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.is-title i{
+  font-size:24px;
+  color:var(--primary);
+}
+
+.is-title h2{
+  margin:0;
+  font-size:22px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.is-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.is-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:2px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+  transition:all .2s ease;
+}
+
+.is-btn:hover:not(:disabled){
+  border-color:var(--primary);
+  background:var(--bg-muted);
+  transform:translateY(-1px);
+}
+
+.is-btn:active:not(:disabled){
+  transform:translateY(0);
+}
+
+.is-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.is-btn-icon{
+  width:44px;
+  height:44px;
+  padding:0;
+  justify-content:center;
+}
+
+.is-excel{
+  background:linear-gradient(135deg, #0f9d58, #16c36a);
+  color:#fff;
+  border-color:rgba(15,157,88,.35);
+}
+
+.is-pdf{
+  background:linear-gradient(135deg, #ef4444, #f97316);
+  color:#fff;
+  border-color:rgba(239,68,68,.35);
+}
+
+.is-primary{
+  background:linear-gradient(135deg, var(--primary), var(--primary-600));
+  color:#fff;
+  border-color:color-mix(in oklab, var(--primary) 65%, transparent);
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+
+#isFiltersCard{
+  width:100%;
+  padding:10px 16px;
+}
+
+.is-filter-grid{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:24px;
+  align-items:flex-end;
+}
+
+.is-filter-group{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:12px;
+}
+
+.is-filter-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--subtle);
+  white-space:nowrap;
+}
+
+.is-filter-group .form-field{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0;
+}
+
+.is-filter-group .form-field span{
+  font-size:13px;
+  white-space:nowrap;
+  margin:0;
+}
+
+.is-filter-group .form-field input[type="date"]{
+  width:140px;
+  padding:8px 10px;
+}
+
+.is-filter-actions{
+  display:flex;
+  margin-inline-start:auto;
+}
+
+#isGrid{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+
+#isGrid .table-responsive{
+  flex:1;
+  overflow:auto;
+  min-height:0;
+}
+
+#isTable{
+  min-width: 900px;
+}
+
+#isTable thead th{
+  text-align:center;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+#isTable td.num{
+  text-align:center;
+  font-variant-numeric: tabular-nums;
+}
+
+.is-row-total td{
+  font-weight:700;
+  background:color-mix(in oklab, var(--primary) 10%, var(--card));
+}
+
+#isSearch:focus{
+  box-shadow:0 0 0 6px var(--ring);
+  border-color:var(--primary);
+}

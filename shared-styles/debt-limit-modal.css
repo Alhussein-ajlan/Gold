@@ -1,0 +1,169 @@
+/* Debt Limit Warning Modal */
+.debt-limit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.debt-limit-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.debt-limit-modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.debt-limit-modal.show .debt-limit-modal-content {
+  transform: scale(1);
+}
+
+.debt-limit-modal-header {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  color: white;
+  padding: 24px;
+  text-align: center;
+}
+
+.debt-limit-modal-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debt-limit-modal-icon i {
+  font-size: 40px;
+  color: white;
+}
+
+.debt-limit-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.debt-limit-modal-body {
+  padding: 24px;
+  color: #2d3748;
+}
+
+.debt-limit-message {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #4a5568;
+}
+
+.debt-limit-details {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.debt-limit-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.debt-limit-detail-row:last-child {
+  border-bottom: none;
+}
+
+.debt-limit-detail-label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.debt-limit-detail-value {
+  font-weight: 700;
+  color: #2d3748;
+  direction: ltr;
+}
+
+.debt-limit-detail-value.excess {
+  color: #e53e3e;
+}
+
+.debt-limit-modal-footer {
+  padding: 16px 24px;
+  background: #f7fafc;
+  display: flex;
+  justify-content: center;
+}
+
+.debt-limit-modal-btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--primary-600));
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.debt-limit-modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(10, 169, 157, 0.4);
+}
+
+.debt-limit-modal-btn:active {
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .debt-limit-modal-content {
+  background: #1a202c;
+}
+
+[data-theme="dark"] .debt-limit-modal-body {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .debt-limit-message {
+  color: #cbd5e0;
+}
+
+[data-theme="dark"] .debt-limit-details {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .debt-limit-detail-label {
+  color: #cbd5e0;
+}
+
+[data-theme="dark"] .debt-limit-detail-value {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .debt-limit-modal-footer {
+  background: #2d3748;
+}

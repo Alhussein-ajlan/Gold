@@ -1,0 +1,190 @@
+/* Permission Denied Modal - Beautiful design matching existing modals */
+
+.permission-denied-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999 !important;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.permission-denied-modal.show {
+  display: flex !important;
+}
+
+.permission-denied-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+.permission-denied-content {
+  position: relative;
+  z-index: 1;
+  background: var(--card, #ffffff);
+  border-radius: 20px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .permission-denied-content {
+    background: var(--bg-secondary, #1a1d23);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.permission-denied-header {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  padding: 30px;
+  text-align: center;
+  color: white;
+}
+
+.permission-denied-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  animation: shake 0.5s ease;
+}
+
+.permission-denied-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.permission-denied-body {
+  padding: 30px;
+  text-align: center;
+  background: var(--card, #ffffff);
+}
+
+.permission-denied-message {
+  font-size: 16px;
+  color: var(--text, #1e293b);
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+}
+
+.permission-denied-detail {
+  font-size: 14px;
+  color: var(--text-muted, #64748b);
+  line-height: 1.5;
+}
+
+/* Dark mode - dark background with white text */
+body.dark-theme .permission-denied-body,
+html[data-theme="dark"] .permission-denied-body {
+  background: var(--card, #1e293b);
+}
+
+body.dark-theme .permission-denied-message,
+html[data-theme="dark"] .permission-denied-message {
+  color: #ffffff !important;
+}
+
+body.dark-theme .permission-denied-detail,
+html[data-theme="dark"] .permission-denied-detail {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.dark-theme .permission-denied-content,
+html[data-theme="dark"] .permission-denied-content {
+  background: var(--card, #1e293b);
+}
+
+@media (prefers-color-scheme: dark) {
+  .permission-denied-body {
+    background: var(--card, #1e293b);
+  }
+  .permission-denied-message {
+    color: #ffffff !important;
+  }
+  .permission-denied-detail {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+  .permission-denied-content {
+    background: var(--card, #1e293b);
+  }
+}
+
+.permission-denied-footer {
+  padding: 20px 30px 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.permission-denied-close-btn {
+  padding: 12px 40px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.permission-denied-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.permission-denied-close-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}

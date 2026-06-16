@@ -1,0 +1,189 @@
+{
+  "openPositions": {
+    "title": "المراكز المفتوحة",
+    "subtitle": "إدارة المراكز المفتوحة للعملاء والموردين",
+    "tabs": {
+      "sellPositions": "مراكز البيع المفتوحة",
+      "buyPositions": "مراكز الشراء المفتوحة"
+    },
+    "cards": {
+      "needsCoverage": "مطلوب التغطية",
+      "safeAccounts": "حسابات آمنة",
+      "xauPrice": "سعر أونصة الذهب",
+      "lastUpdate": "آخر تحديث",
+      "reconnect": "إعادة اتصال MT5",
+      "connecting": "جاري الاتصال...",
+      "change24h": "التغير (24 ساعة)",
+      "high": "الأعلى",
+      "low": "الأدنى",
+      "party": "طرف",
+      "parties": "أطراف",
+      "gram": "جم",
+      "customersCount": "عدد العملاء:",
+      "totalGold": "إجمالي الذهب:",
+      "totalCash": "إجمالي الريال:",
+      "avgCoverage": "متوسط التغطية:",
+      "rate": "المعدل:",
+      "avgPosition": "مركز العميل:",
+      "summary": "ملخص المراكز",
+      "cashDebit": "مدين نقداً",
+      "cashCredit": "دائن نقداً",
+      "goldCredit": "دائن ذهب",
+      "goldDebit": "مدين ذهب",
+      "eventTime": "موعد الحدث"
+    },
+    "filters": {
+      "comparePrice": "سعر المقارنة:",
+      "status": "الحالة:",
+      "all": "الكل",
+      "needsCoverage": "يحتاج تغطية",
+      "safe": "آمن",
+      "search": "بحث عن عميل...",
+      "agreedRate": "المعدل المتفق عليه %:",
+      "priceAdjustment": "الإضافة/النقص:",
+      "priceAdjustmentHint": "قيمة موجبة = إضافة، قيمة سالبة = نقص من سعر الأونصة",
+      "danger": "تحذير",
+      "warning": "تنبيه"
+    },
+    "table": {
+      "title": "أطراف لهم ذهب وعليهم نقد",
+      "titleBuy": "أطراف لهم نقد وعليهم ذهب",
+      "number": "#",
+      "type": "النوع",
+      "id": "الرقم",
+      "name": "الاسم",
+      "goldBalance": "رصيد الذهب",
+      "cashBalance": "رصيد النقد",
+      "coveragePrice": "التغطية على سعر",
+      "customerPosition": "مركز العميل",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "customer": "عميل",
+      "supplier": "مورد",
+      "needsCoverage": "تغطية",
+      "safe": "آمن",
+      "statement": "كشف حساب",
+      "notify": "إخطار",
+      "noData": "لا توجد بيانات",
+      "cashDebit": "مدين ريال",
+      "cashCredit": "دائن ريال",
+      "goldCredit": "دائن ذهب",
+      "goldDebit": "مدين ذهب",
+      "total": "الإجمالي",
+      "requiredCoverage": "المطلوب للتغطية"
+    },
+    "actions": {
+      "export": "تصدير",
+      "exportExcel": "تصدير Excel",
+      "exportPDF": "تصدير PDF",
+      "print": "طباعة",
+      "refresh": "تحديث"
+    },
+    "notification": {
+      "title": "إخطار لتدعيم الحساب",
+      "warningTitle": "إخطار لتدعيم الحساب",
+      "warningMessage": "عزيزي الزبون، نحيطكم علماً بأن مستوى الدعم لمراكزكم المفتوحة قد تراجع إلى أقل من الحد الأدنى والمعدل المتفق عليه.",
+      "entityInfo": {
+        "entityNumber": "رقم",
+        "name": "الاسم",
+        "taxNumber": "الرقم الضريبي",
+        "phone": "رقم الهاتف",
+        "region": "المنطقة",
+        "customer": "عميل",
+        "supplier": "مورد"
+      },
+      "table": {
+        "metal": "المعدن",
+        "balance": "الرصيد (غرام)",
+        "customerPosition": "مركز العميل",
+        "marketPrice": "سعر السوق الآن"
+      },
+      "cards": {
+        "agreedRate": "المعدل المتفق عليه:",
+        "amounts": "المبالغ:",
+        "currentBalance": "رصيدكم الحالي:",
+        "balance": "الرصيد (غرام)",
+        "currentRate": "معدلكم الحالي:",
+        "requiredAmount": "المبلغ المطلوب فوراً:"
+      },
+      "warning": {
+        "title": "مطلوب منكم حماية الحساب فوراً",
+        "message": "يرجى تعزيز ما يلي فوراً بالواتساب:",
+        "transferAmount": "مبلغ التحويل:",
+        "dueDate": "تاريخ الإستحقاق:",
+        "immediate": "فوري",
+        "method": "عن طريق أي بنك"
+      },
+      "footer": "هذا الإخطار مطبوع تلقائياً عن طريق الحاسوب ولا يحتاج إلى توقيع",
+      "printButton": "طباعة",
+      "modal": {
+        "success": "تم بنجاح",
+        "error": "خطأ",
+        "warning": "تحذير",
+        "info": "معلومة",
+        "ok": "حسناً",
+        "imageCopied": "تم نسخ الإخطار إلى الحافظة",
+        "noNotice": "لم يتم العثور على الإخطار",
+        "libraryMissing": "مكتبة التقاط الصورة غير متوفرة",
+        "copyFailed": "فشل في نسخ الصورة",
+        "copySuccess": "تم نسخ صورة الإخطار إلى الحافظة. يمكنك لصقها بـ Ctrl+V",
+        "noPhone": "لا يوجد رقم هاتف صالح لهذا العميل",
+        "whatsappSuccess": "تم نسخ صورة الإخطار إلى الحافظة وفتح واتساب."
+      },
+      "whatsapp": {
+        "title": "⚠️ إخطار لتدعيم الحساب",
+        "dear": "عزيزي الزبون:",
+        "message": "نحيطكم علماً بأن مستوى الدعم لمراكزكم المفتوحة قد تراجع إلى أقل من الحد الأدنى والمعدل المتفق عليه.",
+        "details": "📊 تفاصيل الحساب:",
+        "balanceLabel": "• الرصيد (غرام):",
+        "agreedRateLabel": "• المعدل المتفق عليه:",
+        "currentRateLabel": "• معدلكم الحالي:",
+        "amountsLabel": "• المبالغ:",
+        "currentBalanceLabel": "• رصيدكم الحالي:",
+        "requiredLabel": "💰 المبلغ المطلوب فوراً:",
+        "pleaseSupport": "⚠️ يرجى تعزيز الحساب فوراً.",
+        "thanks": "شكراً لتعاونكم 🙏"
+      },
+      "buttons": {
+        "usd": "دولار",
+        "sar": "ريال سعودي",
+        "whatsapp": "واتساب",
+        "print": "طباعة"
+      }
+    },
+    "export": {
+      "filename": "المراكز_المفتوحة",
+      "sheetName": "المراكز المفتوحة",
+      "sellPositions": "مراكز البيع المفتوحة",
+      "buyPositions": "مراكز الشراء المفتوحة",
+      "reportTitle": "تقرير المراكز المفتوحة",
+      "date": "التاريخ:",
+      "comparePrice": "سعر المقارنة:",
+      "xauPrice": "سعر XAU/USD:",
+      "summary": "الملخص",
+      "needsCoverage": "إجمالي التغطية المطلوبة (ر.س)",
+      "safeAccounts": "إجمالي المراكز الآمنة (ر.س)"
+    },
+    "print": {
+      "reportBasis": "أساس احتساب التقرير",
+      "reportBasisHint": "يوضح السعر والمعايير المعتمدة عند إعداد هذا التقرير",
+      "appliedOuncePrice": "سعر الأونصة المعتمد في التقرير",
+      "liveOuncePrice": "سعر الأونصة المباشر",
+      "priceAddition": "الإضافة على سعر الأونصة",
+      "priceDeduction": "النقص من سعر الأونصة",
+      "agreedRate": "المعدل المتفق عليه",
+      "usdPerOunce": "دولار/أونصة"
+    },
+    "messages": {
+      "loading": "جاري التحميل...",
+      "error": "حدث خطأ أثناء تحميل البيانات",
+      "noData": "لا توجد بيانات",
+      "accountNotFound": "لم يتم العثور على بيانات الحساب",
+      "exportSuccess": "تم التصدير بنجاح",
+      "exportError": "حدث خطأ أثناء التصدير",
+      "reconnecting": "جاري إعادة الاتصال...",
+      "reconnectSuccess": "تم إعادة الاتصال بنجاح",
+      "reconnectError": "فشل إعادة الاتصال"
+    }
+  }
+}
